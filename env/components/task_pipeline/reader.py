@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from env.components.task_pipeline.storage import Storage
 
 
 class Reader:
@@ -8,6 +9,7 @@ class Reader:
         self.start_time = 0
         self.end_time = 0
         self.load_task(file_path)
+        self.storage = Storage(self.records)
 
     def load_task(self, file_path: str) -> (list, datetime):
         """
@@ -26,5 +28,11 @@ class Reader:
         self.end_time = datetime.strptime(task_dict['END_TIME'], ori_time_form)
         self.records = records
 
-    def get_sys_start_time(self):
-        return self.start_time
+    def get_sys_start_and_end_time(self):
+        return self.start_time, self.end_time
+
+
+if __name__ == '__main__':
+    reader = Reader('../../data/task.json')
+    print(reader.get_sys_start_and_end_time())
+    print(reader.storage.dataset)

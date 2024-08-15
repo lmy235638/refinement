@@ -1,6 +1,6 @@
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 ori_time_form = '%Y%m%d%H%M%S'
 
@@ -117,22 +117,24 @@ def parse_to_single_task(records, original_format='%Y%m%d%H%M%S'):
     for record in records:
         stations = record['路径'][1::]
         for i, station in enumerate(stations[0:-1]):
-            if station == 'AA':
-                continue
             task_record = {}
             task_record.update({'PONO': record['PONO']})
             task_record.update({'BEG_STATION': station})
-            if stations[i + 1] == 'AA':
-                tar_station = stations[i + 2]
-            else:
-                tar_station = stations[i + 1]
+            tar_station = stations[i + 1]
             task_record.update({'TAR_STATION': tar_station})
-            assigned_time = record[f'工序{i + 3}开始时间']
+            assigned_time = record[f'工序{i + 3}结束时间']
             assigned_time = datetime.strptime(assigned_time, original_format)
-            task_record.update({'ASSIGNED_TIME': assigned_time.isoformat()})
-            end_time = record[f'工序{len(stations) + 2}开始时间']
+            task_record.update({'ASSIGN_TIME': assigned_time.isoformat()})
+            # end_time = record[f'工序{len(stations) + 2}开始时间']
+            end_time = record[f'工序{i + 4}开始时间']
             end_time = datetime.strptime(end_time, original_format)
             task_record.update({'END_TIME': end_time.isoformat()})
+            if tar_station.endswith('CC'):
+                process_time = timedelta(0)
+            else:
+                process_time = datetime.strptime(record[f'工序{i + 4}结束时间'], original_format) - end_time
+            task_record.update({'PROCESS_TIME': process_time.total_seconds()})
+
             task_records.append(task_record)
 
     return task_records
@@ -215,17 +217,14 @@ def find_earliest_and_last_time(records):
 
 
 if __name__ == '__main__':
-    original_records = read_from_file('ori_data/20240805142920.out')
+    original_records = read_from_file('ori_data/20240826170720.out')
     parse_records = parse_record(original_records)
     with open('processed_data/parse_records.json', 'w', encoding='utf-8') as f:
         json.dump(parse_records, f, indent=4, ensure_ascii=False)
-    # tasks = parse_to_single_task(parse_records)
-    tasks = parse_to_full_task(parse_records)
+    tasks = parse_to_single_task(parse_records)
+    # tasks = parse_to_full_task(parse_records)
 
     processed_data = {'RECORDS': tasks}
-    # start_time = find_earliest_time(parse_records)
-    # processed_data.update({'START_TIME': start_time.isoformat()})
-
     task_start_time, task_end_time = find_earliest_and_last_time(tasks)
     processed_data.update({'START_TIME': task_start_time.isoformat()})
     processed_data.update({'END_TIME': task_end_time.isoformat()})

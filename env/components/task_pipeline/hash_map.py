@@ -1,9 +1,10 @@
 class TaskLinkedNode:
-    def __init__(self, PONO, start, end, assign_time, process_time, next_node=None):
+    def __init__(self, PONO, start, end, assign_time, end_time, process_time, next_node=None):
         self.PONO = PONO
         self.start = start
         self.end = end
         self.assign_time = assign_time
+        self.end_time = end_time
         self.process_time = process_time
         self.next_node = next_node
 
@@ -11,8 +12,8 @@ class TaskLinkedNode:
         # 如果next_node存在，则显示True，否则显示None
         next_node_repr = "True" if self.next_node is not None else "None"
         return (f"TaskLinkedNode(PONO={self.PONO}, start={self.start}, end={self.end}, "
-                f"assign_time={self.assign_time}, process_time={self.process_time}, "
-                f"next_node_exists={next_node_repr})")
+                f"assign_time={self.assign_time}, end_time={self.end_time}"
+                f"process_time={self.process_time}, next_node_exists={next_node_repr})")
 
 
 class HashMap:
