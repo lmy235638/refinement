@@ -1,0 +1,12 @@
+{
+  "RECORDS": [
+    {
+      "PONO": "p18",
+      "BEG_STATION": "1LD",
+      "TAR_STATION": "3LD",
+      "ASSIGNED_TIME": "2024-08-01T20:40:04",
+      "END_TIME": "2024-08-01T21:10:04"
+    }
+  ],
+  "START_TIME": "2024-08-01T20:39:04"
+}

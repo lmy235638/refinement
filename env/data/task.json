@@ -1,0 +1,173 @@
+{
+    "RECORDS": [
+        {
+            "PONO": "p1",
+            "BEG_STATION": "4LF_left",
+            "TAR_STATION": "4RH",
+            "ASSIGNED_TIME": "2024-08-01T16:05:04",
+            "END_TIME": "2024-08-01T17:05:04"
+        },
+        {
+            "PONO": "p1",
+            "BEG_STATION": "4RH",
+            "TAR_STATION": "1CC",
+            "ASSIGNED_TIME": "2024-08-01T16:35:04",
+            "END_TIME": "2024-08-01T17:05:04"
+        },
+        {
+            "PONO": "p2",
+            "BEG_STATION": "1LF",
+            "TAR_STATION": "2RH_left",
+            "ASSIGNED_TIME": "2024-08-01T17:00:04",
+            "END_TIME": "2024-08-01T18:00:04"
+        },
+        {
+            "PONO": "p2",
+            "BEG_STATION": "2RH_left",
+            "TAR_STATION": "1CC",
+            "ASSIGNED_TIME": "2024-08-01T17:30:04",
+            "END_TIME": "2024-08-01T18:00:04"
+        },
+        {
+            "PONO": "p3",
+            "BEG_STATION": "4LF_left",
+            "TAR_STATION": "1RH",
+            "ASSIGNED_TIME": "2024-08-01T17:55:04",
+            "END_TIME": "2024-08-01T18:55:04"
+        },
+        {
+            "PONO": "p3",
+            "BEG_STATION": "1RH",
+            "TAR_STATION": "1CC",
+            "ASSIGNED_TIME": "2024-08-01T18:25:04",
+            "END_TIME": "2024-08-01T18:55:04"
+        },
+        {
+            "PONO": "p4",
+            "BEG_STATION": "1LF",
+            "TAR_STATION": "4RH",
+            "ASSIGNED_TIME": "2024-08-01T18:50:04",
+            "END_TIME": "2024-08-01T19:50:04"
+        },
+        {
+            "PONO": "p4",
+            "BEG_STATION": "4RH",
+            "TAR_STATION": "1CC",
+            "ASSIGNED_TIME": "2024-08-01T19:20:04",
+            "END_TIME": "2024-08-01T19:50:04"
+        },
+        {
+            "PONO": "p5",
+            "BEG_STATION": "4LF_left",
+            "TAR_STATION": "2RH_left",
+            "ASSIGNED_TIME": "2024-08-01T19:45:04",
+            "END_TIME": "2024-08-01T20:45:04"
+        },
+        {
+            "PONO": "p5",
+            "BEG_STATION": "2RH_left",
+            "TAR_STATION": "1CC",
+            "ASSIGNED_TIME": "2024-08-01T20:15:04",
+            "END_TIME": "2024-08-01T20:45:04"
+        },
+        {
+            "PONO": "p6",
+            "BEG_STATION": "1LF",
+            "TAR_STATION": "1RH",
+            "ASSIGNED_TIME": "2024-08-01T20:40:04",
+            "END_TIME": "2024-08-01T21:40:04"
+        },
+        {
+            "PONO": "p6",
+            "BEG_STATION": "1RH",
+            "TAR_STATION": "1CC",
+            "ASSIGNED_TIME": "2024-08-01T21:10:04",
+            "END_TIME": "2024-08-01T21:40:04"
+        },
+        {
+            "PONO": "p7",
+            "BEG_STATION": "4LF_right",
+            "TAR_STATION": "3CC",
+            "ASSIGNED_TIME": "2024-08-01T16:05:04",
+            "END_TIME": "2024-08-01T16:35:04"
+        },
+        {
+            "PONO": "p8",
+            "BEG_STATION": "2LF",
+            "TAR_STATION": "3CC",
+            "ASSIGNED_TIME": "2024-08-01T17:00:04",
+            "END_TIME": "2024-08-01T17:30:04"
+        },
+        {
+            "PONO": "p9",
+            "BEG_STATION": "4LF_right",
+            "TAR_STATION": "3CC",
+            "ASSIGNED_TIME": "2024-08-01T17:55:04",
+            "END_TIME": "2024-08-01T18:25:04"
+        },
+        {
+            "PONO": "p10",
+            "BEG_STATION": "2LF",
+            "TAR_STATION": "3CC",
+            "ASSIGNED_TIME": "2024-08-01T18:50:04",
+            "END_TIME": "2024-08-01T19:20:04"
+        },
+        {
+            "PONO": "p11",
+            "BEG_STATION": "4LF_right",
+            "TAR_STATION": "3CC",
+            "ASSIGNED_TIME": "2024-08-01T19:45:04",
+            "END_TIME": "2024-08-01T20:15:04"
+        },
+        {
+            "PONO": "p12",
+            "BEG_STATION": "2LF",
+            "TAR_STATION": "3CC",
+            "ASSIGNED_TIME": "2024-08-01T20:40:04",
+            "END_TIME": "2024-08-01T21:10:04"
+        },
+        {
+            "PONO": "p13",
+            "BEG_STATION": "4RH",
+            "TAR_STATION": "2CC",
+            "ASSIGNED_TIME": "2024-08-01T16:05:04",
+            "END_TIME": "2024-08-01T16:35:04"
+        },
+        {
+            "PONO": "p14",
+            "BEG_STATION": "2RH_right",
+            "TAR_STATION": "2CC",
+            "ASSIGNED_TIME": "2024-08-01T17:00:04",
+            "END_TIME": "2024-08-01T17:30:04"
+        },
+        {
+            "PONO": "p15",
+            "BEG_STATION": "1RH",
+            "TAR_STATION": "2CC",
+            "ASSIGNED_TIME": "2024-08-01T17:55:04",
+            "END_TIME": "2024-08-01T18:25:04"
+        },
+        {
+            "PONO": "p16",
+            "BEG_STATION": "4RH",
+            "TAR_STATION": "2CC",
+            "ASSIGNED_TIME": "2024-08-01T18:50:04",
+            "END_TIME": "2024-08-01T19:20:04"
+        },
+        {
+            "PONO": "p17",
+            "BEG_STATION": "2RH_right",
+            "TAR_STATION": "2CC",
+            "ASSIGNED_TIME": "2024-08-01T19:45:04",
+            "END_TIME": "2024-08-01T20:15:04"
+        },
+        {
+            "PONO": "p18",
+            "BEG_STATION": "1RH",
+            "TAR_STATION": "2CC",
+            "ASSIGNED_TIME": "2024-08-01T20:40:04",
+            "END_TIME": "2024-08-01T21:10:04"
+        }
+    ],
+    "START_TIME": "2024-08-01T15:30:04"
+}
