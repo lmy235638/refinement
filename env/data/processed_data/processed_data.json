@@ -1,0 +1,270 @@
+{
+    "RECORDS": [
+        {
+            "PONO": "p1",
+            "PASS_STATION": [
+                "3LD",
+                "4LF_right",
+                "3CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T15:44:20",
+            "END_TIME": "2024-08-05T17:04:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 4800.0
+        },
+        {
+            "PONO": "p2",
+            "PASS_STATION": [
+                "2LD",
+                "2LF",
+                "3CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T16:44:20",
+            "END_TIME": "2024-08-05T17:59:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 4500.0
+        },
+        {
+            "PONO": "p3",
+            "PASS_STATION": [
+                "3LD",
+                "4LF_right",
+                "3CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T17:44:20",
+            "END_TIME": "2024-08-05T18:54:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 4200.0
+        },
+        {
+            "PONO": "p4",
+            "PASS_STATION": [
+                "2LD",
+                "2LF",
+                "3CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T18:44:20",
+            "END_TIME": "2024-08-05T19:49:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 3900.0
+        },
+        {
+            "PONO": "p5",
+            "PASS_STATION": [
+                "3LD",
+                "4LF_right",
+                "3CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T19:44:20",
+            "END_TIME": "2024-08-05T20:44:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 3600.0
+        },
+        {
+            "PONO": "p6",
+            "PASS_STATION": [
+                "2LD",
+                "2LF",
+                "3CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T20:44:20",
+            "END_TIME": "2024-08-05T21:39:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 3300.0
+        },
+        {
+            "PONO": "p7",
+            "PASS_STATION": [
+                "2LD",
+                "4RH",
+                "2CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T15:44:20",
+            "END_TIME": "2024-08-05T16:39:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 3300.0
+        },
+        {
+            "PONO": "p8",
+            "PASS_STATION": [
+                "3LD",
+                "2RH_right",
+                "2CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T16:44:20",
+            "END_TIME": "2024-08-05T17:34:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 3000.0
+        },
+        {
+            "PONO": "p9",
+            "PASS_STATION": [
+                "2LD",
+                "1RH",
+                "2CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T17:44:20",
+            "END_TIME": "2024-08-05T18:29:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 2700.0
+        },
+        {
+            "PONO": "p10",
+            "PASS_STATION": [
+                "3LD",
+                "4RH",
+                "2CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T18:44:20",
+            "END_TIME": "2024-08-05T19:24:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 2400.0
+        },
+        {
+            "PONO": "p11",
+            "PASS_STATION": [
+                "2LD",
+                "2RH_right",
+                "2CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T19:44:20",
+            "END_TIME": "2024-08-05T20:19:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 2100.0
+        },
+        {
+            "PONO": "p12",
+            "PASS_STATION": [
+                "3LD",
+                "1RH",
+                "2CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T20:44:20",
+            "END_TIME": "2024-08-05T21:14:20",
+            "PROCESSED_TIME": [
+                1800.0
+            ],
+            "TOTAL_TIME": 1800.0
+        },
+        {
+            "PONO": "p13",
+            "PASS_STATION": [
+                "1LD",
+                "4LF_left",
+                "4RH",
+                "1CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T15:44:20",
+            "END_TIME": "2024-08-05T17:09:20",
+            "PROCESSED_TIME": [
+                1800.0,
+                1800.0
+            ],
+            "TOTAL_TIME": 5100.0
+        },
+        {
+            "PONO": "p14",
+            "PASS_STATION": [
+                "1LD",
+                "1LF",
+                "2RH_left",
+                "1CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T16:44:20",
+            "END_TIME": "2024-08-05T18:04:20",
+            "PROCESSED_TIME": [
+                1800.0,
+                1800.0
+            ],
+            "TOTAL_TIME": 4800.0
+        },
+        {
+            "PONO": "p15",
+            "PASS_STATION": [
+                "1LD",
+                "4LF_left",
+                "1RH",
+                "1CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T17:44:20",
+            "END_TIME": "2024-08-05T18:59:20",
+            "PROCESSED_TIME": [
+                1800.0,
+                1800.0
+            ],
+            "TOTAL_TIME": 4500.0
+        },
+        {
+            "PONO": "p16",
+            "PASS_STATION": [
+                "1LD",
+                "1LF",
+                "4RH",
+                "1CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T18:44:20",
+            "END_TIME": "2024-08-05T19:54:20",
+            "PROCESSED_TIME": [
+                1800.0,
+                1800.0
+            ],
+            "TOTAL_TIME": 4200.0
+        },
+        {
+            "PONO": "p17",
+            "PASS_STATION": [
+                "1LD",
+                "4LF_left",
+                "2RH_left",
+                "1CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T19:44:20",
+            "END_TIME": "2024-08-05T20:49:20",
+            "PROCESSED_TIME": [
+                1800.0,
+                1800.0
+            ],
+            "TOTAL_TIME": 3900.0
+        },
+        {
+            "PONO": "p18",
+            "PASS_STATION": [
+                "1LD",
+                "1LF",
+                "1RH",
+                "1CC"
+            ],
+            "ASSIGN_TIME": "2024-08-05T20:44:20",
+            "END_TIME": "2024-08-05T21:44:20",
+            "PROCESSED_TIME": [
+                1800.0,
+                1800.0
+            ],
+            "TOTAL_TIME": 3600.0
+        }
+    ],
+    "START_TIME": "2024-08-05T15:44:20",
+    "END_TIME": "2024-08-05T21:44:20"
+}

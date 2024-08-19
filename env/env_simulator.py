@@ -66,7 +66,6 @@ class SimulatorEnv(RefinementEnv):
             self.step()
             # print(f"crane1_1.task:{self.vehicles['crane1_1'].task}")
             # print(f"crane1_2.task:{self.vehicles['crane1_2'].task}")
-            print(self.tasks)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False

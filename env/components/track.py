@@ -1,5 +1,5 @@
 from env.components.station import Station
-from env.components.task import Task
+from env.components.task_pipeline.task import Task
 
 
 class Track:
@@ -51,7 +51,6 @@ class Track:
                 tar_pos = determine_end_pos(crash_vehicle)
                 be_crashed_vehicle.take_task(Task(tar_pos, tar_pos, assign_time, end_time, self.name, 0, 'avoid'))
             elif be_crashed_vehicle.task is not None:
-                print('enter')
                 if be_crashed_vehicle.task.assign_time < crash_vehicle.task.assign_time:
                     return_task = crash_vehicle.task
                     tar_pos = determine_end_pos(be_crashed_vehicle)

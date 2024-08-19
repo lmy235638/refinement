@@ -1,13 +1,8 @@
-episode_limit: 1000
-n_actions: 3
-n_agents: 17
-
 safety_distance: 20
 unload_speed: 1.5
 fractional_load_speed: 1
 heavy_load_speed: 0.8
 real_action_time: 30
-reward: 100
 task_finder_length: 10
 
 vehicles:
@@ -15,7 +10,7 @@ vehicles:
     crane1_1:
       other_dim_pos: 134
       LowerMovingPos: 0
-      UpperMovingPos: 292
+      UpperMovingPos: 267
       InitLowerLimit: 0
       InitUpperLimit: 127
       connections:
@@ -31,9 +26,9 @@ vehicles:
     crane1_2:
       other_dim_pos: 134
       LowerMovingPos: 0
-      UpperMovingPos: 292
+      UpperMovingPos: 287
       InitLowerLimit: 130
-      InitUpperLimit: 292
+      InitUpperLimit: 287
       connections:
         - trolley2_1
         - trolley_3
@@ -46,10 +41,10 @@ vehicles:
         - trolley_10
     crane2:
       other_dim_pos: 106
-      LowerMovingPos: 0
-      UpperMovingPos: 180
-      InitLowerLimit: 0
-      InitUpperLimit: 180
+      LowerMovingPos: 73
+      UpperMovingPos: 158
+      InitLowerLimit: 73
+      InitUpperLimit: 158
       connections:
         - trolley_3
         - trolley_4
@@ -71,10 +66,10 @@ vehicles:
         - trolley_6
     crane5:
       other_dim_pos: 13
-      LowerMovingPos: 0
+      LowerMovingPos: 158
       UpperMovingPos: 172
-      InitLowerLimit: 0
-      InitUpperLimit: 172
+      InitLowerLimit: 11
+      InitUpperLimit: 158
       connections:
         - trolley1_2
         - trolley2_2
@@ -86,26 +81,26 @@ vehicles:
   Trolleys:
     trolley1_1:
       other_dim_pos: 11
-      LowerMovingPos: 19
-      UpperMovingPos: 93
-      InitLowerLimit: 56
-      InitUpperLimit: 93
+      LowerMovingPos: 51
+      UpperMovingPos: 79
+      InitLowerLimit: 51
+      InitUpperLimit: 79
       connections:
         - crane3
     trolley1_2:
       other_dim_pos: 11
       LowerMovingPos: 13
-      UpperMovingPos: 60
+      UpperMovingPos: 51
       InitLowerLimit: 13
-      InitUpperLimit: 50
+      InitUpperLimit: 51
       connections:
         - crane5
     trolley2_1:
       other_dim_pos: 48
-      LowerMovingPos: 42
-      UpperMovingPos: 150
+      LowerMovingPos: 51
+      UpperMovingPos: 141
       InitLowerLimit: 93
-      InitUpperLimit: 150
+      InitUpperLimit: 141
       connections:
         - crane1_1
         - crane1_2
@@ -113,7 +108,7 @@ vehicles:
     trolley2_2:
       other_dim_pos: 48
       LowerMovingPos: 13
-      UpperMovingPos: 93
+      UpperMovingPos: 79
       InitLowerLimit: 13
       InitUpperLimit: 66
       connections:
@@ -122,9 +117,9 @@ vehicles:
     trolley_3:
       other_dim_pos: 73
       LowerMovingPos: 13
-      UpperMovingPos: 173
+      UpperMovingPos: 165
       InitLowerLimit: 13
-      InitUpperLimit: 173
+      InitUpperLimit: 165
       connections:
         - crane1_1
         - crane1_2
@@ -134,22 +129,22 @@ vehicles:
     trolley_4:
       other_dim_pos: 102
       LowerMovingPos: 13
-      UpperMovingPos: 173
+      UpperMovingPos: 165
       InitLowerLimit: 13
-      InitUpperLimit: 173
+      InitUpperLimit: 165
       connections:
         - crane1_1
         - crane1_2
         - crane3
         - crane2
         - crane5
-    # TODO Trolly5_1涉及到逆物流问题,此轨道能和加料跨交互,能到达182.这里不考虑,因此限制到173
+    # Trolly5_1涉及到逆物流问题,此轨道能和加料跨交互,能到达182.这里不考虑,因此限制到173
     trolley_5:
       other_dim_pos: 129
       LowerMovingPos: 13
-      UpperMovingPos: 173
+      UpperMovingPos: 165
       InitLowerLimit: 13
-      InitUpperLimit: 173
+      InitUpperLimit: 165
       connections:
         - crane1_1
         - crane1_2
@@ -159,9 +154,9 @@ vehicles:
     trolley_6:
       other_dim_pos: 158
       LowerMovingPos: 13
-      UpperMovingPos: 147
+      UpperMovingPos: 134
       InitLowerLimit: 13
-      InitUpperLimit: 147
+      InitUpperLimit: 134
       connections:
         - crane1_1
         - crane1_2
@@ -170,37 +165,37 @@ vehicles:
         - crane5
     trolley_7:
       other_dim_pos: 150
-      LowerMovingPos: 130
-      UpperMovingPos: 170
-      InitLowerLimit: 130
-      InitUpperLimit: 170
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
       connections:
         - crane1_1
         - crane1_2
     trolley_8:
       other_dim_pos: 167
-      LowerMovingPos: 130
-      UpperMovingPos: 170
-      InitLowerLimit: 130
-      InitUpperLimit: 170
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
       connections:
         - crane1_1
         - crane1_2
     trolley_9:
       other_dim_pos: 220
-      LowerMovingPos: 130
-      UpperMovingPos: 170
-      InitLowerLimit: 130
-      InitUpperLimit: 170
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
       connections:
         - crane1_1
         - crane1_2
     trolley_10:
       other_dim_pos: 240
-      LowerMovingPos: 130
-      UpperMovingPos: 170
-      InitLowerLimit: 130
-      InitUpperLimit: 170
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
       connections:
         - crane1_1
         - crane1_2
@@ -210,78 +205,64 @@ Track:
     bridge1:
       other_dim_pos: 134
       low: 0
-      high: 292
+      high: 287
       num_crane: 2
     bridge2:
       other_dim_pos: 106
-      low: 0
-      high: 180
+      low: 73
+      high: 158
       num_crane: 1
     bridge3:
       other_dim_pos: 79
-      low: 0
-      high: 172
+      low: 11
+      high: 158
       num_crane: 1
     bridge5:
       other_dim_pos: 13
-      low: 0
-      high: 172
+      low: 11
+      high: 158
       num_crane: 1
   vertical:
     trolley_track_1:
       other_dim_pos: 11
       low: 13
       high: 93
-      trolleys:
-        1_1:
-          upper_limit: 13
-          lower_limit: 93
-        1_2:
-          upper_limit: 13
-          lower_limit: 60
     trolley_track_2:
       other_dim_pos: 48
       low: 13
-      high: 150
-      trolleys:
-        2_1:
-          upper_limit: 66
-          lower_limit: 150
-        2_2:
-          upper_limit: 13
-          lower_limit: 93
+      high: 141
     trolley_track_3:
       other_dim_pos: 73
       low: 13
-      high: 173
+      high: 165
     trolley_track_4:
       other_dim_pos: 102
       low: 13
-      high: 173
+      high: 165
     trolley_track_5:
       other_dim_pos: 129
       low: 13
-      high: 182
+      high: 165
     trolley_track_6:
       other_dim_pos: 158
       low: 13
-      high: 147
+      high: 134
     trolley_track_7:
       other_dim_pos: 150
-      low: 130
-      high: 170
+      low: 134
+      high: 155
     trolley_track_8:
       other_dim_pos: 167
-      low: 130
-      high: 170
+      low: 134
+      high: 155
     trolley_track_9:
       other_dim_pos: 220
-      low: 130
-      high: 170
+      low: 134
+      high: 155
     trolley_track_10:
       other_dim_pos: 240
-      low: 130
-      high: 170
+      low: 134
+      high: 155
 
 poses:
   1LD:

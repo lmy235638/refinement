@@ -1,8 +1,6 @@
 import json
 from datetime import datetime
 
-import yaml
-
 
 class Reader:
     def __init__(self, file_path):

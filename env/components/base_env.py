@@ -1,9 +1,9 @@
 from datetime import timedelta
-from utils.file_utils import load_config, print_iterators
+from utils.file_utils import load_config
 from env.components.vehicle import Vehicle
 from env.components.track import Track
 from env.components.station import Station
-from env.components.task import Task
+from env.components.task_pipeline.task import Task
 from env.components.task_pipeline.finder import Finder
 
 
@@ -129,12 +129,14 @@ class RefinementEnv:
             if new_tasks is None:
                 return
 
-            for new_task in new_tasks:
+            # good = Good()
+            for i, new_task in enumerate(new_tasks):
                 start = self.stations[new_task['start']]
                 end = self.stations[new_task['end']]
                 assign_time = new_task['assigned_time']
                 end_time = new_task['end_time']
                 track_name = new_task['track']
+
                 new_task = Task(start_pos=start, end_pos=end, assign_time=assign_time, end_time=end_time,
                                 track_name=track_name, task_type=None, process_time=0, has_good=True)
                 self.tasks.append(new_task)

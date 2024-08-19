@@ -44,3 +44,9 @@ class Buffer:
     def step(self):
         pass
 
+
+if __name__ == '__main__':
+    from reader import Reader
+
+    task_reader = Reader('../../data/test_task_list.json')
+    buffer = Buffer(task_list=task_reader.task_list)

@@ -39,6 +39,10 @@ class Finder:
                 self.station_adjacent_nodes[name].append(adjacent_node)
 
     def decomposition(self):
+        """
+
+        :return: 将一个任务分解成最短路径的若干个子任务
+        """
         solution = []
         task = self.task_buffer.offer_task()
         # 如果任务池还有任务
