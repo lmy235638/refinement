@@ -1,6 +1,6 @@
-from .buffer import Buffer
-from .reader import Reader
-from .node import Node
+from storage import Storage
+from reader import Reader
+from node import Node
 from utils.file_utils import load_config
 
 
@@ -8,7 +8,7 @@ class Finder:
     def __init__(self, file_path, config_path):
         self.config = load_config(config_path)
         task_reader = Reader(file_path)
-        self.task_buffer = Buffer(task_list=task_reader.task_list)
+        self.task_buffer = Storage(task_list=task_reader.task_list)
         self.start_time = task_reader.get_start_time()
         self.task_list = []
         self.nodes = {}

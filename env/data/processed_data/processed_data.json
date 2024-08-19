@@ -9,8 +9,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T15:44:20",
             "END_TIME": "2024-08-05T17:04:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4LF_right": 1800.0
+                }
             ],
             "TOTAL_TIME": 4800.0
         },
@@ -23,8 +25,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T16:44:20",
             "END_TIME": "2024-08-05T17:59:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "2LF": 1800.0
+                }
             ],
             "TOTAL_TIME": 4500.0
         },
@@ -37,8 +41,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T17:44:20",
             "END_TIME": "2024-08-05T18:54:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4LF_right": 1800.0
+                }
             ],
             "TOTAL_TIME": 4200.0
         },
@@ -51,8 +57,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T18:44:20",
             "END_TIME": "2024-08-05T19:49:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "2LF": 1800.0
+                }
             ],
             "TOTAL_TIME": 3900.0
         },
@@ -65,8 +73,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T19:44:20",
             "END_TIME": "2024-08-05T20:44:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4LF_right": 1800.0
+                }
             ],
             "TOTAL_TIME": 3600.0
         },
@@ -79,8 +89,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T20:44:20",
             "END_TIME": "2024-08-05T21:39:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "2LF": 1800.0
+                }
             ],
             "TOTAL_TIME": 3300.0
         },
@@ -93,8 +105,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T15:44:20",
             "END_TIME": "2024-08-05T16:39:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 3300.0
         },
@@ -107,8 +121,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T16:44:20",
             "END_TIME": "2024-08-05T17:34:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "2RH_right": 1800.0
+                }
             ],
             "TOTAL_TIME": 3000.0
         },
@@ -121,8 +137,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T17:44:20",
             "END_TIME": "2024-08-05T18:29:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "1RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 2700.0
         },
@@ -135,8 +153,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T18:44:20",
             "END_TIME": "2024-08-05T19:24:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 2400.0
         },
@@ -149,8 +169,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T19:44:20",
             "END_TIME": "2024-08-05T20:19:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "2RH_right": 1800.0
+                }
             ],
             "TOTAL_TIME": 2100.0
         },
@@ -163,8 +185,10 @@
             ],
             "ASSIGN_TIME": "2024-08-05T20:44:20",
             "END_TIME": "2024-08-05T21:14:20",
-            "PROCESSED_TIME": [
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "1RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 1800.0
         },
@@ -178,9 +202,13 @@
             ],
             "ASSIGN_TIME": "2024-08-05T15:44:20",
             "END_TIME": "2024-08-05T17:09:20",
-            "PROCESSED_TIME": [
-                1800.0,
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4LF_left": 1800.0
+                },
+                {
+                    "4RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 5100.0
         },
@@ -194,9 +222,13 @@
             ],
             "ASSIGN_TIME": "2024-08-05T16:44:20",
             "END_TIME": "2024-08-05T18:04:20",
-            "PROCESSED_TIME": [
-                1800.0,
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "1LF": 1800.0
+                },
+                {
+                    "2RH_left": 1800.0
+                }
             ],
             "TOTAL_TIME": 4800.0
         },
@@ -210,9 +242,13 @@
             ],
             "ASSIGN_TIME": "2024-08-05T17:44:20",
             "END_TIME": "2024-08-05T18:59:20",
-            "PROCESSED_TIME": [
-                1800.0,
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4LF_left": 1800.0
+                },
+                {
+                    "1RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 4500.0
         },
@@ -226,9 +262,13 @@
             ],
             "ASSIGN_TIME": "2024-08-05T18:44:20",
             "END_TIME": "2024-08-05T19:54:20",
-            "PROCESSED_TIME": [
-                1800.0,
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "1LF": 1800.0
+                },
+                {
+                    "4RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 4200.0
         },
@@ -242,9 +282,13 @@
             ],
             "ASSIGN_TIME": "2024-08-05T19:44:20",
             "END_TIME": "2024-08-05T20:49:20",
-            "PROCESSED_TIME": [
-                1800.0,
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "4LF_left": 1800.0
+                },
+                {
+                    "2RH_left": 1800.0
+                }
             ],
             "TOTAL_TIME": 3900.0
         },
@@ -258,9 +302,13 @@
             ],
             "ASSIGN_TIME": "2024-08-05T20:44:20",
             "END_TIME": "2024-08-05T21:44:20",
-            "PROCESSED_TIME": [
-                1800.0,
-                1800.0
+            "PROCESS_TIME": [
+                {
+                    "1LF": 1800.0
+                },
+                {
+                    "1RH": 1800.0
+                }
             ],
             "TOTAL_TIME": 3600.0
         }

@@ -148,17 +148,17 @@ def parse_to_full_task(records, original_format='%Y%m%d%H%M%S'):
         process_times = []
         for i, station in enumerate(stations[0:-1]):
             if station.endswith('LD'):
-                task_start_time = datetime.strptime(record[f'工序{i + 3}结束时间'], original_format)
-                task_record.update({'ASSIGN_TIME': task_start_time.isoformat()})
+                start_time = datetime.strptime(record[f'工序{i + 3}结束时间'], original_format)
+                task_record.update({'ASSIGN_TIME': start_time.isoformat()})
                 continue
             assigned_time = datetime.strptime(record[f'工序{i + 3}开始时间'], original_format)
             end_time = datetime.strptime(record[f'工序{i + 3}结束时间'], original_format)
             process_time = end_time - assigned_time
-            process_times.append((process_time.total_seconds()))
+            process_times.append({station: process_time.total_seconds()})
         end_time = datetime.strptime(record[f'工序{len(stations) + 2}开始时间'], original_format)
         task_record.update({'END_TIME': end_time.isoformat()})
-        task_record.update({'PROCESSED_TIME': process_times})
-        task_record.update({'TOTAL_TIME': (end_time - task_start_time).total_seconds()})
+        task_record.update({'PROCESS_TIME': process_times})
+        task_record.update({'TOTAL_TIME': (end_time - start_time).total_seconds()})
 
         task_records.append(task_record)
     return task_records
