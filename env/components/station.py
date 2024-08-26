@@ -7,7 +7,7 @@ class Station:
         self.type = station_type
         self.reachable_track = {}
 
-        self.processing = False
+        self.is_processing = False
 
     def bind_track(self, track, name):
         self.reachable_track[name] = track
@@ -16,5 +16,5 @@ class Station:
         pass
 
     def __repr__(self):
-        return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, processing={self.processing}, " \
+        return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, processing={self.is_processing}, " \
                f"\n\t\t\tself.reachable_track={self.reachable_track.keys()})"

@@ -5,11 +5,8 @@ from utils.file_utils import load_config
 
 
 class Finder:
-    def __init__(self, file_path, config_path):
-        self.config = load_config(config_path)
-        task_reader = Reader(file_path)
-        self.task_buffer = Storage(task_list=task_reader.task_list)
-        self.start_time = task_reader.get_start_time()
+    def __init__(self, config):
+        self.config = config
         self.task_list = []
         self.nodes = {}
         self.station_adjacent_nodes = {}
@@ -38,46 +35,43 @@ class Finder:
             for adjacent_node in adjacent_nodes:
                 self.station_adjacent_nodes[name].append(adjacent_node)
 
-    def decomposition(self):
+    def decomposition(self, task_node):
         """
-
-        :return: 将一个任务分解成最短路径的若干个子任务
+        将一个任务分解成最短路径的若干个子任务
+        :param task_node:
+        :return:
         """
         solution = []
-        task = self.task_buffer.offer_task()
-        # 如果任务池还有任务
-        if task:
-            for name, node in self.nodes.items():
-                if self.env_vehicles[name].task is not None:
-                    node.is_occupied = True
-                else:
-                    node.is_occupied = False
-            assign_time = task['ASSIGNED_TIME']
-            end_time = task['END_TIME']
-            start_nodes = self.station_adjacent_nodes[task['BEG_STATION']]
-            end_nodes = self.station_adjacent_nodes[task['TAR_STATION']]
 
-            for start_node in start_nodes:
-                for end_node in end_nodes:
-                    for name, node in self.nodes.items():
-                        node.has_visited = False
-                        node.prev_node = None
-                    solution = self.find_path_bfs(self.nodes[start_node], self.nodes[end_node], task['BEG_STATION'],
-                                                  task['TAR_STATION'], assign_time, end_time)
-                    if solution:
-                        return solution
+        for name, node in self.nodes.items():
+            if self.env_vehicles[name].task is not None:
+                node.is_occupied = True
+            else:
+                node.is_occupied = False
+        assign_time = task_node.assign_time
+        process_time = task_node.process_time
+        start_nodes = self.station_adjacent_nodes[task_node.start]
+        end_nodes = self.station_adjacent_nodes[task_node.end]
 
-            # 未找到解
-            self.task_buffer.add_task(task)
-            return solution
-        else:
-            return None
+        for start_node in start_nodes:
+            for end_node in end_nodes:
+                for name, node in self.nodes.items():
+                    node.has_visited = False
+                    node.prev_node = None
+                solution = self.find_path_bfs(self.nodes[start_node], self.nodes[end_node], task_node.start,
+                                              task_node.end, assign_time, process_time)
+                if solution:
+                    return solution
 
-    def find_path_bfs(self, start_node: Node, end_node: Node, task_start_station, task_end_station, assign_time, end_time):
+        # 未找到解
+        return solution
+
+    def find_path_bfs(self, start_node: Node, end_node: Node, task_start_station, task_end_station,
+                      assign_time, process_time):
         queue = []
         solution = []
         vehicle_path = []
-        station_path = [task_start_station]
+        station_path = [task_start_station]  # 搜索是以车为节点
         track_path = [self.env_vehicles[start_node.name].track.name]
         current_node = start_node
         start_node.has_visited = True
@@ -127,7 +121,7 @@ class Finder:
                 'start': station_path[i],
                 'end': station_path[i + 1],
                 'assigned_time': assign_time,
-                'end_time': end_time,
+                'process_time': process_time,
                 'track': track_path[i]
             })
         return solution
@@ -135,6 +129,7 @@ class Finder:
     def get_common_reachable_stations(self, vehicle_1, vehicle_2):
         def get_reachable_stations(vehicle):
             return set([station.name for station in vehicle.track.reachable_stations.values()])
+
         reachable_stations_1 = get_reachable_stations(vehicle_1)
         reachable_stations_2 = get_reachable_stations(vehicle_2)
         common_stations = reachable_stations_1.intersection(reachable_stations_2)

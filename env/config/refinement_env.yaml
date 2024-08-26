@@ -4,6 +4,7 @@ fractional_load_speed: 1
 heavy_load_speed: 0.8
 real_action_time: 30
 task_finder_length: 10
+advance_time: 100
 
 vehicles:
   Cranes:

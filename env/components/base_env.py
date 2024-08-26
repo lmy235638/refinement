@@ -130,7 +130,7 @@ class RefinementEnv:
                 return
 
             # good = Good()
-            for i, new_task in enumerate(new_tasks):
+            for new_task in new_tasks:
                 start = self.stations[new_task['start']]
                 end = self.stations[new_task['end']]
                 assign_time = new_task['assigned_time']

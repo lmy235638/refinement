@@ -19,9 +19,12 @@ class Reader:
         with open(file_path, 'r') as f:
             task_dict = json.load(f)
         records = task_dict['RECORDS']
-        # for task in task_list:
-        #     task['ASSIGNED_TIME'] = datetime.strptime(task['ASSIGNED_TIME'], ori_time_form)
-        #     task['END_TIME'] = datetime.strptime(task['END_TIME'], ori_time_form)
+        for record in records:
+            record['ASSIGN_TIME'] = datetime.strptime(record['ASSIGN_TIME'], ori_time_form)
+            record['END_TIME'] = datetime.strptime(record['END_TIME'], ori_time_form)
         self.start_time = datetime.strptime(task_dict['START_TIME'], ori_time_form)
         self.end_time = datetime.strptime(task_dict['END_TIME'], ori_time_form)
         self.records = records
+
+    def get_sys_start_time(self):
+        return self.start_time
