@@ -1,4 +1,4 @@
-from hash_map import HashMap, TaskLinkedNode
+from env.components.task_pipeline.hash_map import HashMap, TaskLinkedNode
 
 
 class Storage:

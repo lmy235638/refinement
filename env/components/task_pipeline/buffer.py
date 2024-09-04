@@ -1,9 +1,8 @@
 from datetime import timedelta
-from storage import Storage
-from hash_map import HashMap
-from reader import Reader
-from finder import Finder
-from utils.file_utils import load_config
+from env.components.task_pipeline.storage import Storage
+from env.components.task_pipeline.hash_map import HashMap
+from env.components.task_pipeline.reader import Reader
+from env.components.task_pipeline.finder import Finder
 
 
 class Buffer:
@@ -11,8 +10,8 @@ class Buffer:
     #   1. 检查是否要从storage中取出一条任务
     #   2. 检查allocator中的PONO是否做完,做完需要把PONO下一条给finder求解
     #   3. 把finder中的解给allocator
-    def __init__(self, file_path, config_path, env_vehicles):
-        self.config = load_config(config_path)
+    def __init__(self, file_path, config, env_vehicles):
+        self.config = config
         self.env_vehicles = env_vehicles  # finder生成node需要
         self.buffer_time = 0
         self.sys_time = 0
@@ -31,21 +30,34 @@ class Buffer:
         self.buffer = HashMap()
         self.storage = Storage(reader.records)
         self.assign_time_dict = self.storage.get_assign_time_dict()
-        self.finder = Finder(self.config)
+        self.finder = Finder(self.config, self.env_vehicles)
 
     def get_sys_start_time(self):
         return self.sys_time
 
-    def check_allocator(self, pono, ):
-        # allocator中没有这个任务,说明已经做完,放入finder求解添加进allocator
-        if not self.allocator.is_find(pono):
-            task_node = self.buffer.pop(pono)
-            solutions = self.finder.decomposition(task_node)
-            # 如果无解或结束端点不可用,还要把任务放回
-            if not solutions or task_node.end.is_processing:
-                self.buffer.put(pono, task_node, head_insert=True)
-                return None
-            return solutions
+    def get_decompose_task(self, task_list_pono: list):
+        """
+        buffer中的任务取出已做完或没有的任务,求解路径并返回
+        :param task_list_pono:
+        :return:
+        """
+        new_tasks = []
+        for pono in self.buffer.get_pono():
+            # allocator中没有这个任务,说明已经做完,放入finder求解添加进allocator
+            if pono not in task_list_pono:
+                task_node = self.buffer.pop(pono)
+                solutions = self.finder.decomposition(task_node)
+                # 如果无解或结束端点不可用,还要把任务放回
+                # TODO task_node这里还是str
+                # if not solutions or task_node.end.is_processing:
+                if not solutions:
+                    self.buffer.put(pono, task_node, head_insert=True)
+                new_tasks.extend(solutions)
+
+        if new_tasks:
+            return new_tasks
+        else:
+            return None
 
     def offer_task(self):
         pass
@@ -57,17 +69,16 @@ class Buffer:
             self.buffer.put(task_pono, current)
 
     def has_task_began(self):
+        """
+        :return: 找到开始任务的PONO名字
+        """
         for pono, time in self.assign_time_dict.items():
-            if self.buffer_time < time:
+            if self.buffer_time > time:
                 self.assign_time_dict.pop(pono)
                 return pono
         return None
 
-    def step(self):
-        self.get_storage_task()
-        new_tasks = []
-        for pono, node in self.buffer.map.items():
-            new_tasks.extend(self.check_allocator(pono))
-
-        self.buffer_time += timedelta(seconds=1)
-        return new_tasks
+    def update_task(self):
+        self.get_storage_task()  # 找出开始的任务,从storage拿出,加入到buffer里
+        # TODO 缓冲区时间要加一
+        # self.buffer_time += timedelta(seconds=1)

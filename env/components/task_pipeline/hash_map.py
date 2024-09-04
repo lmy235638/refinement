@@ -40,6 +40,16 @@ class HashMap:
         """
         self.map.pop(key)
 
+    def get(self, key):
+        try:
+            current = self.map[key]
+            return current
+        except KeyError:
+            return None
+
+    def get_pono(self):
+        return [pono for pono in self.map.keys()]
+
     def get_and_remove(self, key):
         current = self.map[key]
         self.remove(key)

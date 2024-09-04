@@ -1,19 +1,15 @@
-from storage import Storage
-from reader import Reader
-from node import Node
-from utils.file_utils import load_config
+from env.components.task_pipeline.node import Node
 
 
 class Finder:
-    def __init__(self, config):
+    def __init__(self, config, env_vehicles):
         self.config = config
         self.task_list = []
         self.nodes = {}
         self.station_adjacent_nodes = {}
-        self.env_vehicles = None
+        self.env_vehicles = env_vehicles
 
-    def reset(self, vehicles):
-        self.env_vehicles = vehicles
+    def reset(self):
         self.generate_node()
 
     def generate_node(self):
