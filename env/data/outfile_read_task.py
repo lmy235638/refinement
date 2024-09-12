@@ -222,6 +222,7 @@ if __name__ == '__main__':
     with open('processed_data/parse_records.json', 'w', encoding='utf-8') as f:
         json.dump(parse_records, f, indent=4, ensure_ascii=False)
     tasks = parse_to_single_task(parse_records)
+    tasks.sort(key=lambda x: x['ASSIGN_TIME'])
     # tasks = parse_to_full_task(parse_records)
 
     processed_data = {'RECORDS': tasks}

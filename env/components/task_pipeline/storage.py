@@ -24,16 +24,11 @@ class Storage:
         assign_time_dict = {}
         for key, value in self.dataset.map.items():
             assign_time_dict.update({key: value.assign_time})
-
+        assign_time_dict = dict(sorted(assign_time_dict.items(), key=lambda item: item[1]))
         return assign_time_dict
+
+    def check_task(self, time):
+        pass
 
     def get(self, key):
         return self.dataset.get_and_remove(key)
-
-
-if __name__ == '__main__':
-    from reader import Reader
-
-    task_reader = Reader('../../data/processed_data/processed_data.json')
-    storage = Storage(task_reader.records)
-    print(storage.get_assign_time_dict())

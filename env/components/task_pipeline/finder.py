@@ -31,10 +31,10 @@ class Finder:
             for adjacent_node in adjacent_nodes:
                 self.station_adjacent_nodes[name].append(adjacent_node)
 
-    def decomposition(self, task_node):
+    def decomposition(self, task):
         """
         将一个任务分解成最短路径的若干个子任务
-        :param task_node:
+        :param task:
         :return:
         """
         solution = []
@@ -44,18 +44,20 @@ class Finder:
                 node.is_occupied = True
             else:
                 node.is_occupied = False
-        assign_time = task_node.assign_time
-        process_time = task_node.process_time
-        start_nodes = self.station_adjacent_nodes[task_node.start]
-        end_nodes = self.station_adjacent_nodes[task_node.end]
+        pono = task['PONO']
+        assign_time = task['ASSIGN_TIME']
+        end_time = task['END_TIME']
+        process_time = task['PROCESS_TIME']
+        start_nodes = self.station_adjacent_nodes[task['BEG_STATION']]
+        end_nodes = self.station_adjacent_nodes[task['TAR_STATION']]
 
         for start_node in start_nodes:
             for end_node in end_nodes:
                 for name, node in self.nodes.items():
                     node.has_visited = False
                     node.prev_node = None
-                solution = self.find_path_bfs(self.nodes[start_node], self.nodes[end_node], task_node.start,
-                                              task_node.end, assign_time, process_time)
+                solution = self.find_path_bfs(self.nodes[start_node], self.nodes[end_node], task['BEG_STATION'],
+                                              task['TAR_STATION'], assign_time, end_time, process_time, pono)
                 if solution:
                     return solution
 
@@ -63,7 +65,7 @@ class Finder:
         return solution
 
     def find_path_bfs(self, start_node: Node, end_node: Node, task_start_station, task_end_station,
-                      assign_time, process_time):
+                      assign_time, end_time, process_time, pono):
         queue = []
         solution = []
         vehicle_path = []
@@ -116,9 +118,11 @@ class Finder:
             solution.append({
                 'start': station_path[i],
                 'end': station_path[i + 1],
-                'assigned_time': assign_time,
+                'assign_time': assign_time,
+                'end_time': end_time,
                 'process_time': process_time,
-                'track': track_path[i]
+                'track': track_path[i],
+                'pono': pono
             })
         return solution
 

@@ -3,7 +3,9 @@ from env.components.vehicle import Vehicle
 from env.components.track import Track
 from env.components.station import Station
 from env.components.task_pipeline.task import Task
+from env.components.task_pipeline.reader import Reader
 from env.components.task_pipeline.buffer import Buffer
+from env.components.task_pipeline.finder import Finder
 from env.components.task_pipeline.allocator import Allocator
 from utils.file_utils import load_config
 
@@ -14,10 +16,12 @@ class RefinementEnv:
         self.vehicles = {}
         self.tracks = {}
         self.stations = {}
-        self.tasks = []
         self.sys_time = 0
+        self.sys_end_time = 0
 
-        self.buffer = Buffer(file_path=task_file_path, config=self.config, env_vehicles=self.vehicles)
+        self.reader = Reader(file_path=task_file_path)
+        self.finder = Finder(self.config, self.vehicles)
+        self.buffer = Buffer()
         self.allocator = Allocator()
 
     def reset(self):
@@ -26,35 +30,89 @@ class RefinementEnv:
                 重置任务寻找器
         :return:
         """
-        self.sys_time = self.buffer.get_sys_start_time()
-
+        self.sys_time, self.sys_end_time = self.reader.get_sys_time()
         self.spawn_vehicles()
         self.spawn_tracks()
         self.spawn_stations()
         self.bind_vehicle_station_on_track()
 
-        self.buffer.finder.reset()
+        self.finder.reset()
 
     def step(self):
-        return_tasks = []
-        # self.assign_tasks()
+        self.update_tasks()
 
-        self.buffer.update_task()
-        task_list_pono = self.allocator.check_task_pono()
-        decompose_tasks = self.buffer.get_decompose_task(task_list_pono)
-        self.allocator.generate_task(decompose_tasks)
-        self.buffer.buffer_time += timedelta(seconds=1)
+        # 把buffer中的任务分配给各个轨道
+        for track in self.tracks:
+            track.step()
 
-        for track in self.tracks.values():
-            return_task = track.step()
-            if return_task is not None:
-                return_tasks.append(return_task)
-        for station in self.stations.values():
-            station.step()
+        # self.buffer.update_task()
+        # task_list_pono = self.allocator.check_task_pono()
+        # decompose_tasks = self.buffer.get_decompose_task(task_list_pono)
+        # self.allocator.generate_task(decompose_tasks)
 
-        if return_tasks:
-            self.tasks.extend(return_tasks)
-        self.sys_time += timedelta(seconds=1)
+        # for track in self.tracks.values():
+        #     return_task = track.step()
+        #     if return_task is not None:
+        #         return_tasks.append(return_task)
+        # for station in self.stations.values():
+        #     station.step()
+        #
+        # if return_tasks:
+        #     self.tasks.extend(return_tasks)
+        #
+        # self.sys_time += timedelta(seconds=1)
+
+    def update_tasks(self):
+        # if self.buffer.size == 0 and self.check_all_vehicles_are_idle:
+        # 从reader中获取任务并尝试分解成子任务,成功分解的子任务添加进buffer中
+        task_list = self.reader.get_task(self.sys_time)
+        for task in task_list:
+            solution = self.finder.decomposition(task)
+            if solution:
+                self.buffer.add_from_reader(solution)
+                self.reader.remove_task(task)
+
+    # def assign_tasks(self):
+    #     """
+    #     如果任务列表为空,且所有的车都空闲,取出任务,并将其转换成Task类
+    #     如果到达任务时间,将其下发
+    #     :return:
+    #     """
+    #     if len(self.tasks) == 0 and self.check_all_vehicles_are_idle:
+    #         new_tasks = self.task_finder.decomposition()
+    #         # 任务池没有任务了
+    #         if new_tasks is None:
+    #             return
+    #
+    #         # good = Good()
+    #         for new_task in new_tasks:
+    #             start = self.stations[new_task['start']]
+    #             end = self.stations[new_task['end']]
+    #             assign_time = new_task['assigned_time']
+    #             end_time = new_task['end_time']
+    #             track_name = new_task['track']
+    #
+    #             new_task = Task(start_pos=start, end_pos=end, assign_time=assign_time,
+    #                             track_name=track_name, task_type=None, process_time=0, has_good=True, pono=0)
+    #             self.tasks.append(new_task)
+    #
+    #     if len(self.tasks) != 0:
+    #         self.task_sorted()
+    #
+    #     for task in self.tasks:
+    #         if task.assign_time > self.sys_time:
+    #             break
+    #         for vehicle in self.vehicles.values():
+    #             if vehicle.task is None and vehicle.track.name == task.track_name and vehicle.check_task_doable(task):
+    #                 vehicle.take_task(task)
+    #                 self.tasks.remove(task)
+    #                 break
+
+    def check_all_vehicles_are_idle(self):
+        for vehicle in self.vehicles.values():
+            if vehicle.task is not None or vehicle.is_loading:
+                return True
+        return False
 
     def spawn_vehicles(self):
         crane_trolly_info = self.config['vehicles']
@@ -124,64 +182,23 @@ class RefinementEnv:
                             station.bind_track(track=track, name=track_name)
                             track.add_station(name=station_name, station=station)
 
-    def task_sorted(self):
-        self.tasks = sorted(self.tasks, key=lambda x: x.assign_time)
-
-    # def assign_tasks(self):
-    #     """
-    #     如果任务列表为空,且所有的车都空闲,取出任务,并将其转换成Task类
-    #     如果到达任务时间,将其下发
-    #     :return:
-    #     """
-    #     if len(self.tasks) == 0 and self.check_all_vehicles_are_idle:
-    #         new_tasks = self.task_finder.decomposition()
-    #         # 任务池没有任务了
-    #         if new_tasks is None:
-    #             return
-    #
-    #         # good = Good()
-    #         for new_task in new_tasks:
-    #             start = self.stations[new_task['start']]
-    #             end = self.stations[new_task['end']]
-    #             assign_time = new_task['assigned_time']
-    #             end_time = new_task['end_time']
-    #             track_name = new_task['track']
-    #
-    #             new_task = Task(start_pos=start, end_pos=end, assign_time=assign_time,
-    #                             track_name=track_name, task_type=None, process_time=0, has_good=True, pono=0)
-    #             self.tasks.append(new_task)
-    #
-    #     if len(self.tasks) != 0:
-    #         self.task_sorted()
-    #
-    #     for task in self.tasks:
-    #         if task.assign_time > self.sys_time:
-    #             break
-    #         for vehicle in self.vehicles.values():
-    #             if vehicle.task is None and vehicle.track.name == task.track_name and vehicle.check_task_doable(task):
-    #                 vehicle.take_task(task)
-    #                 self.tasks.remove(task)
-    #                 break
-
-    def check_all_vehicles_are_idle(self):
-        for vehicle in self.vehicles.values():
-            if vehicle.task is not None or vehicle.is_loading:
-                return True
-        return False
-
 
 if __name__ == '__main__':
     env = RefinementEnv(config_path='../config/refinement_env.yaml',
                         task_file_path='../data/processed_data/processed_data.json')
     env.reset()
-    last_print_time = env.sys_time
-    while True:
-        env.step()
-        time_since_last_print = env.sys_time - last_print_time
-        # 如果时间差达到或超过了10分钟（600秒）
-        if time_since_last_print >= timedelta(seconds=600):
-            print(env.sys_time)  # 打印当前时间
-            last_print_time = env.sys_time  # 更新上一次打印的时间为当前时间
+    print(env.buffer.buffer)
+    env.step()
+    print(env.buffer.buffer)
 
-        if env.sys_time >= datetime(2024,8,6,00,00,00):
-            break
+    # last_print_time = env.sys_time
+    # while True:
+    #     env.step()
+    #     time_since_last_print = env.sys_time - last_print_time
+    #     # 如果时间差达到或超过了10分钟（600秒）
+    #     if time_since_last_print >= timedelta(seconds=600):
+    #         print(env.sys_time)  # 打印当前时间
+    #         last_print_time = env.sys_time  # 更新上一次打印的时间为当前时间
+    #
+    #     if env.sys_time >= datetime(2024, 8, 6, 00, 00, 00):
+    #         break

@@ -1,8 +1,5 @@
 from datetime import timedelta
-from env.components.task_pipeline.storage import Storage
-from env.components.task_pipeline.hash_map import HashMap
-from env.components.task_pipeline.reader import Reader
-from env.components.task_pipeline.finder import Finder
+from env.components.task_pipeline.task import Task
 
 
 class Buffer:
@@ -10,30 +7,27 @@ class Buffer:
     #   1. 检查是否要从storage中取出一条任务
     #   2. 检查allocator中的PONO是否做完,做完需要把PONO下一条给finder求解
     #   3. 把finder中的解给allocator
-    def __init__(self, file_path, config, env_vehicles):
-        self.config = config
-        self.env_vehicles = env_vehicles  # finder生成node需要
-        self.buffer_time = 0
-        self.sys_time = 0
-
-        self.buffer = None
-        self.finder = None
-        self.storage = None
+    def __init__(self):
+        self.buffer = []
+        self.size = 0
         self.assign_time_dict = {}
 
-        self.reset(file_path)
+    def update_size(self, delta):
+        self.size += delta
 
-    def reset(self, file_path):
-        reader = Reader(file_path)
-        self.sys_time = reader.get_sys_start_time()
-        self.buffer_time = self.sys_time - timedelta(seconds=self.config['advance_time'])
-        self.buffer = HashMap()
-        self.storage = Storage(reader.records)
-        self.assign_time_dict = self.storage.get_assign_time_dict()
-        self.finder = Finder(self.config, self.env_vehicles)
+    def add_from_reader(self, tasks):
+        for task in tasks:
+            new_task = Task(start_pos=task['start'], end_pos=task['end'], assign_time=task['assign_time'],
+                            end_time=task['end_time'], process_time=task['process_time'],
+                            track=task['track'], pono=task['track'])
+            new_task.determine_type()
+            self.buffer.append(new_task)
+            self.update_size(1)
 
-    def get_sys_start_time(self):
-        return self.sys_time
+        # pass
+
+    def add_from_allocator(self):
+        pass
 
     def get_decompose_task(self, task_list_pono: list):
         """
@@ -80,5 +74,3 @@ class Buffer:
 
     def update_task(self):
         self.get_storage_task()  # 找出开始的任务,从storage拿出,加入到buffer里
-        # TODO 缓冲区时间要加一
-        # self.buffer_time += timedelta(seconds=1)
