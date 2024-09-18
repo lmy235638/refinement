@@ -1,5 +1,5 @@
 class Good:
-    def __init__(self, pass_station: list, process_time: list):
+    def __init__(self, pass_station=None, process_time=0):
         self.pass_station = pass_station
         self.process_time = process_time
 

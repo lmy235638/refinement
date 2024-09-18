@@ -7,10 +7,23 @@ class Station:
         self.type = station_type
         self.reachable_track = {}
 
+        self.good = None
         self.is_processing = False
 
     def bind_track(self, track, name):
         self.reachable_track[name] = track
+
+    def add_good(self, good):
+        if self.good is None:
+            self.good = good
+        else:
+            raise RuntimeError('已有货物工位出现货物')
+
+    def remove_good(self, good):
+        if self.good is None:
+            raise RuntimeError('在空工位移除货物')
+        else:
+            self.good = None
 
     def step(self):
         pass

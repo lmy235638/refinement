@@ -128,7 +128,7 @@ class Finder:
 
     def get_common_reachable_stations(self, vehicle_1, vehicle_2):
         def get_reachable_stations(vehicle):
-            return set([station.name for station in vehicle.track.reachable_stations.values()])
+            return set([station.name for station in vehicle.track.stations.values()])
 
         reachable_stations_1 = get_reachable_stations(vehicle_1)
         reachable_stations_2 = get_reachable_stations(vehicle_2)

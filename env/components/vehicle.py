@@ -36,11 +36,11 @@ class Vehicle:
 
     def check_task_doable(self, task):
         if self.type == 'crane':
-            return self.lower_limit <= task.start_pos.x <= self.upper_limit and \
-                self.lower_limit <= task.end_pos.x <= self.upper_limit
+            return self.lower_limit <= self.config['poses'][task.start_pos]['x'] <= self.upper_limit and \
+                self.lower_limit <= self.config['poses'][task.end_pos]['x'] <= self.upper_limit
         elif self.type == 'trolley':
-            return self.lower_limit <= task.start_pos.y <= self.upper_limit and \
-                self.lower_limit <= task.end_pos.y <= self.upper_limit
+            return self.lower_limit <= self.config['poses'][task.start_pos]['y'] <= self.upper_limit and \
+                self.lower_limit <= self.config['poses'][task.end_pos]['y'] <= self.upper_limit
         else:
             raise ValueError('车辆类型未定义')
 
@@ -96,6 +96,13 @@ class Vehicle:
             self.speed = (self.config['fractional_load_speed'])
         else:
             self.speed = (self.config['heavy_load_speed'])
+
+    def take_good(self):
+        """
+        拿起货物
+        :return:
+        """
+        pass
 
     def simulate_move(self):
         self.determine_speed()

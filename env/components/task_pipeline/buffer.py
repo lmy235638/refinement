@@ -29,6 +29,10 @@ class Buffer:
     def add_from_allocator(self):
         pass
 
+    def remove_task(self, task):
+        self.buffer.remove(task)
+        self.update_size(-1)
+
     def get_decompose_task(self, task_list_pono: list):
         """
         buffer中的任务取出已做完或没有的任务,求解路径并返回

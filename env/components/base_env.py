@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 from env.components.vehicle import Vehicle
 from env.components.track import Track
 from env.components.station import Station
+from env.components.good import Good
 from env.components.task_pipeline.task import Task
 from env.components.task_pipeline.reader import Reader
 from env.components.task_pipeline.buffer import Buffer
@@ -16,6 +17,7 @@ class RefinementEnv:
         self.vehicles = {}
         self.tracks = {}
         self.stations = {}
+        self.goods = {}
         self.sys_time = 0
         self.sys_end_time = 0
 
@@ -40,15 +42,17 @@ class RefinementEnv:
 
     def step(self):
         self.update_tasks()
-
+        # print(self.buffer.buffer)
         # 把buffer中的任务分配给各个轨道
-        for track in self.tracks:
-            track.step()
+        for track in self.tracks.values():
+            task = None
+            for ori_task in self.buffer.buffer:
+                if ori_task.track == track.name:
+                    task = ori_task
+                    break
+            track.step(task)
 
-        # self.buffer.update_task()
-        # task_list_pono = self.allocator.check_task_pono()
-        # decompose_tasks = self.buffer.get_decompose_task(task_list_pono)
-        # self.allocator.generate_task(decompose_tasks)
+        self.sys_time += timedelta(seconds=1)
 
         # for track in self.tracks.values():
         #     return_task = track.step()
@@ -67,46 +71,16 @@ class RefinementEnv:
         # 从reader中获取任务并尝试分解成子任务,成功分解的子任务添加进buffer中
         task_list = self.reader.get_task(self.sys_time)
         for task in task_list:
-            solution = self.finder.decomposition(task)
-            if solution:
-                self.buffer.add_from_reader(solution)
+            solutions = self.finder.decomposition(task)
+            if solutions:
+                self.buffer.add_from_reader(solutions)
                 self.reader.remove_task(task)
+                self.spawn_good(solutions)  # 生成货物在LD上
 
-    # def assign_tasks(self):
-    #     """
-    #     如果任务列表为空,且所有的车都空闲,取出任务,并将其转换成Task类
-    #     如果到达任务时间,将其下发
-    #     :return:
-    #     """
-    #     if len(self.tasks) == 0 and self.check_all_vehicles_are_idle:
-    #         new_tasks = self.task_finder.decomposition()
-    #         # 任务池没有任务了
-    #         if new_tasks is None:
-    #             return
-    #
-    #         # good = Good()
-    #         for new_task in new_tasks:
-    #             start = self.stations[new_task['start']]
-    #             end = self.stations[new_task['end']]
-    #             assign_time = new_task['assigned_time']
-    #             end_time = new_task['end_time']
-    #             track_name = new_task['track']
-    #
-    #             new_task = Task(start_pos=start, end_pos=end, assign_time=assign_time,
-    #                             track_name=track_name, task_type=None, process_time=0, has_good=True, pono=0)
-    #             self.tasks.append(new_task)
-    #
-    #     if len(self.tasks) != 0:
-    #         self.task_sorted()
-    #
-    #     for task in self.tasks:
-    #         if task.assign_time > self.sys_time:
-    #             break
-    #         for vehicle in self.vehicles.values():
-    #             if vehicle.task is None and vehicle.track.name == task.track_name and vehicle.check_task_doable(task):
-    #                 vehicle.take_task(task)
-    #                 self.tasks.remove(task)
-    #                 break
+    def spawn_good(self, solutions: dict):
+        for solution in solutions:
+            if solution['start'].endswith('LD'):
+                self.goods[solution['pono']] = Good(process_time=solution['process_time'])
 
     def check_all_vehicles_are_idle(self):
         for vehicle in self.vehicles.values():
@@ -140,10 +114,10 @@ class RefinementEnv:
         vertical_tracks = track_info['vertical']
         for name, info in horizontal_tracks.items():
             self.tracks[name] = Track(start=info['low'], end=info['high'], other_dim_pos=info['other_dim_pos'],
-                                      vertical=False, name=name, time=self.sys_time)
+                                      vertical=False, name=name, time=self.sys_time, config=self.config)
         for name, info in vertical_tracks.items():
             self.tracks[name] = Track(start=info['low'], end=info['high'], other_dim_pos=info['other_dim_pos'],
-                                      vertical=True, name=name, time=self.sys_time)
+                                      vertical=True, name=name, time=self.sys_time, config=self.config)
 
     def spawn_stations(self):
         layout_info = self.config['Station_Layout']
@@ -190,7 +164,8 @@ if __name__ == '__main__':
     print(env.buffer.buffer)
     env.step()
     print(env.buffer.buffer)
-
+    # for _ in range(10000):
+    #     env.step()
     # last_print_time = env.sys_time
     # while True:
     #     env.step()

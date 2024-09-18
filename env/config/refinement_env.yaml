@@ -53,10 +53,10 @@ vehicles:
         - trolley_6
     crane3:
       other_dim_pos: 79
-      LowerMovingPos: 0
-      UpperMovingPos: 172
-      InitLowerLimit: 0
-      InitUpperLimit: 172
+      LowerMovingPos: 11
+      UpperMovingPos: 158
+      InitLowerLimit: 11
+      InitUpperLimit: 158
       connections:
         - trolley1_1
         - trolley2_2
@@ -67,8 +67,8 @@ vehicles:
         - trolley_6
     crane5:
       other_dim_pos: 13
-      LowerMovingPos: 158
-      UpperMovingPos: 172
+      LowerMovingPos: 11
+      UpperMovingPos: 158
       InitLowerLimit: 11
       InitUpperLimit: 158
       connections:
