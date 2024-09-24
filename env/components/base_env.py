@@ -24,7 +24,6 @@ class RefinementEnv:
         self.reader = Reader(file_path=task_file_path)
         self.finder = Finder(self.config, self.vehicles)
         self.buffer = Buffer()
-        self.allocator = Allocator()
 
     def reset(self):
         """
@@ -42,15 +41,17 @@ class RefinementEnv:
 
     def step(self):
         self.update_tasks()
-        # print(self.buffer.buffer)
+        print(f'buffer: {self.buffer.buffer}')
         # 把buffer中的任务分配给各个轨道
         for track in self.tracks.values():
-            task = None
+            tasks = []
             for ori_task in self.buffer.buffer:
                 if ori_task.track == track.name:
-                    task = ori_task
-                    break
-            track.step(task)
+                    tasks.append(ori_task)
+                    self.buffer.remove_task(ori_task)
+            track.add_tasks_to_buffer(tasks)
+            track.task_allocator()
+            track.step()
 
         self.sys_time += timedelta(seconds=1)
 
@@ -139,10 +140,10 @@ class RefinementEnv:
             for vehicle_name, vehicle in self.vehicles.items():
                 if track.other_dim_pos == vehicle.other_dim_pos:
                     if track.vertical and vehicle.type == 'trolley':
-                        track.add_vehicles(vehicles=vehicle, name=vehicle_name)
+                        track.add_vehicles(vehicle=vehicle)
                         vehicle.bind_track(track)
                     elif not track.vertical and vehicle.type == 'crane':
-                        track.add_vehicles(vehicles=vehicle, name=vehicle_name)
+                        track.add_vehicles(vehicle=vehicle)
                         vehicle.bind_track(track)
             for station_name, station in self.stations.items():
                 if track.vertical:
@@ -161,11 +162,12 @@ if __name__ == '__main__':
     env = RefinementEnv(config_path='../config/refinement_env.yaml',
                         task_file_path='../data/processed_data/processed_data.json')
     env.reset()
-    print(env.buffer.buffer)
-    env.step()
-    print(env.buffer.buffer)
-    # for _ in range(10000):
-    #     env.step()
+    # print(env.buffer.buffer)
+    # env.step()
+    # print(env.buffer.buffer)
+    for i in range(100):
+        print('*' * 40 + f' {i} ' + '*' * 40)
+        env.step()
     # last_print_time = env.sys_time
     # while True:
     #     env.step()

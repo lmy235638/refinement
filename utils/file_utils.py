@@ -17,3 +17,7 @@ def print_iterators(iterators):
     print('*'*80)
     for name, iterator in iterators.items():
         print(f'{name}:{iterator}')
+
+
+def bool_xor(a, b):
+    return (a and not b) or (not a and b)

@@ -62,7 +62,10 @@ class SimulatorEnv(RefinementEnv):
         clock = pygame.time.Clock()
         running = True
         pygame.init()
+        i = 0
         while running:
+            print('*' * 40 + f' {i} ' + '*' * 40)
+            i += 1
             self.step()
             # print(f"crane1_1.task:{self.vehicles['crane1_1'].task}")
             # print(f"crane1_2.task:{self.vehicles['crane1_2'].task}")
@@ -80,8 +83,5 @@ class SimulatorEnv(RefinementEnv):
 
 if __name__ == '__main__':
     simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
-                             task_file='data/test_task_list.json')
-    simulator.vehicles['crane2'].load_degree = 3
-    simulator.vehicles['crane1_1'].pos = 160
-    simulator.vehicles['crane1_2'].pos = 190
+                             task_file='data/processed_data/processed_data.json')
     simulator.main_game_loop()

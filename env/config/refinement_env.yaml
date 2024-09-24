@@ -3,17 +3,15 @@ unload_speed: 1.5
 fractional_load_speed: 1
 heavy_load_speed: 0.8
 real_action_time: 30
-task_buffer_size: 10
-advance_time: 100
 
 vehicles:
   Cranes:
     crane1_1:
       other_dim_pos: 134
-      LowerMovingPos: 0
-      UpperMovingPos: 267
-      InitLowerLimit: 0
-      InitUpperLimit: 127
+      LowerMovingPos: 48
+      UpperMovingPos: 167
+      InitLowerLimit: 48
+      InitUpperLimit: 129
       connections:
         - trolley2_1
         - trolley_3
@@ -26,10 +24,10 @@ vehicles:
         - trolley_10
     crane1_2:
       other_dim_pos: 134
-      LowerMovingPos: 0
-      UpperMovingPos: 287
-      InitLowerLimit: 130
-      InitUpperLimit: 287
+      LowerMovingPos: 73
+      UpperMovingPos: 267
+      InitLowerLimit: 150
+      InitUpperLimit: 267
       connections:
         - trolley2_1
         - trolley_3
@@ -84,7 +82,7 @@ vehicles:
       other_dim_pos: 11
       LowerMovingPos: 51
       UpperMovingPos: 79
-      InitLowerLimit: 51
+      InitLowerLimit: 61
       InitUpperLimit: 79
       connections:
         - crane3
@@ -93,7 +91,7 @@ vehicles:
       LowerMovingPos: 13
       UpperMovingPos: 51
       InitLowerLimit: 13
-      InitUpperLimit: 51
+      InitUpperLimit: 41
       connections:
         - crane5
     trolley2_1:
