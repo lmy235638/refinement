@@ -34,6 +34,10 @@ class Track:
         temp_task.temp_hold_time = task_hold_time
         return temp_task
 
+    def cal_move_time(self, vehicle, pos):
+        speed = vehicle.determine_speed()
+        return int(abs((vehicle.pos - pos) / speed)) + 1
+
     def vehicles_crash_check(self):
         for i in range(self.vehicle_num - 1):
             temp_left_pos = self.vehicles[i].simulate_move()
@@ -77,8 +81,10 @@ class Track:
                             right_vehicle.take_task(self.temp_task(right_vehicle, 'temp', right_vehicle.pos, 20))
                         else:
                             self.buffer.add_from_allocator(right_vehicle.task)
+                            pos = left_vehicle.task.end_pos + self.config['simulate_safety_distance']
+                            time = max(self.cal_move_time(right_vehicle, pos), self.cal_move_time(left_vehicle, left_vehicle.task.end_pos))
                             right_vehicle.take_task(self.temp_task(right_vehicle, 'temp', left_vehicle.task.end_pos +
-                                                                   self.config['simulate_safety_distance'], 0))
+                                                                   self.config['simulate_safety_distance'], time))
                     elif left_vehicle.load_degree == 0 and right_vehicle.load_degree != 0:
                         # 左车空载,右车装载
                         if left_action == right_action:
@@ -177,8 +183,8 @@ class Track:
             # print(f'{vehicle} {vehicle.task}')
             if not vehicle.task and vehicle.check_task_doable(tasks):
                 able_vehicles.append(vehicle)
-        if not able_vehicles:
-            raise ValueError(f'没有空闲车但被分配了任务')
+        # if not able_vehicles:
+        #     raise ValueError(f'没有空闲车但被分配了任务')
         return able_vehicles
 
     def find_closest_vehicle(self, task, able_vehicles):

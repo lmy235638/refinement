@@ -34,7 +34,7 @@ class Vehicle:
         self.track = track
 
     def set_operating(self, new_state):
-        print('enter set_operating')
+        print(f'{self.name} enter set_operating')
         self.is_operating = new_state
         # if new_state:
         #     self.operating_timer = self.config['real_action_time']

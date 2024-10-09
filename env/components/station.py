@@ -36,13 +36,15 @@ class Station:
 
     def capture_vehicle(self, vehicle):
         self.vehicles.append(vehicle)
+        print(f'{self.name} capture {vehicle.name}')
 
     def release_vehicle(self, vehicle):
-        self.vehicles.remove(vehicle)
-        print(f'{self.name} release {vehicle.name}')
-        vehicle.set_operating(False)
-        if vehicle.ladle is None:
-            vehicle.remove_task()
+        if vehicle in self.vehicles:
+            self.vehicles.remove(vehicle)
+            print(f'{self.name} release {vehicle.name}')
+            vehicle.set_operating(False)
+            if vehicle.ladle is None:
+                vehicle.remove_task()
 
     def set_operating(self, new_state):
         self.is_operating = new_state
@@ -108,11 +110,15 @@ class Station:
                 self.operating_timer -= 1
                 print(f'{self.name} {self.operating_timer}')
                 if self.operating_timer == 0:
-                    for vehicle in self.vehicles:
+                    print(f'{self.name} has {[vehicle.name for vehicle in self.vehicles]} at operating_timer==0')
+                    for vehicle in self.vehicles[:]:
                         self.release_vehicle(vehicle)
                     self.set_operating(False)
             else:
                 raise ValueError(f'工位操作时间小于0 {self.name} {self.operating_timer}')
+
+        if self.vehicles:
+            print(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
 
     def __repr__(self):
         return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, processing={self.is_processing}, " \
