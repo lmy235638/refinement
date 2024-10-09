@@ -2,7 +2,7 @@ from datetime import timedelta, datetime
 from env.components.vehicle import Vehicle
 from env.components.track import Track
 from env.components.station import Station
-from env.components.good import Good
+from env.components.ladle import Ladle
 from env.components.task_pipeline.task import Task
 from env.components.task_pipeline.reader import Reader
 from env.components.task_pipeline.buffer import Buffer
@@ -17,7 +17,7 @@ class RefinementEnv:
         self.vehicles = {}
         self.tracks = {}
         self.stations = {}
-        self.goods = {}
+        self.ladles = []
         self.sys_time = 0
         self.sys_end_time = 0
 
@@ -53,19 +53,11 @@ class RefinementEnv:
             track.task_allocator()
             track.step()
 
-        self.sys_time += timedelta(seconds=1)
+        for station in self.stations.values():
+            # print(station)
+            station.step()
 
-        # for track in self.tracks.values():
-        #     return_task = track.step()
-        #     if return_task is not None:
-        #         return_tasks.append(return_task)
-        # for station in self.stations.values():
-        #     station.step()
-        #
-        # if return_tasks:
-        #     self.tasks.extend(return_tasks)
-        #
-        # self.sys_time += timedelta(seconds=1)
+        self.sys_time += timedelta(seconds=1)
 
     def update_tasks(self):
         # if self.buffer.size == 0 and self.check_all_vehicles_are_idle:
@@ -76,18 +68,14 @@ class RefinementEnv:
             if solutions:
                 self.buffer.add_from_reader(solutions)
                 self.reader.remove_task(task)
-                self.spawn_good(solutions)  # 生成货物在LD上
+                self.spawn_ladle(solutions)  # 生成货物在LD上
 
-    def spawn_good(self, solutions: dict):
+    def spawn_ladle(self, solutions: dict):
         for solution in solutions:
             if solution['start'].endswith('LD'):
-                self.goods[solution['pono']] = Good(process_time=solution['process_time'])
-
-    def check_all_vehicles_are_idle(self):
-        for vehicle in self.vehicles.values():
-            if vehicle.task is not None or vehicle.is_loading:
-                return True
-        return False
+                ladle = Ladle(pono=solution['pono'], process_time=solution['process_time'])
+                self.ladles.append(ladle)
+                self.stations[solution['start']].add_ladle(ladle)
 
     def spawn_vehicles(self):
         crane_trolly_info = self.config['vehicles']
@@ -128,12 +116,12 @@ class RefinementEnv:
             x = info['x']
             y = info['y']
             station_type = 'workstation'
-            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name)
+            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name, config=self.config)
         for name, info in intersections_info.items():
             x = info['x']
             y = info['y']
             station_type = 'intersection'
-            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name)
+            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name, config=self.config)
 
     def bind_vehicle_station_on_track(self):
         for track_name, track in self.tracks.items():

@@ -76,7 +76,7 @@ class SimulatorEnv(RefinementEnv):
                     running = False
 
             self.render()
-            clock.tick(60)
+            clock.tick(10)
 
         pygame.quit()
 

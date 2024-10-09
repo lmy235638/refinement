@@ -13,10 +13,6 @@ class Task:
         self.has_good = has_good
         self.vehicle = vehicle
         self.temp_hold_time = temp_hold_time
-        # self.start_transfer = start_transfer
-        # self.end_transfer = end_transfer
-
-        self.determine_type()
 
     def determine_type(self):
         # if self.start_pos.endswith('LD'):

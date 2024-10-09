@@ -1,5 +1,6 @@
-class Good:
-    def __init__(self, pass_station=None, process_time=0):
+class Ladle:
+    def __init__(self, pono, pass_station=None, process_time=0):
+        self.pono = pono
         self.pass_station = pass_station
         self.process_time = process_time
 
