@@ -31,7 +31,11 @@ class SimulatorEnv(RefinementEnv):
             x = 100 + station.x * 3
             y = 750 - station.y * 3
             name = station.name
-            pygame.draw.circle(self.screen, THECOLORS['red'], (x, y), 5, width=2)
+
+            if station.ladle:
+                pygame.draw.circle(self.screen, THECOLORS['red'], (x, y), 5, width=0)
+            else:
+                pygame.draw.circle(self.screen, THECOLORS['red'], (x, y), 5, width=2)
 
             text = font.render(name, True, THECOLORS['black'])
             self.screen.blit(text, (x, y))
@@ -40,16 +44,17 @@ class SimulatorEnv(RefinementEnv):
                 x = 100 + vehicle.other_dim_pos * 3 - 5
                 y = 750 - vehicle.pos * 3 - 10
 
-                loaded = vehicle.load_degree > 0
+                # loaded = vehicle.load_degree > 0
                 width = 10
                 height = 20
             else:
                 x = 100 + vehicle.pos * 3 - 10
                 y = 750 - vehicle.other_dim_pos * 3 - 5
-                loaded = vehicle.load_degree > 0
+                # loaded = vehicle.load_degree > 0
                 width = 20
                 height = 10
-            if loaded:
+            # if loaded:
+            if vehicle.ladle:
                 pygame.draw.rect(self.screen, THECOLORS['blue'], (x, y, width, height))
             else:
                 pygame.draw.rect(self.screen, THECOLORS['blue'], (x, y, width, height), 2)

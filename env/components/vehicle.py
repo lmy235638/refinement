@@ -8,8 +8,6 @@ class Action(Enum):
     STAY = 0
     LEFT = -1
     RIGHT = 1
-    LOAD = 0
-    UNLOAD = 0
 
 
 class Vehicle:
@@ -30,19 +28,19 @@ class Vehicle:
         self.speed = 1.5
         self.load_degree = 0
         self.ladle = None
-        self.operating_timer = 0
-        self.temp = None
+        self.operating_timer = -1
 
     def bind_track(self, track):
         self.track = track
 
     def set_operating(self, new_state):
+        print('enter set_operating')
         self.is_operating = new_state
-        if new_state:
-            self.operating_timer = self.config['real_action_time']
-        else:
-            self.operating_timer = 0
-            print('set')
+        # if new_state:
+        #     self.operating_timer = self.config['real_action_time']
+        # else:
+        #     self.operating_timer = -1
+        #     print('set idle')
 
     def check_task_doable(self, task):
         if self.type == 'crane':
@@ -63,10 +61,10 @@ class Vehicle:
 
     def calculate_target(self):
         if self.task:
-            if self.load_degree == 0:
-                target = self.task.start_pos
-            else:
+            if self.ladle:
                 target = self.task.end_pos
+            else:
+                target = self.task.start_pos
         else:
             target = self.pos
         return target
@@ -83,18 +81,14 @@ class Vehicle:
                 else:
                     self.remove_task()
 
-            if self.action == Action.LOAD or self.action == Action.UNLOAD:
-                self.operating_timer -= 1
-                print(self.operating_timer)
-                if self.operating_timer <= 0:
-                    self.set_operating(False)
-                    if self.action == Action.LOAD:
-                        self.take_ladle(self.temp)
-                        self.remove_temp_ladle()
-                    elif self.action == Action.UNLOAD:
-                        self.drop_ladle()
-                    else:
-                        raise ValueError('动作未定义')
+            # if self.action in (Action.LOAD, Action.UNLOAD):
+            #     print(f'{self.action}')
+            #     if self.operating_timer == -1:
+            #         raise ValueError(f'{self.name} 当前动作为空')
+            #     self.operating_timer -= 1
+            #     print(self.operating_timer)
+            #     if self.operating_timer <= 0:
+            #         self.set_operating(False)
 
     def determine_action(self):
         """
@@ -102,7 +96,7 @@ class Vehicle:
         若动作发生改变,更新动作,返回动作值
         :return:
         """
-        if self.task is None:
+        if self.task is None or self.is_operating:
             action = Action.STAY
         else:
             target = self.calculate_target()
@@ -114,12 +108,6 @@ class Vehicle:
 
             if abs(self.pos - target) < self.config['able_process_distance']:
                 action = Action.STAY
-
-            if self.is_operating:
-                if self.ladle:
-                    action = Action.UNLOAD
-                else:
-                    action = Action.LOAD
 
         return action
 
@@ -139,16 +127,13 @@ class Vehicle:
             raise ValueError('已有钢包')
 
     def drop_ladle(self):
+        ladle = self.ladle
         if self.ladle:
             self.ladle = None
         else:
             raise ValueError('没有钢包')
 
-    def add_temp_ladle(self, ladle):
-        self.temp = ladle
-
-    def remove_temp_ladle(self):
-        self.temp = None
+        return ladle
 
     def simulate_move(self):
         speed = self.determine_speed()
