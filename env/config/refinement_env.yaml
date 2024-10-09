@@ -1,4 +1,5 @@
 safety_distance: 20
+simulate_safety_distance: 23
 unload_speed: 1.5
 fractional_load_speed: 1
 heavy_load_speed: 0.8

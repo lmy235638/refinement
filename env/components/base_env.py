@@ -49,6 +49,7 @@ class RefinementEnv:
                 if ori_task.track == track.name:
                     tasks.append(ori_task)
                     self.buffer.remove_task(ori_task)
+            print('*' * 20 + f'track:{track.name}' + '*' * 20)
             track.add_tasks_to_buffer(tasks)
             track.task_allocator()
             track.step()

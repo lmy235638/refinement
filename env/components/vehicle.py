@@ -57,6 +57,7 @@ class Vehicle:
         print(f'{self.name} take {task}')
 
     def remove_task(self):
+        print(f'{self.name} remove {self.task}')
         self.task = None
 
     def calculate_target(self):
@@ -70,16 +71,16 @@ class Vehicle:
         return target
 
     def move(self):
-        if self.task:
-            self.speed = self.determine_speed()
-            self.action = self.determine_action()
-            self.pos += self.speed * self.action.value
+        self.determine_load_degree()
+        self.speed = self.determine_speed()
+        self.action = self.determine_action()
+        self.pos += self.speed * self.action.value
 
-            if self.task.type == 'temp':
-                if self.task.temp_hold_time > 0:
-                    self.task.temp_hold_time -= 1
-                else:
-                    self.remove_task()
+        if self.task and self.task.type == 'temp':
+            if self.task.temp_hold_time > 0:
+                self.task.temp_hold_time -= 1
+            else:
+                self.remove_task()
 
             # if self.action in (Action.LOAD, Action.UNLOAD):
             #     print(f'{self.action}')
@@ -120,6 +121,12 @@ class Vehicle:
             speed = (self.config['heavy_load_speed'])
         return speed
 
+    def determine_load_degree(self):
+        if self.ladle:
+            self.load_degree = 1
+        else:
+            self.load_degree = 0
+
     def take_ladle(self, ladle):
         if self.ladle is None:
             self.ladle = ladle
@@ -143,4 +150,4 @@ class Vehicle:
     def __repr__(self):
         return f"Vehicle(name={self.name}, upper_limit={self.upper_limit!r}, lower_limit={self.lower_limit!r}, " \
                f"\n\t\t\tcurrent_pos={self.pos!r}, load_degree={self.load_degree!r}, speed={self.speed!r}, " \
-               f"\n\t\t\ttype={self.type!r}, track={self.track.name})"
+               f"\n\t\t\ttype={self.type!r}, track={self.track.name}, task={self.task})"

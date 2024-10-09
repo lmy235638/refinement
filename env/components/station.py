@@ -23,7 +23,7 @@ class Station:
         else:
             raise RuntimeError('工位已经有钢包')
 
-        if self.type == 'workstation' and self.name.endswith('CC'):
+        if self.name.endswith('CC'):
             self.remove_ladle()
 
     def remove_ladle(self):
@@ -39,20 +39,21 @@ class Station:
 
     def release_vehicle(self, vehicle):
         self.vehicles.remove(vehicle)
+        print(f'{self.name} release {vehicle.name}')
         vehicle.set_operating(False)
+        if vehicle.ladle is None:
+            vehicle.remove_task()
 
     def set_operating(self, new_state):
         self.is_operating = new_state
         if new_state:
             self.operating_timer = self.config['real_action_time']
-        else:
-            self.operating_timer = -1
 
     def step(self):
-        if self.operating_timer == -1:
-            # 说明当前工位空闲
-            for vehicle in self.vehicles:
-                if self.type == 'workstation':
+        # 说明当前工位空闲
+        if not self.is_operating:
+            if self.type == 'workstation':
+                for vehicle in self.vehicles:
                     if vehicle.operating_timer == -1:
                         if vehicle.ladle:
                             # 车卸载货物,工位装载货物
@@ -64,10 +65,28 @@ class Station:
                             vehicle.take_ladle(self.remove_ladle())
                             self.set_operating(True)
 
-                elif self.type == 'intersection':
-                    pass
+            elif self.type == 'intersection':
+                if len(self.vehicles) == 2:
+                    # print(self)
+                    has_ladle_vehicle = None
+                    no_ladle_vehicle = None
+                    for vehicle in self.vehicles:
+                        if vehicle.ladle:
+                            has_ladle_vehicle = vehicle
+                        else:
+                            no_ladle_vehicle = vehicle
+                    if has_ladle_vehicle is None or no_ladle_vehicle is None:
+                        raise ValueError('两个车,其中有个为None')
+                    no_ladle_vehicle.take_ladle(has_ladle_vehicle.drop_ladle())
+                    has_ladle_vehicle.set_operating(True)
+                    no_ladle_vehicle.set_operating(True)
+                    self.set_operating(True)
+                elif len(self.vehicles) > 2:
+                    raise ValueError('交互工位车数量大于2')
                 else:
-                    raise RuntimeError('未定义工位类型')
+                    pass
+            else:
+                raise RuntimeError('未定义工位类型')
 
             # 检查工位的轨道上面的车,如果车的目标点是该工位,把车吸入进来
             for track in self.reachable_track.values():
@@ -80,18 +99,21 @@ class Station:
                             distance = abs(self.x - vehicle.pos)
                             station_pos = self.x
 
-                        if distance < self.config['able_process_distance'] and vehicle.calculate_target() == station_pos:
+                        if distance < self.config['able_process_distance'] and \
+                                vehicle.calculate_target() == station_pos and vehicle not in self.vehicles:
                             self.capture_vehicle(vehicle)
         else:
             # 工位正在执行装载或卸载
             if self.operating_timer > 0:
                 self.operating_timer -= 1
+                print(f'{self.name} {self.operating_timer}')
                 if self.operating_timer == 0:
                     for vehicle in self.vehicles:
                         self.release_vehicle(vehicle)
+                    self.set_operating(False)
             else:
-                raise ValueError('工位操作时间小于0')
+                raise ValueError(f'工位操作时间小于0 {self.name} {self.operating_timer}')
 
     def __repr__(self):
         return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, processing={self.is_processing}, " \
-               f"\n\t\t\tself.reachable_track={self.reachable_track.keys()})"
+               f"\n\t\t\tself.reachable_track={self.reachable_track.keys()}, vehicles{self.vehicles})"
