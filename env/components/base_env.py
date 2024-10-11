@@ -85,7 +85,6 @@ class RefinementEnv:
         self.sys_time += timedelta(seconds=1)
 
     def update_tasks(self):
-        # if self.buffer.size == 0 and self.check_all_vehicles_are_idle:
         # 从reader中获取任务并尝试分解成子任务,成功分解的子任务添加进buffer中
         task_list = self.reader.get_task(self.sys_time)
         self.finder.update_node_occupied()  # 更新node节点状态

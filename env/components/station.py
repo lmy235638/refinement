@@ -70,15 +70,18 @@ class Station:
                     if vehicle.operating_timer == -1:
                         if vehicle.ladle:
                             # 车卸载货物,工位装载货物
+                            logging.info(f'{vehicle.ladle.pono} arrive {self.name}')
                             self.add_ladle(vehicle.drop_ladle())
                             vehicle.set_operating(True)
                             self.set_operating(True)
                             self.set_processing(True, vehicle.task.process_time)
                         else:
                             # 空车装货物,工位卸载货物
-                            vehicle.set_operating(True)
-                            vehicle.take_ladle(self.remove_ladle())
-                            self.set_operating(True)
+                            if not self.is_processing:
+                                # 不在加工时才可以拿走
+                                vehicle.set_operating(True)
+                                vehicle.take_ladle(self.remove_ladle())
+                                self.set_operating(True)
 
             elif self.type == 'intersection':
                 if len(self.vehicles) == 2:
@@ -161,4 +164,4 @@ class Station:
     def __repr__(self):
         return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, " \
                f"processing={self.is_processing}, \n\t\t\tself.reachable_track={self.reachable_track.keys()}, " \
-               f"vehicles{self.vehicles}, ladle{self.ladle})"
+               f"vehicles={self.vehicles}, ladle={self.ladle})"

@@ -45,13 +45,6 @@ class Finder:
         :return:
         """
         solution = []
-
-        # 更新节点占用情况
-        for name, node in self.nodes.items():
-            if self.env_vehicles[name].task is not None:
-                node.is_occupied = True
-            else:
-                node.is_occupied = False
         pono = task['PONO']
         assign_time = task['ASSIGN_TIME']
         end_time = task['END_TIME']

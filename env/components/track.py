@@ -48,104 +48,102 @@ class Track:
                 left_vehicle: Vehicle = min(self.vehicles, key=lambda vehicle: vehicle.pos)
                 right_vehicle: Vehicle = max(self.vehicles, key=lambda vehicle: vehicle.pos)
                 # 1. 有一车正在加工,优先级最高
-                try:
-                    if left_vehicle.is_operating or right_vehicle.is_operating:
-                        if left_vehicle.is_operating:
-                            self.buffer.add_from_allocator(right_vehicle.task)
-                            # 站住不动
-                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_vehicle.pos, 0))
-                        else:
-                            self.buffer.add_from_allocator(left_vehicle.task)
-                            # 站住不动
-                            left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, 0))
+                if left_vehicle.is_operating or right_vehicle.is_operating:
+                    if left_vehicle.is_operating:
+                        self.buffer.add_from_allocator(right_vehicle.task)
+                        # 站住不动
+                        right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_vehicle.pos, 0))
+                    else:
+                        self.buffer.add_from_allocator(left_vehicle.task)
+                        # 站住不动
+                        left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, 0))
 
-                    # 2. 一车空闲,一车有任务
-                    elif bool_xor(left_vehicle.task, right_vehicle.task):
-                        if left_vehicle.task:
-                            # 左车有任务撞右车
-                            pos = left_vehicle.task.end_pos + self.config['simulate_safety_distance'] \
-                                if left_vehicle.ladle \
-                                else left_vehicle.task.start_pos + self.config['simulate_safety_distance']
-                            right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', pos, 0))
+                # 2. 一车空闲,一车有任务
+                elif bool_xor(left_vehicle.task, right_vehicle.task):
+                    if left_vehicle.task:
+                        # 左车有任务撞右车
+                        pos = left_vehicle.task.end_pos + self.config['simulate_safety_distance'] \
+                            if left_vehicle.ladle \
+                            else left_vehicle.task.start_pos + self.config['simulate_safety_distance']
+                        right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', pos, 0))
+                    else:
+                        # 右车有任务撞左车
+                        left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
+                                                              right_vehicle.task.start_pos - self.config[
+                                                                  'simulate_safety_distance'], 0))
+                # 3. 两车任务下发时间相同
+                elif left_vehicle.task.assign_time == right_vehicle.task.assign_time:
+                    left_action = left_vehicle.determine_action()
+                    right_action = right_vehicle.determine_action()
+                    if left_vehicle.load_degree != 0 and right_vehicle.load_degree == 0:
+                        # 左车装载,右车空载
+                        if left_action == right_action:
+                            # 同一方向,说明空车追装载车
+                            self.buffer.add_from_allocator(right_vehicle.task)
+                            time = self.cal_move_time(left_vehicle, left_vehicle.task.end_pos)
+                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
+                                                                   right_vehicle.pos, time))
                         else:
-                            # 右车有任务撞左车
-                            left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
-                                                                  right_vehicle.task.start_pos - self.config[
-                                                                      'simulate_safety_distance'], 0))
-                    # 3. 两车任务下发时间相同
-                    elif left_vehicle.task.assign_time == right_vehicle.task.assign_time:
-                        left_action = left_vehicle.determine_action()
-                        right_action = right_vehicle.determine_action()
-                        if left_vehicle.load_degree != 0 and right_vehicle.load_degree == 0:
-                            # 左车装载,右车空载
-                            if left_action == right_action:
-                                # 同一方向,说明空车追装载车
+                            self.buffer.add_from_allocator(right_vehicle.task)
+                            pos = left_vehicle.task.end_pos + self.config['simulate_safety_distance']
+                            time = max(self.cal_move_time(right_vehicle, pos),
+                                       self.cal_move_time(left_vehicle, left_vehicle.task.end_pos))
+                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
+                                                                   left_vehicle.task.end_pos +
+                                                                   self.config['simulate_safety_distance'], time))
+                    elif left_vehicle.load_degree == 0 and right_vehicle.load_degree != 0:
+                        # 左车空载,右车装载
+                        if left_action == right_action:
+                            # 同一方向,说明空车追装载车
+                            self.buffer.add_from_allocator(left_vehicle.task)
+                            time = self.cal_move_time(right_vehicle, right_vehicle.task.end_pos)
+                            left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp',
+                                                                  left_vehicle.pos, time))
+                        else:
+                            raise ValueError(f'不是空车追装载车情况出现')
+                    elif left_vehicle.load_degree == 0 and right_vehicle.load_degree == 0:
+                        # 两车都空载
+                        if left_action != right_action:
+                            left_cost = abs(left_vehicle.pos - left_vehicle.task.start_pos)
+                            right_cost = abs(right_vehicle.pos - right_vehicle.task.start_pos)
+                            if left_cost < right_cost:
                                 self.buffer.add_from_allocator(right_vehicle.task)
                                 right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
-                                                                       right_vehicle.pos, 20))
+                                                                       right_vehicle.pos + left_action.value *
+                                                                       left_vehicle.determine_speed(), 0))
                             else:
-                                self.buffer.add_from_allocator(right_vehicle.task)
-                                pos = left_vehicle.task.end_pos + self.config['simulate_safety_distance']
-                                time = max(self.cal_move_time(right_vehicle, pos),
-                                           self.cal_move_time(left_vehicle, left_vehicle.task.end_pos))
-                                right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
-                                                                       left_vehicle.task.end_pos +
-                                                                       self.config['simulate_safety_distance'], time))
-                        elif left_vehicle.load_degree == 0 and right_vehicle.load_degree != 0:
-                            # 左车空载,右车装载
-                            if left_action == right_action:
-                                # 同一方向,说明空车追装载车
                                 self.buffer.add_from_allocator(left_vehicle.task)
-                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, 20))
-                            else:
-                                raise ValueError(f'不是空车追装载车情况出现')
-                        elif left_vehicle.load_degree == 0 and right_vehicle.load_degree == 0:
-                            # 两车都空载
-                            if left_action != right_action:
-                                left_cost = abs(left_vehicle.pos - left_vehicle.task.start_pos)
-                                right_cost = abs(right_vehicle.pos - right_vehicle.task.start_pos)
-                                if left_cost < right_cost:
-                                    self.buffer.add_from_allocator(right_vehicle.task)
-                                    right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
-                                                                           right_vehicle.pos + left_action.value *
-                                                                           left_vehicle.determine_speed(), 0))
-                                else:
-                                    self.buffer.add_from_allocator(left_vehicle.task)
-                                    left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp',
-                                                                          left_vehicle.pos + right_action.value *
-                                                                          right_vehicle.determine_speed(), 0))
-                            else:
-                                raise ValueError(f'两空车方向一样但冲突情况出现')
-                        elif left_vehicle.load_degree != 0 and right_vehicle.load_degree != 0:
-                            # 两车都装载
-                            if left_action != right_action:
-                                left_cost = abs(left_vehicle.pos - left_vehicle.task.end_pos)
-                                right_cost = abs(right_vehicle.pos - right_vehicle.task.end_pos)
-                                if left_cost < right_cost:
-                                    self.buffer.add_from_allocator(right_vehicle.task)
-                                    right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
-                                                                           right_vehicle.pos + left_action.value *
-                                                                           left_vehicle.determine_speed(), 0,
-                                                                           is_end=True))
-                                else:
-                                    self.buffer.add_from_allocator(left_vehicle.task)
-                                    left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp',
-                                                                          left_vehicle.pos + right_action.value *
-                                                                          right_vehicle.determine_speed(), 0,
-                                                                          is_end=True))
-                            else:
-                                raise ValueError(f'两装载方向一样但冲突情况出现')
+                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp',
+                                                                      left_vehicle.pos + right_action.value *
+                                                                      right_vehicle.determine_speed(), 0))
                         else:
-                            raise ValueError(f'未考虑情况出现')
-                    elif self.vehicles[i].task.assign_time < self.vehicles[i + 1].task.assign_time:
-                        raise ValueError(f'暂时没考虑不同时间冲突')
-                    elif self.vehicles[i].task.assign_time > self.vehicles[i + 1].task.assign_time:
-                        raise ValueError(f'暂时没考虑不同时间冲突')
+                            raise ValueError(f'两空车方向一样但冲突情况出现')
+                    elif left_vehicle.load_degree != 0 and right_vehicle.load_degree != 0:
+                        # 两车都装载
+                        if left_action != right_action:
+                            left_cost = abs(left_vehicle.pos - left_vehicle.task.end_pos)
+                            right_cost = abs(right_vehicle.pos - right_vehicle.task.end_pos)
+                            if left_cost < right_cost:
+                                self.buffer.add_from_allocator(right_vehicle.task)
+                                right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
+                                                                       right_vehicle.pos + left_action.value *
+                                                                       left_vehicle.determine_speed(), 0,
+                                                                       is_end=True))
+                            else:
+                                self.buffer.add_from_allocator(left_vehicle.task)
+                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp',
+                                                                      left_vehicle.pos + right_action.value *
+                                                                      right_vehicle.determine_speed(), 0,
+                                                                      is_end=True))
+                        else:
+                            raise ValueError(f'两装载方向一样但冲突情况出现')
                     else:
                         raise ValueError(f'未考虑情况出现')
-                except AttributeError:
-                    print(f'left_vehicle:{left_vehicle} right_vehicle:{right_vehicle}')
-                    raise ValueError(f'111')
+                # 4. 两车任务下发时间不同
+                elif self.vehicles[i].task.assign_time != self.vehicles[i + 1].task.assign_time:
+                    raise ValueError(f'暂时没考虑不同时间冲突')
+                else:
+                    raise ValueError(f'未考虑情况出现')
 
     def vehicle_choice(self, able_vehicles: list, tasks: list):
         if len(tasks) == 1:

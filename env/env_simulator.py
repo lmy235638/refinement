@@ -1,7 +1,6 @@
 import logging
-import sys
-
 import imageio
+import sys
 import numpy as np
 import pygame
 from components.base_env import RefinementEnv
@@ -73,12 +72,10 @@ class SimulatorEnv(RefinementEnv):
         clock = pygame.time.Clock()
         running = True
         pygame.init()
-        i = 0
 
         writer = imageio.get_writer('animation.mp4', fps=60)
         while running:
-            logging.info('*' * 40 + f' {i} ' + '*' * 40)
-            i += 1
+            logging.info('*' * 40 + f' {self.sys_time} ' + '*' * 40)
             self.step()
             # print(f"crane1_1.task:{self.vehicles['crane1_1'].task}")
             # print(f"crane1_2.task:{self.vehicles['crane1_2'].task}")
@@ -100,7 +97,6 @@ class SimulatorEnv(RefinementEnv):
             # writer.append_data(array)
 
             clock.tick(60)
-
         pygame.quit()
         writer.close()
 
