@@ -1,3 +1,6 @@
+import logging
+
+
 class Station:
     def __init__(self, x, y, name, station_type, config):
         self.name = name
@@ -12,6 +15,7 @@ class Station:
         self.is_processing = False
         self.is_operating = False
         self.operating_timer = -1
+        self.processing_timer = -1
         self.temp = None
 
     def bind_track(self, track, name):
@@ -36,12 +40,14 @@ class Station:
 
     def capture_vehicle(self, vehicle):
         self.vehicles.append(vehicle)
-        print(f'{self.name} capture {vehicle.name}')
+        # print(f'{self.name} capture {vehicle.name}')
+        logging.info(f'{self.name} capture {vehicle.name}')
 
     def release_vehicle(self, vehicle):
         if vehicle in self.vehicles:
             self.vehicles.remove(vehicle)
-            print(f'{self.name} release {vehicle.name}')
+            # print(f'{self.name} release {vehicle.name}')
+            logging.info(f'{self.name} release {vehicle.name}')
             vehicle.set_operating(False)
             if vehicle.ladle is None:
                 vehicle.remove_task()
@@ -50,6 +56,11 @@ class Station:
         self.is_operating = new_state
         if new_state:
             self.operating_timer = self.config['real_action_time']
+
+    def set_processing(self, new_state, process_time=0):
+        self.is_processing = new_state
+        if new_state:
+            self.processing_timer = process_time
 
     def step(self):
         # 说明当前工位空闲
@@ -61,6 +72,8 @@ class Station:
                             # 车卸载货物,工位装载货物
                             self.add_ladle(vehicle.drop_ladle())
                             vehicle.set_operating(True)
+                            self.set_operating(True)
+                            self.set_processing(True, vehicle.task.process_time)
                         else:
                             # 空车装货物,工位卸载货物
                             vehicle.set_operating(True)
@@ -70,6 +83,9 @@ class Station:
             elif self.type == 'intersection':
                 if len(self.vehicles) == 2:
                     # print(self)
+                    # 检查两个车是否正确
+                    if not self.check_captive_vehicle_pono(self.vehicles):
+                        raise RuntimeError(f'吸入的两车不正确: {self.vehicles}')
                     has_ladle_vehicle = None
                     no_ladle_vehicle = None
                     for vehicle in self.vehicles:
@@ -108,9 +124,10 @@ class Station:
             # 工位正在执行装载或卸载
             if self.operating_timer > 0:
                 self.operating_timer -= 1
-                print(f'{self.name} {self.operating_timer}')
+                # print(f'operating_timer {self.name} {self.operating_timer}')
+                logging.info(f'operating_timer {self.name} {self.operating_timer}')
                 if self.operating_timer == 0:
-                    print(f'{self.name} has {[vehicle.name for vehicle in self.vehicles]} at operating_timer==0')
+                    # print(f'{self.name} has {[vehicle.name for vehicle in self.vehicles]} at operating_timer==0')
                     for vehicle in self.vehicles[:]:
                         self.release_vehicle(vehicle)
                     self.set_operating(False)
@@ -118,8 +135,30 @@ class Station:
                 raise ValueError(f'工位操作时间小于0 {self.name} {self.operating_timer}')
 
         if self.vehicles:
-            print(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
+            # print(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
+            logging.info(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
+
+        if self.is_processing:
+            if self.ladle is None:
+                if self.name.endswith('CC'):
+                    pass
+                else:
+                    raise RuntimeError(f'工位正在执行,但无钢包 {self}')
+            if self.processing_timer > 0:
+                self.processing_timer -= 1
+                # print(f'processing_timer {self.name} {self.processing_timer}')
+                logging.info(f'processing_timer {self.name} {self.processing_timer}')
+                if self.processing_timer == 0:
+                    self.set_processing(False)
+
+    def check_captive_vehicle_pono(self, vehicle_list):
+        pono = vehicle_list[0].task.pono
+        for vehicle in vehicle_list[1:]:
+            if vehicle.task.pono != pono:
+                return False
+        return True
 
     def __repr__(self):
-        return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, processing={self.is_processing}, " \
-               f"\n\t\t\tself.reachable_track={self.reachable_track.keys()}, vehicles{self.vehicles})"
+        return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, " \
+               f"processing={self.is_processing}, \n\t\t\tself.reachable_track={self.reachable_track.keys()}, " \
+               f"vehicles{self.vehicles}, ladle{self.ladle})"

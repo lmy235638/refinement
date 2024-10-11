@@ -1,3 +1,4 @@
+import logging
 import random
 from enum import Enum
 import numbers
@@ -34,7 +35,7 @@ class Vehicle:
         self.track = track
 
     def set_operating(self, new_state):
-        print(f'{self.name} enter set_operating')
+        # print(f'{self.name} enter set_operating')
         self.is_operating = new_state
         # if new_state:
         #     self.operating_timer = self.config['real_action_time']
@@ -54,10 +55,12 @@ class Vehicle:
 
     def take_task(self, task):
         self.task = task
-        print(f'{self.name} take {task}')
+        # print(f'{self.name} take {task}')
+        logging.info(f'{self.name} take {task}')
 
     def remove_task(self):
-        print(f'{self.name} remove {self.task}')
+        # print(f'{self.name} remove {self.task}')
+        logging.info(f'{self.name} remove {self.task}')
         self.task = None
 
     def calculate_target(self):
@@ -123,7 +126,7 @@ class Vehicle:
 
     def determine_load_degree(self):
         if self.ladle:
-            self.load_degree = 1
+            self.load_degree = 2
         else:
             self.load_degree = 0
 

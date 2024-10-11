@@ -31,6 +31,13 @@ class Finder:
             for adjacent_node in adjacent_nodes:
                 self.station_adjacent_nodes[name].append(adjacent_node)
 
+    def update_node_occupied(self):
+        for name, node in self.nodes.items():
+            if self.env_vehicles[name].task is not None:
+                node.is_occupied = True
+            else:
+                node.is_occupied = False
+
     def decomposition(self, task):
         """
         将一个任务分解成最短路径的若干个子任务
@@ -39,6 +46,7 @@ class Finder:
         """
         solution = []
 
+        # 更新节点占用情况
         for name, node in self.nodes.items():
             if self.env_vehicles[name].task is not None:
                 node.is_occupied = True
@@ -90,10 +98,10 @@ class Finder:
             current_node.has_visited = True
             for node_name in current_node.connected_nodes:
                 connected_node = self.nodes[node_name]
-                if current_node.prev_node is not None:
-                    if current_node.prev_node.name == "trolley2_1" or current_node.prev_node.name == "trolley2_2":
-                        if connected_node.name == "trolley2_1" or connected_node.name == "trolley2_2":
-                            continue
+                # if current_node.prev_node is not None:
+                #     if current_node.prev_node.name == "trolley2_1" or current_node.prev_node.name == "trolley2_2":
+                #         if connected_node.name == "trolley2_1" or connected_node.name == "trolley2_2":
+                #             continue
                 if connected_node not in queue and not connected_node.has_visited and not connected_node.is_occupied:
                     connected_node.prev_node = current_node
                     queue.append(connected_node)
@@ -110,6 +118,8 @@ class Finder:
             end = vehicle_path[i + 1]
             start_vehicle = self.env_vehicles[start.name]
             end_vehicle = self.env_vehicles[end.name]
+            self.nodes[start.name].is_occupied = True
+            self.nodes[end.name].is_occupied = True
             station_path.append(self.get_common_reachable_stations(start_vehicle, end_vehicle))
             track_path.append(end_vehicle.track.name)
         station_path.append(task_end_station)

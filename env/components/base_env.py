@@ -7,13 +7,12 @@ from env.components.task_pipeline.task import Task
 from env.components.task_pipeline.reader import Reader
 from env.components.task_pipeline.buffer import Buffer
 from env.components.task_pipeline.finder import Finder
-from env.components.task_pipeline.allocator import Allocator
 from utils.file_utils import load_config
+import logging
 
 
 class RefinementEnv:
     def __init__(self, config_path, task_file_path):
-        self.config = load_config(config_path)
         self.vehicles = {}
         self.tracks = {}
         self.stations = {}
@@ -21,6 +20,7 @@ class RefinementEnv:
         self.sys_time = 0
         self.sys_end_time = 0
 
+        self.config = load_config(config_path)
         self.reader = Reader(file_path=task_file_path)
         self.finder = Finder(self.config, self.vehicles)
         self.buffer = Buffer()
@@ -39,17 +39,41 @@ class RefinementEnv:
 
         self.finder.reset()
 
+        logging.info([(name, vehicle.pos) for name, vehicle in self.vehicles.items()])
+        logging.info([station.name for station in self.stations.values()])
+
+        self.vehicles['crane1_1'].pos = 57
+        self.vehicles['crane1_2'].pos = 260
+        self.vehicles['crane2'].pos = 91
+        self.vehicles['crane3'].pos = 48
+        self.vehicles['crane5'].pos = 109
+        self.vehicles['trolley1_1'].pos = 75
+        self.vehicles['trolley1_2'].pos = 39
+        self.vehicles['trolley2_1'].pos = 132
+        self.vehicles['trolley2_2'].pos = 21
+        self.vehicles['trolley_3'].pos = 156
+        self.vehicles['trolley_4'].pos = 105
+        self.vehicles['trolley_5'].pos = 35
+        self.vehicles['trolley_6'].pos = 57
+        self.vehicles['trolley_7'].pos = 143
+        self.vehicles['trolley_8'].pos = 135
+        self.vehicles['trolley_9'].pos = 151
+        self.vehicles['trolley_10'].pos = 150
+
     def step(self):
         self.update_tasks()
-        print(f'buffer: {self.buffer.buffer}')
+        # print(f'buffer: {self.buffer.buffer}')
+        if self.buffer.buffer:
+            logging.info(f'buffer: {self.buffer.buffer}')
         # 把buffer中的任务分配给各个轨道
         for track in self.tracks.values():
             tasks = []
-            for ori_task in self.buffer.buffer:
+            for ori_task in self.buffer.buffer[:]:
                 if ori_task.track == track.name:
                     tasks.append(ori_task)
                     self.buffer.remove_task(ori_task)
-            print('*' * 20 + f'track:{track.name}' + '*' * 20)
+            # print('*' * 20 + f'track:{track.name}' + '*' * 20)
+            logging.info('*' * 20 + f'track:{track.name}' + '*' * 20)
             track.add_tasks_to_buffer(tasks)
             track.task_allocator()
             track.step()
@@ -64,6 +88,7 @@ class RefinementEnv:
         # if self.buffer.size == 0 and self.check_all_vehicles_are_idle:
         # 从reader中获取任务并尝试分解成子任务,成功分解的子任务添加进buffer中
         task_list = self.reader.get_task(self.sys_time)
+        self.finder.update_node_occupied()  # 更新node节点状态
         for task in task_list:
             solutions = self.finder.decomposition(task)
             if solutions:
@@ -151,12 +176,13 @@ if __name__ == '__main__':
     env = RefinementEnv(config_path='../config/refinement_env.yaml',
                         task_file_path='../data/processed_data/processed_data.json')
     env.reset()
+    print(env.stations)
     # print(env.buffer.buffer)
     # env.step()
     # print(env.buffer.buffer)
-    for i in range(100):
-        print('*' * 40 + f' {i} ' + '*' * 40)
-        env.step()
+    # for i in range(100):
+    #     print('*' * 40 + f' {i} ' + '*' * 40)
+    #     env.step()
     # last_print_time = env.sys_time
     # while True:
     #     env.step()

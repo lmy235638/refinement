@@ -1,3 +1,8 @@
+import logging
+import sys
+
+import imageio
+import numpy as np
 import pygame
 from components.base_env import RefinementEnv
 from pygame.color import THECOLORS
@@ -10,6 +15,7 @@ class SimulatorEnv(RefinementEnv):
         pygame.init()
         screen_info = pygame.display.Info()
         self.screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
+
 
     def render(self):
         self.screen.fill(THECOLORS['white'])
@@ -68,8 +74,10 @@ class SimulatorEnv(RefinementEnv):
         running = True
         pygame.init()
         i = 0
+
+        writer = imageio.get_writer('animation.mp4', fps=60)
         while running:
-            print('*' * 40 + f' {i} ' + '*' * 40)
+            logging.info('*' * 40 + f' {i} ' + '*' * 40)
             i += 1
             self.step()
             # print(f"crane1_1.task:{self.vehicles['crane1_1'].task}")
@@ -81,12 +89,26 @@ class SimulatorEnv(RefinementEnv):
                     running = False
 
             self.render()
+
+            # # 保存当前帧
+            # surface = pygame.display.get_surface()
+            # array = pygame.surfarray.array3d(surface)
+            # # 翻转帧的垂直方向
+            # array = np.flip(array, axis=0)
+            # # 向右旋转90度
+            # array = np.rot90(array, k=3)
+            # writer.append_data(array)
+
             clock.tick(60)
 
         pygame.quit()
+        writer.close()
 
 
 if __name__ == '__main__':
+    # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w', format='%(message)s')
+    logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
+
     simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
                              task_file='data/processed_data/processed_data.json')
     simulator.main_game_loop()

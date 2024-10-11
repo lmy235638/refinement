@@ -323,16 +323,11 @@ poses:
     connections:
       - 4RH3
       - 4RH5
-  2LF_up:
+  2LF:
     x: 48
     y: 51
     connections:
-      - 2LF3_up
-  2LF_down:
-    x: 48
-    y: 51
-    connections:
-      - 2LF3_down
+      -
       - 2LF5
   1RH:
     x: 158
@@ -352,7 +347,7 @@ poses:
     connections:
       - 1LF
       - 1LD1
-      - 2LF3_up
+      - 2LF3
   1LD1:
     x: 73
     y: 134
@@ -446,30 +441,21 @@ poses:
     x: 11
     y: 79
     connections:
-      - 2LF3_up
-      - 2LF3_down
+      - 2LF3
       - 4RH
-  2LF3_up:
+  2LF3:
     x: 48
     y: 79
     connections:
       - 1LF1
       - 4RH3
-      - 2LF_up
-      - 1LD3
-  2LF3_down:
-    x: 48
-    y: 79
-    connections:
-      - 4RH3
-      - 2LF_down
+      - 2LF
       - 1LD3
   1LD3:
     x: 73
     y: 79
     connections:
-      - 2LF3_up
-      - 2LF3_down
+      - 2LF3
       - 1LD2
       - 2LD3
       - 1LD5
@@ -506,7 +492,7 @@ poses:
     x: 48
     y: 13
     connections:
-      - 2LF_down
+      - 2LF
       - 3CC
       - 1LD5
   1LD5:
