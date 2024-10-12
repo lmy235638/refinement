@@ -152,5 +152,6 @@ class Vehicle:
 
     def __repr__(self):
         return f"Vehicle(name={self.name}, upper_limit={self.upper_limit!r}, lower_limit={self.lower_limit!r}, " \
-               f"\n\t\t\tcurrent_pos={self.pos!r}, load_degree={self.load_degree!r}, speed={self.speed!r}, " \
-               f"\n\t\t\ttype={self.type!r}, track={self.track.name}, task={self.task})"
+               f"current_pos={self.pos!r}, \n\t\t\tload_degree={self.load_degree!r}, speed={self.speed!r}, " \
+               f"type={self.type!r}, track={self.track.name}, task={self.task}, " \
+               f"ladle={self.ladle.pono if self.ladle else None})"

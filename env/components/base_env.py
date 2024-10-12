@@ -1,9 +1,8 @@
-from datetime import timedelta, datetime
+from datetime import timedelta
 from env.components.vehicle import Vehicle
 from env.components.track import Track
 from env.components.station import Station
 from env.components.ladle import Ladle
-from env.components.task_pipeline.task import Task
 from env.components.task_pipeline.reader import Reader
 from env.components.task_pipeline.buffer import Buffer
 from env.components.task_pipeline.finder import Finder
@@ -68,10 +67,10 @@ class RefinementEnv:
         # 把buffer中的任务分配给各个轨道
         for track in self.tracks.values():
             tasks = []
-            for ori_task in self.buffer.buffer[:]:
-                if ori_task.track == track.name:
-                    tasks.append(ori_task)
-                    self.buffer.remove_task(ori_task)
+            for task in self.buffer.buffer[:]:
+                if task.track == track.name:
+                    tasks.append(task)
+                    self.buffer.remove_task(task)
             # print('*' * 20 + f'track:{track.name}' + '*' * 20)
             logging.info('*' * 20 + f'track:{track.name}' + '*' * 20)
             track.add_tasks_to_buffer(tasks)

@@ -15,7 +15,6 @@ class SimulatorEnv(RefinementEnv):
         screen_info = pygame.display.Info()
         self.screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
 
-
     def render(self):
         self.screen.fill(THECOLORS['white'])
         # self.gauge_tasks()
@@ -102,8 +101,9 @@ class SimulatorEnv(RefinementEnv):
 
 
 if __name__ == '__main__':
-    # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w', format='%(message)s')
-    logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
+    logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
+                        format='%(levelname)s: - %(message)s', encoding='utf-8')
+    # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
                              task_file='data/processed_data/processed_data.json')

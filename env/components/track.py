@@ -29,10 +29,14 @@ class Track:
         temp_task = copy.deepcopy(task)
         temp_task.type = task_type
         if is_end:
+            temp_task.start_pos = 0
             temp_task.end_pos = task_pos
         else:
             temp_task.start_pos = task_pos
+            temp_task.end_pos = 0
         temp_task.temp_hold_time = task_hold_time
+        temp_task.process_time = 0
+        logging.info(f'generate temp_task:{temp_task}')
         return temp_task
 
     def cal_move_time(self, vehicle, pos):
@@ -43,7 +47,7 @@ class Track:
         for i in range(self.vehicle_num - 1):
             temp_left_pos = self.vehicles[i].simulate_move()
             temp_right_pos = self.vehicles[i + 1].simulate_move()
-            if abs(temp_left_pos - temp_right_pos) < self.config['simulate_safety_distance']:
+            if abs(temp_left_pos - temp_right_pos) < self.config['safety_distance']:
                 # 两车发生碰撞
                 left_vehicle: Vehicle = min(self.vehicles, key=lambda vehicle: vehicle.pos)
                 right_vehicle: Vehicle = max(self.vehicles, key=lambda vehicle: vehicle.pos)
@@ -62,15 +66,16 @@ class Track:
                 elif bool_xor(left_vehicle.task, right_vehicle.task):
                     if left_vehicle.task:
                         # 左车有任务撞右车
-                        pos = left_vehicle.task.end_pos + self.config['simulate_safety_distance'] \
-                            if left_vehicle.ladle \
-                            else left_vehicle.task.start_pos + self.config['simulate_safety_distance']
+                        pos = left_vehicle.task.end_pos + self.config['safety_distance'] \
+                              + self.config['more_move_distance'] if left_vehicle.ladle \
+                              else left_vehicle.task.start_pos + self.config['safety_distance']
                         right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', pos, 0))
                     else:
                         # 右车有任务撞左车
-                        left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
-                                                              right_vehicle.task.start_pos - self.config[
-                                                                  'simulate_safety_distance'], 0))
+                        pos = right_vehicle.task.start_pos - self.config['safety_distance'] \
+                              - self.config['more_move_distance']
+                        left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', pos, 0))
+                # 下面的两个车都会有任务
                 # 3. 两车任务下发时间相同
                 elif left_vehicle.task.assign_time == right_vehicle.task.assign_time:
                     left_action = left_vehicle.determine_action()
@@ -84,13 +89,13 @@ class Track:
                             right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
                                                                    right_vehicle.pos, time))
                         else:
+                            # 两车一左一右,在中间碰撞
                             self.buffer.add_from_allocator(right_vehicle.task)
-                            pos = left_vehicle.task.end_pos + self.config['simulate_safety_distance']
+                            pos = left_vehicle.task.end_pos + self.config['safety_distance'] \
+                                  + self.config['more_move_distance']
                             time = max(self.cal_move_time(right_vehicle, pos),
                                        self.cal_move_time(left_vehicle, left_vehicle.task.end_pos))
-                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
-                                                                   left_vehicle.task.end_pos +
-                                                                   self.config['simulate_safety_distance'], time))
+                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', pos, time))
                     elif left_vehicle.load_degree == 0 and right_vehicle.load_degree != 0:
                         # 左车空载,右车装载
                         if left_action == right_action:
@@ -102,7 +107,7 @@ class Track:
                         else:
                             raise ValueError(f'不是空车追装载车情况出现')
                     elif left_vehicle.load_degree == 0 and right_vehicle.load_degree == 0:
-                        # 两车都空载
+                        # 两车都空载 谁近谁优先
                         if left_action != right_action:
                             left_cost = abs(left_vehicle.pos - left_vehicle.task.start_pos)
                             right_cost = abs(right_vehicle.pos - right_vehicle.task.start_pos)
@@ -117,7 +122,7 @@ class Track:
                                                                       left_vehicle.pos + right_action.value *
                                                                       right_vehicle.determine_speed(), 0))
                         else:
-                            raise ValueError(f'两空车方向一样但冲突情况出现')
+                            raise ValueError(f'{self.name} 两空车方向一样但冲突情况出现 {left_vehicle} {right_vehicle}')
                     elif left_vehicle.load_degree != 0 and right_vehicle.load_degree != 0:
                         # 两车都装载
                         if left_action != right_action:
@@ -136,14 +141,21 @@ class Track:
                                                                       right_vehicle.determine_speed(), 0,
                                                                       is_end=True))
                         else:
-                            raise ValueError(f'两装载方向一样但冲突情况出现')
+                            logging.error(f'两车装载方向一样但冲突情况出现')
                     else:
                         raise ValueError(f'未考虑情况出现')
                 # 4. 两车任务下发时间不同
                 elif self.vehicles[i].task.assign_time != self.vehicles[i + 1].task.assign_time:
-                    raise ValueError(f'暂时没考虑不同时间冲突')
+                    raise logging.error(f'{self.name} 暂时没考虑不同时间冲突 {left_vehicle} {right_vehicle}')
                 else:
                     raise ValueError(f'未考虑情况出现')
+
+        for i in range(self.vehicle_num - 1):
+            temp_left_pos = self.vehicles[i].simulate_move()
+            temp_right_pos = self.vehicles[i + 1].simulate_move()
+            if abs(temp_left_pos - temp_right_pos) < self.config['safety_distance']:
+                raise logging.error(f'{self.name} 调整之后仍发生冲突 {self.vehicles[i]} temp_left_pos:{temp_left_pos} '
+                                    f'{self.vehicles[i + 1]} temp_right_pos:{temp_right_pos}')
 
     def vehicle_choice(self, able_vehicles: list, tasks: list):
         if len(tasks) == 1:
@@ -193,8 +205,6 @@ class Track:
             # print(f'{vehicle} {vehicle.task}')
             if not vehicle.task and vehicle.check_task_doable(tasks):
                 able_vehicles.append(vehicle)
-        # if not able_vehicles:
-        #     raise ValueError(f'没有空闲车但被分配了任务')
         return able_vehicles
 
     def find_closest_vehicle(self, task, able_vehicles):
@@ -220,13 +230,15 @@ class Track:
         # 3.执行移动
         for vehicle in self.vehicles:
             vehicle.move()
+            # if self.name == 'bridge1' and vehicle.task:
+            #     logging.info(f'{vehicle}')
 
         # 安全距离检查
-        for current in self.vehicles:
-            for other in self.vehicles:
-                if current is not other and abs(current.pos - other.pos) < self.config['safety_distance']:
-                    raise RuntimeError(f"{self.name}: Distance between {current} and {other} is less than "
-                                       f"safety_distance. current_task:{current.task}, other_task:{other.task}")
+        for i in range(self.vehicle_num - 1):
+            left_vehicle = self.vehicles[i]
+            right_vehicle = self.vehicles[i + 1]
+            if abs(left_vehicle.pos - right_vehicle.pos) < self.config['safety_distance']:
+                logging.error(f'{self.name} 检测到两个车距离小于安全距离 {left_vehicle} {right_vehicle}')
 
     def add_vehicles(self, vehicle):
         self.vehicles.append(vehicle)

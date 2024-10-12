@@ -22,4 +22,4 @@ class Task:
     def __repr__(self):
         return f"\n\tTask(start_pos={self.start_pos}, end_pos={self.end_pos}, " \
                f"assign_time={self.assign_time}, pono={self.pono}, track_name='{self.track}', " \
-               f"type={self.type}, process_time={self.process_time})"
+               f"type={self.type}, process_time={self.process_time}, temp_hold_time={self.temp_hold_time})"

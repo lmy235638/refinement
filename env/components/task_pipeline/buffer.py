@@ -1,3 +1,5 @@
+import logging
+
 from env.components.task_pipeline.task import Task
 
 
@@ -32,7 +34,10 @@ class Buffer:
             self.buffer.append(task)
 
     def add_from_allocator(self, task):
+        if task.type == 'temp':
+            raise logging.error(f'车把临时任务返回给buffer')
         self.buffer.append(task)
+        logging.info(f'add task from allocator: {task}')
 
     def remove_task(self, task):
         if task in self.buffer:

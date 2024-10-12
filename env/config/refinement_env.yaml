@@ -1,4 +1,5 @@
 safety_distance: 20
+more_move_distance: 1.5
 simulate_safety_distance: 23
 unload_speed: 1.5
 fractional_load_speed: 1
