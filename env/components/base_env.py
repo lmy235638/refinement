@@ -46,10 +46,10 @@ class RefinementEnv:
         self.vehicles['crane2'].pos = 91
         self.vehicles['crane3'].pos = 48
         self.vehicles['crane5'].pos = 109
-        self.vehicles['trolley1_1'].pos = 75
-        self.vehicles['trolley1_2'].pos = 39
-        self.vehicles['trolley2_1'].pos = 132
-        self.vehicles['trolley2_2'].pos = 21
+        self.vehicles['trolley1_1'].pos = 39
+        self.vehicles['trolley1_2'].pos = 75
+        self.vehicles['trolley2_1'].pos = 21
+        self.vehicles['trolley2_2'].pos = 132
         self.vehicles['trolley_3'].pos = 156
         self.vehicles['trolley_4'].pos = 105
         self.vehicles['trolley_5'].pos = 35

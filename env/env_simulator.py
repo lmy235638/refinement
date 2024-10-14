@@ -14,49 +14,61 @@ class SimulatorEnv(RefinementEnv):
         pygame.init()
         screen_info = pygame.display.Info()
         self.screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
-
+        self.screen_height = self.screen.get_height()
+        self.screen_width = self.screen.get_width()
     def render(self):
         self.screen.fill(THECOLORS['white'])
+        font = pygame.font.SysFont("Times New Roman", 15)
         # self.gauge_tasks()
-        font = pygame.font.SysFont(None, 15)
+        left_padding = 200
+        under_padding = 100
+        scale_factor = 5
+        track_width = 2
+        circle_radius = 5
+        rect_width = 10
+        rect_height = 20
+
         for track in self.tracks.values():
             start = track.start
             end = track.end
             if track.vertical:
                 x = track.other_dim_pos
-                start_pos = ((100 + x * 3), (750 - start * 3))
-                end_pos = ((100 + x * 3), (750 - end * 3))
+                start_pos = ((left_padding + x * scale_factor),
+                             (self.screen_height - start * scale_factor - under_padding))
+                end_pos = ((left_padding + x * scale_factor), (self.screen_height - end * scale_factor - under_padding))
             else:
                 y = track.other_dim_pos
-                start_pos = ((100 + start * 3), (750 - y * 3))
-                end_pos = ((100 + end * 3), (750 - y * 3))
-            pygame.draw.line(self.screen, THECOLORS['black'], start_pos, end_pos, 2)
+                start_pos = ((left_padding + start * scale_factor),
+                             (self.screen_height - y * scale_factor - under_padding))
+                end_pos = ((left_padding + end * scale_factor),
+                           (self.screen_height - y * scale_factor - under_padding))
+            pygame.draw.line(self.screen, THECOLORS['black'], start_pos, end_pos, track_width)
+
         for station in self.stations.values():
-            x = 100 + station.x * 3
-            y = 750 - station.y * 3
+            x = left_padding + station.x * scale_factor
+            y = self.screen_height - station.y * scale_factor - under_padding
             name = station.name
 
             if station.ladle:
-                pygame.draw.circle(self.screen, THECOLORS['red'], (x, y), 5, width=0)
+                pygame.draw.circle(self.screen, THECOLORS['red'], (x, y), circle_radius, width=0)
             else:
-                pygame.draw.circle(self.screen, THECOLORS['red'], (x, y), 5, width=2)
+                pygame.draw.circle(self.screen, THECOLORS['red'], (x, y), circle_radius, width=2)
 
             text = font.render(name, True, THECOLORS['black'])
             self.screen.blit(text, (x, y))
+
         for vehicle in self.vehicles.values():
             if vehicle.type == 'trolley':
-                x = 100 + vehicle.other_dim_pos * 3 - 5
-                y = 750 - vehicle.pos * 3 - 10
-
-                # loaded = vehicle.load_degree > 0
+                x = left_padding + vehicle.other_dim_pos * scale_factor - 5
+                y = self.screen_height - vehicle.pos * scale_factor - 10 - under_padding
                 width = 10
                 height = 20
             else:
-                x = 100 + vehicle.pos * 3 - 10
-                y = 750 - vehicle.other_dim_pos * 3 - 5
-                # loaded = vehicle.load_degree > 0
+                x = left_padding + vehicle.pos * scale_factor - 10
+                y = self.screen_height - vehicle.other_dim_pos * scale_factor - 5 - under_padding
                 width = 20
                 height = 10
+
             # if loaded:
             if vehicle.ladle:
                 pygame.draw.rect(self.screen, THECOLORS['blue'], (x, y, width, height))
@@ -101,9 +113,9 @@ class SimulatorEnv(RefinementEnv):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
-                        format='%(levelname)s: - %(message)s', encoding='utf-8')
-    # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
+    # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
+    #                     format='%(levelname)s: - %(message)s', encoding='utf-8')
+    logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
                              task_file='data/processed_data/processed_data.json')

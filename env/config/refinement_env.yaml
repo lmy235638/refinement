@@ -1,5 +1,5 @@
 safety_distance: 20
-more_move_distance: 1.5
+more_move_distance: 0.5
 simulate_safety_distance: 23
 unload_speed: 1.5
 fractional_load_speed: 1
@@ -16,7 +16,7 @@ vehicles:
       InitLowerLimit: 48
       InitUpperLimit: 129
       connections:
-        - trolley2_1
+        - trolley2_2
         - trolley_3
         - trolley_4
         - trolley_5
@@ -32,7 +32,7 @@ vehicles:
       InitLowerLimit: 150
       InitUpperLimit: 267
       connections:
-        - trolley2_1
+        - trolley2_2
         - trolley_3
         - trolley_4
         - trolley_5
@@ -59,9 +59,9 @@ vehicles:
       InitLowerLimit: 11
       InitUpperLimit: 158
       connections:
-        - trolley1_1
-        - trolley2_2
+        - trolley1_2
         - trolley2_1
+        - trolley2_2
         - trolley_3
         - trolley_4
         - trolley_5
@@ -73,8 +73,8 @@ vehicles:
       InitLowerLimit: 11
       InitUpperLimit: 158
       connections:
-        - trolley1_2
-        - trolley2_2
+        - trolley1_1
+        - trolley2_1
         - trolley_3
         - trolley_4
         - trolley_5
@@ -83,21 +83,30 @@ vehicles:
   Trolleys:
     trolley1_1:
       other_dim_pos: 11
-      LowerMovingPos: 51
-      UpperMovingPos: 79
-      InitLowerLimit: 61
-      InitUpperLimit: 79
-      connections:
-        - crane3
-    trolley1_2:
-      other_dim_pos: 11
       LowerMovingPos: 13
       UpperMovingPos: 51
       InitLowerLimit: 13
       InitUpperLimit: 41
       connections:
         - crane5
+    trolley1_2:
+      other_dim_pos: 11
+      LowerMovingPos: 51
+      UpperMovingPos: 79
+      InitLowerLimit: 61
+      InitUpperLimit: 79
+      connections:
+        - crane3
     trolley2_1:
+      other_dim_pos: 48
+      LowerMovingPos: 13
+      UpperMovingPos: 79
+      InitLowerLimit: 13
+      InitUpperLimit: 66
+      connections:
+        - crane3
+        - crane5
+    trolley2_2:
       other_dim_pos: 48
       LowerMovingPos: 51
       UpperMovingPos: 141
@@ -106,15 +115,6 @@ vehicles:
       connections:
         - crane1_1
         - crane1_2
-        - crane3
-    trolley2_2:
-      other_dim_pos: 48
-      LowerMovingPos: 13
-      UpperMovingPos: 79
-      InitLowerLimit: 13
-      InitUpperLimit: 66
-      connections:
-        - crane5
         - crane3
     trolley_3:
       other_dim_pos: 73
@@ -583,7 +583,7 @@ Station_Layout:
       connections:
         - 1LF1
       vehicle:
-        - trolley2_1
+        - trolley2_2
     1CC:
       x: 223
       y: 134
@@ -608,8 +608,8 @@ Station_Layout:
         - 4RH3
         - 4RH5
       vehicle:
-        - trolley1_2
         - trolley1_1
+        - trolley1_2
     2LF:
       x: 48
       y: 51
@@ -617,8 +617,8 @@ Station_Layout:
         - 2LF3
         - 2LF5
       vehicle:
-        - trolley2_2
         - trolley2_1
+        - trolley2_2
     1RH:
       x: 158
       y: 51

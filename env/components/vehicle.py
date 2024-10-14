@@ -53,10 +53,19 @@ class Vehicle:
         else:
             raise ValueError('车辆类型未定义')
 
+    def check_whose_task(self, task):
+        if task.vehicle is None:
+            return True
+        else:
+            if task.vehicle == self.name:
+                return True
+            else:
+                return False
+
     def take_task(self, task):
         self.task = task
         # print(f'{self.name} take {task}')
-        logging.info(f'{self.name} take {task}')
+        logging.info(f'{self.name} at {self.pos} take {task}')
 
     def remove_task(self):
         # print(f'{self.name} remove {self.task}')

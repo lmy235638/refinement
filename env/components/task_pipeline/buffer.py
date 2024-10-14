@@ -33,11 +33,11 @@ class Buffer:
             task.end_pos = self.config['poses'][task.end_pos][self.axis]
             self.buffer.append(task)
 
-    def add_from_allocator(self, task):
+    def add_from_allocator(self, task, crash_type):
         if task.type == 'temp':
             raise logging.error(f'车把临时任务返回给buffer')
         self.buffer.append(task)
-        logging.info(f'add task from allocator: {task}')
+        logging.info(f'add {crash_type} task from allocator: {task}')
 
     def remove_task(self, task):
         if task in self.buffer:
