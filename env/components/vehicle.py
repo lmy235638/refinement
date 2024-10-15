@@ -44,14 +44,8 @@ class Vehicle:
         #     print('set idle')
 
     def check_task_doable(self, task):
-        if self.type == 'crane':
-            return self.lower_limit <= task.start_pos <= self.upper_limit and \
-                self.lower_limit <= task.end_pos <= self.upper_limit
-        elif self.type == 'trolley':
-            return self.lower_limit <= task.start_pos <= self.upper_limit and \
-                self.lower_limit <= task.end_pos <= self.upper_limit
-        else:
-            raise ValueError('车辆类型未定义')
+        return self.lower_limit <= task.start_pos <= self.upper_limit and \
+            self.lower_limit <= task.end_pos <= self.upper_limit
 
     def check_whose_task(self, task):
         if task.vehicle is None:
@@ -69,7 +63,7 @@ class Vehicle:
 
     def remove_task(self):
         # print(f'{self.name} remove {self.task}')
-        logging.info(f'{self.name} remove {self.task}')
+        logging.info(f'{self.name}at {self.pos} remove {self.task}')
         self.task = None
 
     def calculate_target(self):
@@ -160,7 +154,5 @@ class Vehicle:
         return self.pos + speed * action.value
 
     def __repr__(self):
-        return f"Vehicle(name={self.name}, upper_limit={self.upper_limit!r}, lower_limit={self.lower_limit!r}, " \
-               f"current_pos={self.pos!r}, \n\t\t\tload_degree={self.load_degree!r}, speed={self.speed!r}, " \
-               f"type={self.type!r}, track={self.track.name}, task={self.task}, " \
-               f"ladle={self.ladle.pono if self.ladle else None})"
+        return f"Vehicle(name={self.name}, current_pos={self.pos!r}, \n\t\t\tload_degree={self.load_degree!r}, " \
+               f"speed={self.speed!r}, ladle={self.ladle.pono if self.ladle else None}, task={self.task})"

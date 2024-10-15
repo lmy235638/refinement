@@ -6,6 +6,13 @@ import pygame
 from components.base_env import RefinementEnv
 from pygame.color import THECOLORS
 
+left_padding = 200
+under_padding = 100
+scale_factor = 5
+track_width = 2
+circle_radius = 5
+rect_width = 10
+rect_height = 20
 
 class SimulatorEnv(RefinementEnv):
     def __init__(self, config_file, task_file):
@@ -16,17 +23,15 @@ class SimulatorEnv(RefinementEnv):
         self.screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
         self.screen_height = self.screen.get_height()
         self.screen_width = self.screen.get_width()
+
     def render(self):
         self.screen.fill(THECOLORS['white'])
         font = pygame.font.SysFont("Times New Roman", 15)
+        time_font = pygame.font.SysFont("Times New Roman", 30)
         # self.gauge_tasks()
-        left_padding = 200
-        under_padding = 100
-        scale_factor = 5
-        track_width = 2
-        circle_radius = 5
-        rect_width = 10
-        rect_height = 20
+
+        sys_time = time_font.render(self.sys_time.strftime('%Y-%m-%d %H:%M:%S'), True, THECOLORS['black'])
+        self.screen.blit(sys_time, (self.screen_width/2 - 150, 40))
 
         for track in self.tracks.values():
             start = track.start
@@ -40,8 +45,7 @@ class SimulatorEnv(RefinementEnv):
                 y = track.other_dim_pos
                 start_pos = ((left_padding + start * scale_factor),
                              (self.screen_height - y * scale_factor - under_padding))
-                end_pos = ((left_padding + end * scale_factor),
-                           (self.screen_height - y * scale_factor - under_padding))
+                end_pos = ((left_padding + end * scale_factor),(self.screen_height - y * scale_factor - under_padding))
             pygame.draw.line(self.screen, THECOLORS['black'], start_pos, end_pos, track_width)
 
         for station in self.stations.values():
@@ -95,6 +99,8 @@ class SimulatorEnv(RefinementEnv):
                     running = False
                 if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
                     running = False
+            if self.sys_time > self.sys_end_time and self.all_track_free():
+                running = False
 
             self.render()
 
@@ -113,9 +119,9 @@ class SimulatorEnv(RefinementEnv):
 
 
 if __name__ == '__main__':
-    # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
-    #                     format='%(levelname)s: - %(message)s', encoding='utf-8')
-    logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
+    logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
+                        format='%(levelname)s: - %(message)s', encoding='utf-8')
+    # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
                              task_file='data/processed_data/processed_data.json')

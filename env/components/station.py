@@ -88,7 +88,7 @@ class Station:
                     # print(self)
                     # 检查两个车是否正确
                     if not self.check_captive_vehicle_pono(self.vehicles):
-                        raise RuntimeError(f'吸入的两车不正确: {self.vehicles}')
+                        raise logging.error(f'{self.name} 吸入的两车不正确: {self.vehicles}')
                     has_ladle_vehicle = None
                     no_ladle_vehicle = None
                     for vehicle in self.vehicles:

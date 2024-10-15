@@ -23,7 +23,6 @@ class Buffer:
             new_task = Task(start_pos=task['start'], end_pos=task['end'], assign_time=task['assign_time'],
                             end_time=task['end_time'], process_time=task['process_time'],
                             track=task['track'], pono=task['pono'])
-            new_task.determine_type()
             self.buffer.append(new_task)
             self.update_size(1)
 

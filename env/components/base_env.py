@@ -169,6 +169,12 @@ class RefinementEnv:
                             station.bind_track(track=track, name=track_name)
                             track.add_station(name=station_name, station=station)
 
+    def all_track_free(self):
+        for track in self.tracks.values():
+            if len(track.buffer.buffer) != 0 and not track.all_vehicle_free():
+                return False
+        return True
+
 
 if __name__ == '__main__':
     env = RefinementEnv(config_path='../config/refinement_env.yaml',

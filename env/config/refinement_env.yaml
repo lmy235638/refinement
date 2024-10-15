@@ -1,5 +1,8 @@
 safety_distance: 20
-more_move_distance: 0.5
+more_move_distance: 0.7
+more_pos_unload: 1.3
+more_pos_load: 0.9
+more_pos_fractional: 0.7
 simulate_safety_distance: 23
 unload_speed: 1.5
 fractional_load_speed: 1
@@ -12,7 +15,7 @@ vehicles:
     crane1_1:
       other_dim_pos: 134
       LowerMovingPos: 48
-      UpperMovingPos: 167
+      UpperMovingPos: 267
       InitLowerLimit: 48
       InitUpperLimit: 129
       connections:
@@ -27,7 +30,7 @@ vehicles:
         - trolley_10
     crane1_2:
       other_dim_pos: 134
-      LowerMovingPos: 73
+      LowerMovingPos: 48
       UpperMovingPos: 267
       InitLowerLimit: 150
       InitUpperLimit: 267

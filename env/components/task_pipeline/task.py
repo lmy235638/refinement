@@ -14,12 +14,7 @@ class Task:
         self.vehicle = vehicle
         self.temp_hold_time = temp_hold_time
 
-    def determine_type(self):
-        # if self.start_pos.endswith('LD'):
-        #     self.type = ''
-        pass
-
     def __repr__(self):
-        return f"\n\tTask(start_pos={self.start_pos}, end_pos={self.end_pos}, " \
-               f"assign_time={self.assign_time}, pono={self.pono}, track_name='{self.track}', " \
+        return f"\n\tTask(start_pos={self.start_pos}, end_pos={self.end_pos}, vehicle={self.vehicle} " \
+               f"assign_time={self.assign_time}, pono={self.pono},\n\t\t track_name='{self.track}', " \
                f"type={self.type}, process_time={self.process_time}, temp_hold_time={self.temp_hold_time})"
