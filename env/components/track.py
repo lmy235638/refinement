@@ -41,6 +41,39 @@ class Track:
         speed = vehicle.determine_speed()
         return int(abs((vehicle.pos - pos) / speed)) + 1
 
+    def cal_max_time(self, vehicle1, pos1, vehicle2, pos2):
+        return max(self.cal_move_time(vehicle1, pos1), self.cal_move_time(vehicle2, pos2))
+
+    def cal_stop_pos(self, vehicle, tar_pos):
+        cur_pos = vehicle.pos
+        speed = vehicle.determine_speed()
+
+        if tar_pos < cur_pos:
+            speed = -speed
+        while abs(cur_pos - tar_pos) > self.config['able_process_distance']:
+            cur_pos += speed
+
+        return cur_pos
+
+    def cal_avoid_pos(self, vehicle, avoid_pos, is_right):
+        cur_pos = vehicle.pos
+        speed = vehicle.determine_speed()
+        if is_right:
+            avoid_pos += self.config['safety_distance']
+            while cur_pos < avoid_pos:
+                cur_pos += speed
+        else:
+            avoid_pos -= self.config['safety_distance']
+            while cur_pos > avoid_pos:
+                cur_pos -= speed
+
+        return cur_pos
+
+    def cal_avoid_pos_all(self, prior_vehicle, prior_tar, avoid_vehicle, is_avoid_right):
+        prior_stop = self.cal_stop_pos(prior_vehicle, prior_tar)
+        avoid_pos = self.cal_avoid_pos(avoid_vehicle, prior_stop, is_avoid_right)
+        return prior_stop, avoid_pos
+
     def vehicles_crash_check(self):
         for i in range(self.vehicle_num - 1):
             temp_left_pos = self.vehicles[i].simulate_move()
@@ -70,18 +103,18 @@ class Track:
                 elif bool_xor(left_vehicle.task, right_vehicle.task):
                     if left_vehicle.task:
                         # 左车有任务撞右车
-                        pos = left_vehicle.task.end_pos + self.config['safety_distance'] + \
-                              self.config['more_move_distance'] if left_vehicle.ladle \
-                              else left_vehicle.task.start_pos + self.config['safety_distance']
                         logging.info('2-左有任务撞右车')
-                        right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', pos, 0))
+                        left_tar = self.cal_stop_pos(left_vehicle, left_vehicle.task.end_pos if left_vehicle.ladle else left_vehicle.task.start_pos)
+                        right_tar = self.cal_avoid_pos(right_vehicle, left_tar, is_right=True)
+                        time = max(self.cal_move_time(left_vehicle, left_tar), self.cal_move_time(right_vehicle, right_tar))
+                        right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', right_tar, time))
                     else:
                         # 右车有任务撞左车
-                        pos = right_vehicle.task.end_pos - self.config['safety_distance'] - \
-                              self.config['more_move_distance'] if right_vehicle.ladle \
-                              else right_vehicle.task.start_pos - self.config['safety_distance']
                         logging.info('2-右车有任务撞左车')
-                        left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', pos, 0))
+                        right_tar = self.cal_stop_pos(right_vehicle, right_vehicle.task.end_pos if right_vehicle.ladle else right_vehicle.task.start_pos )
+                        left_tar = self.cal_avoid_pos(left_vehicle, right_tar, is_right=False)
+                        time = max(self.cal_move_time(right_vehicle, right_tar), self.cal_move_time(left_vehicle, left_tar))
+                        left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', left_tar, time))
 
                 # 下面的两个车都会有任务
                 # 3. 两车任务下发时间相同
@@ -102,26 +135,26 @@ class Track:
                         else:
                             # 两车一左一右,在中间碰撞
                             self.buffer.add_from_allocator(right_vehicle.task, '3-左装右空-中间撞')
-                            pos = left_vehicle.task.end_pos + self.config['safety_distance'] + \
-                                  self.config['more_pos_unload']
-                            time = max(self.cal_move_time(right_vehicle, pos),
-                                       self.cal_move_time(left_vehicle, left_vehicle.task.end_pos))
-                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', pos, time))
+                            left_pos = self.cal_stop_pos(left_vehicle, left_vehicle.task.end_pos)
+                            right_pos = self.cal_avoid_pos(right_vehicle, left_pos, is_right=True)
+                            time = max(self.cal_move_time(right_vehicle, right_pos),
+                                       self.cal_move_time(left_vehicle, left_pos))
+                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_pos, time))
                     elif left_vehicle.load_degree == 0 and right_vehicle.load_degree != 0:
                         # 左车空载,右车装载
                         if left_action == right_action:
                             # 同一方向,说明空车追装载车
+                            # TODO 可优化时间
                             self.buffer.add_from_allocator(left_vehicle.task, '3-左空右装-空追装')
                             time = self.cal_move_time(right_vehicle, right_vehicle.task.end_pos)
                             left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, time))
                         else:
                             # 两车一左一右,在中间碰撞
                             self.buffer.add_from_allocator(left_vehicle.task, '3-左空右装-中间撞')
-                            pos = right_vehicle.task.end_pos - self.config['safety_distance'] - \
-                                  self.config['more_move_distance']
-                            time = max(self.cal_move_time(left_vehicle, pos),
-                                       self.cal_move_time(right_vehicle, right_vehicle.task.end_pos))
-                            left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', pos, time))
+                            right_pos = self.cal_stop_pos(right_vehicle, right_vehicle.task.end_pos)
+                            left_pos = self.cal_avoid_pos(left_vehicle, right_pos, is_right=False)
+                            time = self.cal_max_time(left_vehicle, left_pos, right_vehicle, right_pos)
+                            left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_pos, time))
                     elif left_vehicle.load_degree == 0 and right_vehicle.load_degree == 0:
                         # 两车都空载 谁近谁优先
                         if left_action != right_action:
@@ -129,14 +162,16 @@ class Track:
                             right_cost = abs(right_vehicle.pos - right_vehicle.task.start_pos)
                             if left_cost < right_cost:
                                 self.buffer.add_from_allocator(right_vehicle.task, '3-左空右空-右让左')
-                                pos = left_vehicle.task.start_pos + self.config['safety_distance'] \
-                                      + self.config['more_pos_unload']
-                                right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', pos, 0))
+                                left_pos = self.cal_stop_pos(left_vehicle, left_vehicle.task.start_pos)
+                                right_pos = self.cal_avoid_pos(right_vehicle, left_pos, is_right=True)
+                                time = self.cal_move_time(right_vehicle, right_pos)
+                                right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_pos, time))
                             else:
                                 self.buffer.add_from_allocator(left_vehicle.task, '3-左空右空-左让右')
-                                pos = right_vehicle.task.start_pos - self.config['safety_distance'] \
-                                      - self.config['more_pos_unload']
-                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', pos, 0))
+                                right_pos = self.cal_stop_pos(right_vehicle, right_vehicle.task.start_pos)
+                                left_pos = self.cal_avoid_pos(left_vehicle, right_pos, is_right=False)
+                                time = self.cal_move_time(right_vehicle, right_pos)
+                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_pos, time))
                         else:
                             raise ValueError(f'{self.name} 两空车方向一样但冲突情况出现 {left_vehicle} {right_vehicle}')
                     elif left_vehicle.load_degree != 0 and right_vehicle.load_degree != 0:
@@ -147,15 +182,15 @@ class Track:
                             if left_cost < right_cost:
                                 right_vehicle.task.vehicle = right_vehicle.name  # 确保有钢包的车做完临时任务还是他自己接
                                 self.buffer.add_from_allocator(right_vehicle.task, '3-左装右装-右让左')
-                                pos = right_vehicle.pos + left_action.value * left_vehicle.determine_speed() \
-                                      + self.config['more_move_distance']
-                                right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', pos, 0, is_end=True))
+                                left_pos = self.cal_stop_pos(left_vehicle, left_vehicle.task.end_pos)
+                                right_pos = self.cal_avoid_pos(right_vehicle, left_pos, is_right=True)
+                                right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_pos, 0, is_end=True))
                             else:
                                 left_vehicle.task.vehicle = left_vehicle.name
                                 self.buffer.add_from_allocator(left_vehicle.task, '3-左装右装-左让右')
-                                pos = left_vehicle.pos + right_action.value * right_vehicle.determine_speed() \
-                                      - self.config['more_move_distance']
-                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', pos, 0, is_end=True))
+                                right_pos = self.cal_stop_pos(right_vehicle, right_vehicle.task.end_pos)
+                                left_pos = self.cal_avoid_pos(left_vehicle, right_pos, is_right=False)
+                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_pos, 0, is_end=True))
                         else:
                             logging.error(f'两车装载方向一样但冲突情况出现')
                     else:
@@ -288,8 +323,8 @@ class Track:
             temp_left_pos = self.vehicles[i].simulate_move()
             temp_right_pos = self.vehicles[i + 1].simulate_move()
             if abs(temp_left_pos - temp_right_pos) < self.config['safety_distance']:
-                raise logging.error(f'{self.name} 调整之后仍发生冲突 {self.vehicles[i]} temp_left_pos:{temp_left_pos} '
-                                    f'{self.vehicles[i + 1]} temp_right_pos:{temp_right_pos}')
+                raise logging.error(f'{self.name} 调整之后仍发生冲突 {self.vehicles[i]} 左车临时位置:temp_left_pos:{temp_left_pos} '
+                                    f'{self.vehicles[i + 1]} 右车临时位置:temp_right_pos:{temp_right_pos}')
 
     def vehicle_choice(self, able_vehicles: list, tasks: list):
         if len(tasks) == 1:

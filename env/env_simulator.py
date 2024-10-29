@@ -88,7 +88,7 @@ class SimulatorEnv(RefinementEnv):
         running = True
         pygame.init()
 
-        writer = imageio.get_writer('animation.mp4', fps=60)
+        writer = imageio.get_writer('animation.mp4', fps=20)
         while running:
             logging.info('*' * 40 + f' {self.sys_time} ' + '*' * 40)
             self.step()
@@ -100,6 +100,7 @@ class SimulatorEnv(RefinementEnv):
                 if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
                     running = False
             if self.sys_time > self.sys_end_time and self.all_track_free():
+                logging.info(f'All tasks completed at {self.sys_time}')
                 running = False
 
             self.render()
@@ -119,9 +120,9 @@ class SimulatorEnv(RefinementEnv):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
-                        format='%(levelname)s: - %(message)s', encoding='utf-8')
-    # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
+    # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
+    #                     format='%(levelname)s: - %(message)s', encoding='utf-8')
+    logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
                              task_file='data/processed_data/processed_data.json')

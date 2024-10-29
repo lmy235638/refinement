@@ -63,6 +63,16 @@ class Station:
             self.processing_timer = process_time
 
     def step(self):
+        for vehicle in self.vehicles:
+            if vehicle.type == 'crane':
+                distance = abs(vehicle.pos - self.x)
+            elif vehicle.type == 'trolley':
+                distance = abs(vehicle.pos - self.y)
+            else:
+                raise logging.error(f'{vehicle.name} vehicle_type不正确')
+            if distance > self.config['able_process_distance']:
+                self.release_vehicle(vehicle)
+
         # 说明当前工位空闲
         if not self.is_operating:
             if self.type == 'workstation':
