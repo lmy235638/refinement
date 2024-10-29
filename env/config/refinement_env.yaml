@@ -3,7 +3,7 @@ simulate_safety_distance: 23
 unload_speed: 1.5
 fractional_load_speed: 1
 heavy_load_speed: 0.8
-able_process_distance: 1
+able_process_distance: 0.79
 real_action_time: 30
 
 vehicles:
