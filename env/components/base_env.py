@@ -6,7 +6,7 @@ from env.components.ladle import Ladle
 from env.components.task_pipeline.reader import Reader
 from env.components.task_pipeline.buffer import Buffer
 from env.components.task_pipeline.finder import Finder
-from utils.file_utils import load_config
+from utils.file_utils import load_config, pos_convert
 import logging
 
 
@@ -41,23 +41,23 @@ class RefinementEnv:
         logging.info([(name, vehicle.pos) for name, vehicle in self.vehicles.items()])
         logging.info([station.name for station in self.stations.values()])
 
-        self.vehicles['crane1_1'].pos = 57
-        self.vehicles['crane1_2'].pos = 260
-        self.vehicles['crane2'].pos = 91
-        self.vehicles['crane3'].pos = 48
-        self.vehicles['crane5'].pos = 109
-        self.vehicles['trolley1_1'].pos = 39
-        self.vehicles['trolley1_2'].pos = 75
-        self.vehicles['trolley2_1'].pos = 21
-        self.vehicles['trolley2_2'].pos = 132
-        self.vehicles['trolley_3'].pos = 156
-        self.vehicles['trolley_4'].pos = 105
-        self.vehicles['trolley_5'].pos = 35
-        self.vehicles['trolley_6'].pos = 57
-        self.vehicles['trolley_7'].pos = 143
-        self.vehicles['trolley_8'].pos = 135
-        self.vehicles['trolley_9'].pos = 151
-        self.vehicles['trolley_10'].pos = 150
+        # self.vehicles['crane1_1'].pos = pos_convert(57)
+        # self.vehicles['crane1_2'].pos = pos_convert(260)
+        # self.vehicles['crane2'].pos = pos_convert(91)
+        # self.vehicles['crane3'].pos = pos_convert(48)
+        # self.vehicles['crane5'].pos = pos_convert(109)
+        # self.vehicles['trolley1_1'].pos = pos_convert(39)
+        # self.vehicles['trolley1_2'].pos = pos_convert(75)
+        # self.vehicles['trolley2_1'].pos = pos_convert(21)
+        # self.vehicles['trolley2_2'].pos = pos_convert(132)
+        # self.vehicles['trolley_3'].pos = pos_convert(156)
+        # self.vehicles['trolley_4'].pos = pos_convert(105)
+        # self.vehicles['trolley_5'].pos = pos_convert(35)
+        # self.vehicles['trolley_6'].pos = pos_convert(57)
+        # self.vehicles['trolley_7'].pos = pos_convert(143)
+        # self.vehicles['trolley_8'].pos = pos_convert(135)
+        # self.vehicles['trolley_9'].pos = pos_convert(151)
+        # self.vehicles['trolley_10'].pos = pos_convert(150)
 
     def step(self):
         self.update_tasks()

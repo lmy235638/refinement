@@ -1,18 +1,18 @@
-safety_distance: 20
-unload_speed: 1.5
-fractional_load_speed: 1
-heavy_load_speed: 0.8
-able_process_distance: 0.79
+safety_distance: 372
+unload_speed: 93
+fractional_load_speed: 62
+heavy_load_speed: 49.6
+able_process_distance: 48.98
 real_action_time: 30
 
 vehicles:
   Cranes:
     crane1_1:
-      other_dim_pos: 134
-      LowerMovingPos: 48
-      UpperMovingPos: 267
-      InitLowerLimit: 48
-      InitUpperLimit: 129
+      other_dim_pos: 8402
+      LowerMovingPos: 2976
+      UpperMovingPos: 16183
+      InitLowerLimit: 2976
+      InitUpperLimit: 7998
       connections:
         - trolley2_2
         - trolley_3
@@ -24,11 +24,11 @@ vehicles:
         - trolley_9
         - trolley_10
     crane1_2:
-      other_dim_pos: 134
-      LowerMovingPos: 48
-      UpperMovingPos: 267
-      InitLowerLimit: 150
-      InitUpperLimit: 267
+      other_dim_pos: 8402
+      LowerMovingPos: 2976
+      UpperMovingPos: 16183
+      InitLowerLimit: 9330
+      InitUpperLimit: 16554
       connections:
         - trolley2_2
         - trolley_3
@@ -40,39 +40,39 @@ vehicles:
         - trolley_9
         - trolley_10
     crane2:
-      other_dim_pos: 106
-      LowerMovingPos: 73
-      UpperMovingPos: 158
-      InitLowerLimit: 73
-      InitUpperLimit: 158
+      other_dim_pos: 6663
+      LowerMovingPos: 4569
+      UpperMovingPos: 9883
+      InitLowerLimit: 4569
+      InitUpperLimit: 9883
       connections:
         - trolley_3
         - trolley_4
         - trolley_5
         - trolley_6
     crane3:
-      other_dim_pos: 79
-      LowerMovingPos: 11
-      UpperMovingPos: 158
-      InitLowerLimit: 11
-      InitUpperLimit: 158
+      other_dim_pos: 4932
+      LowerMovingPos: 700
+      UpperMovingPos: 9883
+      InitLowerLimit: 700
+      InitUpperLimit: 9883
       connections:
-        - trolley1_2
-        - trolley2_1
+        - trolley1_1
         - trolley2_2
+        - trolley2_1
         - trolley_3
         - trolley_4
         - trolley_5
         - trolley_6
     crane5:
-      other_dim_pos: 13
-      LowerMovingPos: 11
-      UpperMovingPos: 158
-      InitLowerLimit: 11
-      InitUpperLimit: 158
+      other_dim_pos: 845
+      LowerMovingPos: 700
+      UpperMovingPos: 9883
+      InitLowerLimit: 700
+      InitUpperLimit: 9883
       connections:
-        - trolley1_1
-        - trolley2_1
+        - trolley1_2
+        - trolley2_2
         - trolley_3
         - trolley_4
         - trolley_5
@@ -80,46 +80,46 @@ vehicles:
 
   Trolleys:
     trolley1_1:
-      other_dim_pos: 11
-      LowerMovingPos: 13
-      UpperMovingPos: 51
-      InitLowerLimit: 13
-      InitUpperLimit: 41
+      other_dim_pos: 700
+      LowerMovingPos: 845
+      UpperMovingPos: 3266
+      InitLowerLimit: 806
+      InitUpperLimit: 2542
       connections:
         - crane5
     trolley1_2:
-      other_dim_pos: 11
-      LowerMovingPos: 51
-      UpperMovingPos: 79
-      InitLowerLimit: 61
-      InitUpperLimit: 79
+      other_dim_pos: 700
+      LowerMovingPos: 3266
+      UpperMovingPos: 4932
+      InitLowerLimit: 3782
+      InitUpperLimit: 4898
       connections:
         - crane3
     trolley2_1:
-      other_dim_pos: 48
-      LowerMovingPos: 13
-      UpperMovingPos: 79
-      InitLowerLimit: 13
-      InitUpperLimit: 66
+      other_dim_pos: 2970
+      LowerMovingPos: 845
+      UpperMovingPos: 4932
+      InitLowerLimit: 806
+      InitUpperLimit: 4092
       connections:
         - crane3
         - crane5
     trolley2_2:
-      other_dim_pos: 48
-      LowerMovingPos: 51
-      UpperMovingPos: 141
-      InitLowerLimit: 93
-      InitUpperLimit: 141
+      other_dim_pos: 2970
+      LowerMovingPos: 3266
+      UpperMovingPos: 9140
+      InitLowerLimit: 5766
+      InitUpperLimit: 8742
       connections:
         - crane1_1
         - crane1_2
         - crane3
     trolley_3:
-      other_dim_pos: 73
-      LowerMovingPos: 13
-      UpperMovingPos: 165
-      InitLowerLimit: 13
-      InitUpperLimit: 165
+      other_dim_pos: 4569
+      LowerMovingPos: 845
+      UpperMovingPos: 10393
+      InitLowerLimit: 845
+      InitUpperLimit: 10393
       connections:
         - crane1_1
         - crane1_2
@@ -127,11 +127,11 @@ vehicles:
         - crane2
         - crane5
     trolley_4:
-      other_dim_pos: 102
-      LowerMovingPos: 13
-      UpperMovingPos: 165
-      InitLowerLimit: 13
-      InitUpperLimit: 165
+      other_dim_pos: 6321
+      LowerMovingPos: 845
+      UpperMovingPos: 10393
+      InitLowerLimit: 845
+      InitUpperLimit: 10393
       connections:
         - crane1_1
         - crane1_2
@@ -140,11 +140,11 @@ vehicles:
         - crane5
     # Trolly5_1涉及到逆物流问题,此轨道能和加料跨交互,能到达182.这里不考虑,因此限制到173
     trolley_5:
-      other_dim_pos: 129
-      LowerMovingPos: 13
-      UpperMovingPos: 165
-      InitLowerLimit: 13
-      InitUpperLimit: 165
+      other_dim_pos: 8085
+      LowerMovingPos: 845
+      UpperMovingPos: 10393
+      InitLowerLimit: 845
+      InitUpperLimit: 10393
       connections:
         - crane1_1
         - crane1_2
@@ -152,11 +152,11 @@ vehicles:
         - crane2
         - crane5
     trolley_6:
-      other_dim_pos: 158
-      LowerMovingPos: 13
-      UpperMovingPos: 134
-      InitLowerLimit: 13
-      InitUpperLimit: 134
+      other_dim_pos: 9883
+      LowerMovingPos: 845
+      UpperMovingPos: 8402
+      InitLowerLimit: 845
+      InitUpperLimit: 8402
       connections:
         - crane1_1
         - crane1_2
@@ -164,38 +164,38 @@ vehicles:
         - crane2
         - crane5
     trolley_7:
-      other_dim_pos: 150
-      LowerMovingPos: 134
-      UpperMovingPos: 155
-      InitLowerLimit: 134
-      InitUpperLimit: 155
+      other_dim_pos: 9385
+      LowerMovingPos: 8402
+      UpperMovingPos: 9370
+      InitLowerLimit: 8402
+      InitUpperLimit: 9370
       connections:
         - crane1_1
         - crane1_2
     trolley_8:
-      other_dim_pos: 167
-      LowerMovingPos: 134
-      UpperMovingPos: 155
-      InitLowerLimit: 134
-      InitUpperLimit: 155
+      other_dim_pos: 10418
+      LowerMovingPos: 8402
+      UpperMovingPos: 9370
+      InitLowerLimit: 8402
+      InitUpperLimit: 9370
       connections:
         - crane1_1
         - crane1_2
     trolley_9:
-      other_dim_pos: 220
-      LowerMovingPos: 134
-      UpperMovingPos: 155
-      InitLowerLimit: 134
-      InitUpperLimit: 155
+      other_dim_pos: 13703
+      LowerMovingPos: 8402
+      UpperMovingPos:  9454
+      InitLowerLimit: 8402
+      InitUpperLimit: 9454
       connections:
         - crane1_1
         - crane1_2
     trolley_10:
-      other_dim_pos: 240
-      LowerMovingPos: 134
-      UpperMovingPos: 155
-      InitLowerLimit: 134
-      InitUpperLimit: 155
+      other_dim_pos: 14891
+      LowerMovingPos: 8402
+      UpperMovingPos:  9454
+      InitLowerLimit: 8402
+      InitUpperLimit: 9454
       connections:
         - crane1_1
         - crane1_2
@@ -203,321 +203,335 @@ vehicles:
 Track:
   horizontal:
     bridge1:
-      other_dim_pos: 134
+      other_dim_pos: 8402
       low: 0
-      high: 287
+      high: 17794
       num_crane: 2
     bridge2:
-      other_dim_pos: 106
-      low: 73
-      high: 158
+      other_dim_pos: 6663
+      low: 4569
+      high: 9883
       num_crane: 1
     bridge3:
-      other_dim_pos: 79
-      low: 11
-      high: 158
+      other_dim_pos: 4932
+      low: 700
+      high: 9883
       num_crane: 1
     bridge5:
-      other_dim_pos: 13
-      low: 11
-      high: 158
+      other_dim_pos: 845
+      low: 700
+      high: 9883
       num_crane: 1
   vertical:
     trolley_track_1:
-      other_dim_pos: 11
-      low: 13
-      high: 93
+      other_dim_pos: 700
+      low: 845
+      high: 4932
     trolley_track_2:
-      other_dim_pos: 48
-      low: 13
-      high: 141
+      other_dim_pos: 2970
+      low: 845
+      high: 9140
     trolley_track_3:
-      other_dim_pos: 73
-      low: 13
-      high: 165
+      other_dim_pos: 4569
+      low: 845
+      high: 10393
     trolley_track_4:
-      other_dim_pos: 102
-      low: 13
-      high: 165
+      other_dim_pos: 6321
+      low: 845
+      high: 10393
     trolley_track_5:
-      other_dim_pos: 129
-      low: 13
-      high: 165
+      other_dim_pos: 8085
+      low: 845
+      high: 10393
     trolley_track_6:
-      other_dim_pos: 158
-      low: 13
-      high: 134
+      other_dim_pos: 9883
+      low: 845
+      high: 8402
     trolley_track_7:
-      other_dim_pos: 150
-      low: 134
-      high: 155
+      other_dim_pos: 9385
+      low: 8402
+      high: 9370
     trolley_track_8:
-      other_dim_pos: 167
-      low: 134
-      high: 155
+      other_dim_pos: 10418
+      low: 8402
+      high: 9370
     trolley_track_9:
-      other_dim_pos: 220
-      low: 134
-      high: 155
+      other_dim_pos: 13703
+      low: 8402
+      high: 9454
     trolley_track_10:
-      other_dim_pos: 240
-      low: 134
-      high: 155
+      other_dim_pos: 14891
+      low: 8402
+      high: 9454
 
 poses:
   1LD:
-    x: 73
-    y: 165
+    x: 4560
+    y: 10393
     connections:
       - 1LD1
   2LD:
-    x: 102
-    y: 165
+    x: 6311
+    y: 10393
     connections:
       - 2LD1
   3LD:
-    x: 129
-    y: 165
+    x: 8155
+    y: 10393
     connections:
       - 3LD1
   4LF_left:
-    x: 150
-    y: 155
+    x: 9385
+    y: 9370
     connections:
       - 4LF1
   4LF_right:
-    x: 167
-    y: 155
+    x: 10418
+    y: 9370
     connections:
       - 4LF2
   2RH_left:
-    x: 220
-    y: 155
+    x: 13703
+    y: 9454
     connections:
       - 2RH1
   2RH_right:
-    x: 240
-    y: 155
+    x: 14891
+    y: 9454
     connections:
       - 2RH2
   1LF:
-    x: 48
-    y: 141
+    x: 2970
+    y: 9140
     connections:
       - 1LF1
   1CC:
-    x: 223
-    y: 134
+    x: 14773
+    y: 8402
     connections:
       - 2RH2
       - 2RH1
   2CC:
-    x: 267
-    y: 134
+    x: 16183
+    y: 8402
     connections:
       - 2RH2
   4RH:
-    x: 11
-    y: 51
+    x: 700
+    y: 3266
     connections:
       - 4RH3
       - 4RH5
-  2LF:
-    x: 48
-    y: 51
+  2LF_up:
+    x: 2970
+    y: 3357
     connections:
-      -
+      - 2LF3_up
+  2LF_down:
+    x: 2970
+    y: 3357
+    connections:
+      - 2LF3_down
       - 2LF5
   1RH:
-    x: 158
-    y: 51
+    x: 9883
+    y: 3082
     connections:
       - 1RH3
       - 1RH5
   3CC:
-    x: 34
-    y: 13
+    x: 2116
+    y: 845
     connections:
       - 4RH5
       - 2LF5
   1LF1:
-    x: 48
-    y: 134
+    x: 2970
+    y: 8402
     connections:
       - 1LF
       - 1LD1
-      - 2LF3
+      - 2LF3_up
   1LD1:
-    x: 73
-    y: 134
+    x: 4569
+    y: 8402
     connections:
       - 1LD
       - 1LF1
       - 1LD2
       - 2LD1
   2LD1:
-    x: 102
-    y: 134
+    x: 6321
+    y: 8402
     connections:
       - 2LD
       - 1LD1
       - 2LD2
       - 3LD1
   3LD1:
-    x: 129
-    y: 134
+    x: 8085
+    y: 8402
     connections:
       - 3LD
       - 2LD1
       - 3LD2
       - 4LF1
   4LF1:
-    x: 150
-    y: 134
+    x: 9385
+    y: 8402
     connections:
       - 4LF_left
       - 3LD1
       - 1RH1
   4LF2:
-    x: 167
-    y: 134
+    x: 10418
+    y: 8402
     connections:
       - 4LF_right
       - 2RH1
       - 1RH1
   1RH1:
-    x: 158
-    y: 134
+    x: 9883
+    y: 8402
     connections:
       - 4LF1
       - 4LF2
       - 1RH2
   2RH1:
-    x: 220
-    y: 134
+    x: 13703
+    y: 8402
     connections:
       - 1CC
       - 4LF2
       - 2RH_left
   2RH2:
-    x: 240
-    y: 134
+    x: 14891
+    y: 8402
     connections:
       - 1CC
       - 2CC
       - 2RH_right
   1LD2:
-    x: 73
-    y: 106
+    x: 4569
+    y: 6663
     connections:
       - 2LD2
       - 1LD1
       - 1LD3
   2LD2:
-    x: 102
-    y: 106
+    x: 6321
+    y: 6663
     connections:
       - 2LD1
       - 1LD2
       - 3LD2
       - 2LD3
   3LD2:
-    x: 129
-    y: 106
+    x: 8085
+    y: 6663
     connections:
       - 3LD1
       - 2LD2
       - 1RH2
       - 3LD3
   1RH2:
-    x: 158
-    y: 106
+    x: 9883
+    y: 6663
     connections:
       - 3LD2
       - 1RH1
       - 1RH3
   4RH3:
-    x: 11
-    y: 79
+    x: 700
+    y: 4932
     connections:
-      - 2LF3
+      - 2LF3_up
+      - 2LF3_down
       - 4RH
-  2LF3:
-    x: 48
-    y: 79
+  2LF3_up:
+    x: 2970
+    y: 4932
     connections:
       - 1LF1
       - 4RH3
-      - 2LF
+      - 2LF_up
+      - 1LD3
+  2LF3_down:
+    x: 2970
+    y: 4932
+    connections:
+      - 4RH3
+      - 2LF_down
       - 1LD3
   1LD3:
-    x: 73
-    y: 79
+    x: 4569
+    y: 4932
     connections:
-      - 2LF3
+      - 2LF3_up
+      - 2LF3_down
       - 1LD2
       - 2LD3
       - 1LD5
   2LD3:
-    x: 102
-    y: 79
+    x: 6321
+    y: 4932
     connections:
       - 1LD3
       - 3LD3
       - 2LD2
       - 2LD5
   3LD3:
-    x: 129
-    y: 79
+    x: 8085
+    y: 4932
     connections:
       - 2LD3
       - 3LD2
       - 3LD5
       - 1RH3
   1RH3:
-    x: 158
-    y: 79
+    x: 9883
+    y: 4932
     connections:
       - 3LD3
       - 1RH2
       - 1RH
   4RH5:
-    x: 11
-    y: 13
+    x: 700
+    y: 845
     connections:
       - 4RH
       - 3CC
   2LF5:
-    x: 48
-    y: 13
+    x: 2970
+    y: 845
     connections:
-      - 2LF
+      - 2LF_down
       - 3CC
       - 1LD5
   1LD5:
-    x: 73
-    y: 13
+    x: 4569
+    y: 845
     connections:
       - 1LD3
       - 2LF5
       - 2LD5
   2LD5:
-    x: 102
-    y: 13
+    x: 6321
+    y: 845
     connections:
       - 1LD5
       - 3LD5
       - 2LD3
   3LD5:
-    x: 129
-    y: 13
+    x: 8085
+    y: 845
     connections:
       - 2LD5
       - 3LD3
       - 1RH5
   1RH5:
-    x: 158
-    y: 13
+    x: 9883
+    y: 845
     connections:
       - 3LD5
       - 1RH
@@ -527,64 +541,64 @@ poses:
 Station_Layout:
   workstations:
     1LD:
-      x: 73
-      y: 165
+      x: 4560
+      y: 10393
       connections:
         - 1LD1
       vehicle:
         - trolley_3
     2LD:
-      x: 102
-      y: 165
+      x: 6311
+      y: 10393
       connections:
         - 2LD1
       vehicle:
         - trolley_4
     3LD:
-      x: 129
-      y: 165
+      x: 8155
+      y: 10393
       connections:
         - 3LD1
       vehicle:
         - trolley_5
     4LF_left:
-      x: 150
-      y: 155
+      x: 9385
+      y: 9370
       connections:
         - 4LF1
       vehicle:
         - trolley_7
     4LF_right:
-      x: 167
-      y: 155
+      x: 10418
+      y: 9370
       connections:
         - 4LF2
       vehicle:
         - trolley_8
     2RH_left:
-      x: 220
-      y: 155
+      x: 13703
+      y: 9454
       connections:
         - 2RH1
       vehicle:
         - trolley_9
     2RH_right:
-      x: 240
-      y: 155
+      x: 14891
+      y: 9454
       connections:
         - 2RH2
       vehicle:
         - trolley_10
     1LF:
-      x: 48
-      y: 141
+      x: 2970
+      y: 9140
       connections:
         - 1LF1
       vehicle:
         - trolley2_2
     1CC:
-      x: 223
-      y: 134
+      x: 14773
+      y: 8402
       connections:
         - 2RH2
         - 2RH1
@@ -592,16 +606,16 @@ Station_Layout:
         - crane1_1
         - crane1_2
     2CC:
-      x: 267
-      y: 134
+      x: 16183
+      y: 8402
       connections:
         - 2RH2
       vehicle:
         - crane1_1
         - crane1_2
     4RH:
-      x: 11
-      y: 51
+      x: 700
+      y: 3266
       connections:
         - 4RH3
         - 4RH5
@@ -609,8 +623,8 @@ Station_Layout:
         - trolley1_1
         - trolley1_2
     2LF:
-      x: 48
-      y: 51
+      x: 2970
+      y: 3357
       connections:
         - 2LF3
         - 2LF5
@@ -618,16 +632,16 @@ Station_Layout:
         - trolley2_1
         - trolley2_2
     1RH:
-      x: 158
-      y: 51
+      x: 9883
+      y: 3082
       connections:
         - 1RH3
         - 1RH5
       vehicle:
         - trolley_6
     3CC:
-      x: 34
-      y: 13
+      x: 2116
+      y: 845
       connections:
         - 4RH5
         - 2LF5
@@ -636,183 +650,183 @@ Station_Layout:
   # 交互位置
   intersections:
     1LF1:
-      x: 48
-      y: 134
+      x: 2970
+      y: 8402
       connections:
         - 1LF
         - 1LD1
         - 2LF3
     1LD1:
-      x: 73
-      y: 134
+      x: 4569
+      y: 8402
       connections:
         - 1LD
         - 1LF1
         - 1LD2
         - 2LD1
     2LD1:
-      x: 102
-      y: 134
+      x: 6321
+      y: 8402
       connections:
         - 2LD
         - 1LD1
         - 2LD2
         - 3LD1
     3LD1:
-      x: 129
-      y: 134
+      x: 8085
+      y: 8402
       connections:
         - 3LD
         - 2LD1
         - 3LD2
         - 4LF1
     4LF1:
-      x: 150
-      y: 134
+      x: 9385
+      y: 8402
       connections:
         - 4LF_left
         - 3LD1
         - 1RH1
     4LF2:
-      x: 167
-      y: 134
+      x: 10418
+      y: 8402
       connections:
         - 4LF_right
         - 2RH1
         - 1RH1
     1RH1:
-      x: 158
-      y: 134
+      x: 9883
+      y: 8402
       connections:
         - 4LF1
         - 4LF2
         - 1RH2
     2RH1:
-      x: 220
-      y: 134
+      x: 13703
+      y: 8402
       connections:
         - 1CC
         - 4LF2
         - 2RH_left
     2RH2:
-      x: 240
-      y: 134
+      x: 14891
+      y: 8402
       connections:
         - 1CC
         - 2CC
         - 2RH_right
     1LD2:
-      x: 73
-      y: 106
+      x: 4569
+      y: 6663
       connections:
         - 2LD2
         - 1LD1
         - 1LD3
     2LD2:
-      x: 102
-      y: 106
+      x: 6321
+      y: 6663
       connections:
         - 2LD1
         - 1LD2
         - 3LD2
         - 2LD3
     3LD2:
-      x: 129
-      y: 106
+      x: 8085
+      y: 6663
       connections:
         - 3LD1
         - 2LD2
         - 1RH2
         - 3LD3
     1RH2:
-      x: 158
-      y: 106
+      x: 9883
+      y: 6663
       connections:
         - 3LD2
         - 1RH1
         - 1RH3
     4RH3:
-      x: 11
-      y: 79
+      x: 700
+      y: 4932
       connections:
         - 2LF3
         - 4RH
     2LF3:
-      x: 48
-      y: 79
+      x: 2970
+      y: 4932
       connections:
         - 1LF1
         - 4RH3
         - 2LF
         - 1LD3
     1LD3:
-      x: 73
-      y: 79
+      x: 4569
+      y: 4932
       connections:
         - 2LF3
         - 1LD2
         - 2LD3
         - 1LD5
     2LD3:
-      x: 102
-      y: 79
+      x: 6321
+      y: 4932
       connections:
         - 1LD3
         - 3LD3
         - 2LD2
         - 2LD5
     3LD3:
-      x: 129
-      y: 79
+      x: 8085
+      y: 4932
       connections:
         - 2LD3
         - 3LD2
         - 3LD5
         - 1RH3
     1RH3:
-      x: 158
-      y: 79
+      x: 9883
+      y: 4932
       connections:
         - 3LD3
         - 1RH2
         - 1RH
     4RH5:
-      x: 11
-      y: 13
+      x: 700
+      y: 845
       connections:
         - 4RH
         - 3CC
     2LF5:
-      x: 48
-      y: 13
+      x: 2970
+      y: 845
       connections:
         - 2LF
         - 3CC
         - 1LD5
     1LD5:
-      x: 73
-      y: 13
+      x: 4569
+      y: 845
       connections:
         - 1LD3
         - 2LF5
         - 2LD5
     2LD5:
-      x: 102
-      y: 13
+      x: 6321
+      y: 845
       connections:
         - 1LD5
         - 3LD5
         - 2LD3
     3LD5:
-      x: 129
-      y: 13
+      x: 8085
+      y: 845
       connections:
         - 2LD5
         - 3LD3
         - 1RH5
     1RH5:
-      x: 158
-      y: 13
+      x: 9883
+      y: 845
       connections:
         - 3LD5
         - 1RH

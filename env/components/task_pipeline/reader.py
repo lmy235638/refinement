@@ -41,8 +41,3 @@ class Reader:
 
     def remove_task(self, task):
         self.records.remove(task)
-
-
-if __name__ == '__main__':
-    reader = Reader('../../data/task.json')
-    print(reader.get_sys_time())

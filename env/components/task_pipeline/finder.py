@@ -142,8 +142,3 @@ class Finder:
             raise ValueError("存在多个共同的可达站点，但函数设计为只返回一个站点。")
         else:
             raise ValueError("没有找到共同可达站点")
-
-    # if __name__ == '__main__':
-# task_allocator = Allocator(file_path='../../data/task.json',
-#                            config_path='../../config/refinement_env.yaml')
-# task_allocator.decomposition()

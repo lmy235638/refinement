@@ -21,3 +21,7 @@ def print_iterators(iterators):
 
 def bool_xor(a, b):
     return (a and not b) or (not a and b)
+
+def pos_convert(pos):
+    factor = 62
+    return pos * factor
