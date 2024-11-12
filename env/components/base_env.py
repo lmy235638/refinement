@@ -41,23 +41,23 @@ class RefinementEnv:
         logging.info([(name, vehicle.pos) for name, vehicle in self.vehicles.items()])
         logging.info([station.name for station in self.stations.values()])
 
-        # self.vehicles['crane1_1'].pos = pos_convert(57)
-        # self.vehicles['crane1_2'].pos = pos_convert(260)
-        # self.vehicles['crane2'].pos = pos_convert(91)
-        # self.vehicles['crane3'].pos = pos_convert(48)
-        # self.vehicles['crane5'].pos = pos_convert(109)
-        # self.vehicles['trolley1_1'].pos = pos_convert(39)
-        # self.vehicles['trolley1_2'].pos = pos_convert(75)
-        # self.vehicles['trolley2_1'].pos = pos_convert(21)
-        # self.vehicles['trolley2_2'].pos = pos_convert(132)
-        # self.vehicles['trolley_3'].pos = pos_convert(156)
-        # self.vehicles['trolley_4'].pos = pos_convert(105)
-        # self.vehicles['trolley_5'].pos = pos_convert(35)
-        # self.vehicles['trolley_6'].pos = pos_convert(57)
-        # self.vehicles['trolley_7'].pos = pos_convert(143)
-        # self.vehicles['trolley_8'].pos = pos_convert(135)
-        # self.vehicles['trolley_9'].pos = pos_convert(151)
-        # self.vehicles['trolley_10'].pos = pos_convert(150)
+        # self.vehicles['crane1_1'].pos = 62
+        # self.vehicles['crane1_2'].pos = 156
+        # self.vehicles['crane2'].pos = 121
+        # self.vehicles['crane3'].pos = 36
+        # self.vehicles['crane5'].pos = 108
+        # self.vehicles['trolley1_1'].pos = 28
+        # self.vehicles['trolley1_2'].pos = 63
+        # self.vehicles['trolley2_1'].pos = 66
+        # self.vehicles['trolley2_2'].pos = 121
+        # self.vehicles['trolley_3'].pos = 117
+        # self.vehicles['trolley_4'].pos = 50
+        # self.vehicles['trolley_5'].pos = 51
+        # self.vehicles['trolley_6'].pos = 71
+        # self.vehicles['trolley_7'].pos = 150
+        # self.vehicles['trolley_8'].pos = 137
+        # self.vehicles['trolley_9'].pos = 134
+        # self.vehicles['trolley_10'].pos = 147
 
     def step(self):
         self.update_tasks()

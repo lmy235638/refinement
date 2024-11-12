@@ -331,11 +331,16 @@ class Track:
         remove_tasks = []
         for task in self.buffer.buffer:
             able_vehicles = self.find_able_vehicles(task)  # 找出能接任务的车
+            # logging.info(f'able_vehicles: {able_vehicles}')
             if able_vehicles:
-                able_vehicle = self.find_closest_vehicle(task, able_vehicles)
-                # logging.info(f'{able_vehicle.name} {able_vehicle.check_whose_task(task)}')
-                if able_vehicle.check_whose_task(task):
-                    # 确保有钢包的车还能接回自己的任务
+                if task.vehicle is not None:
+                    for able_vehicle in able_vehicles:
+                        if able_vehicle.check_whose_task(task):
+                            # 确保有钢包的车还能接回自己的任务
+                            able_vehicle.take_task(task)
+                            remove_tasks.append(task)
+                else:
+                    able_vehicle = self.find_closest_vehicle(task, able_vehicles)
                     able_vehicle.take_task(task)
                     remove_tasks.append(task)
         for remove_task in remove_tasks:
@@ -381,8 +386,8 @@ class Track:
         for vehicle in self.vehicles:
             vehicle.move()
             # logging.info(f'{vehicle}')
-            if self.name == 'bridge1':
-                logging.info(f'车: {vehicle}')
+            # if self.name == 'bridge1':
+            #     logging.info(f'车: {vehicle}')
 
         # 安全距离检查
         for i in range(self.vehicle_num - 1):
@@ -407,6 +412,6 @@ class Track:
     def __repr__(self):
         reachable_stations_repr = ", ".join(
             repr(station) for station in self.stations) if self.stations else "None"
-        return f"Track(start={self.start!r}, vertical={self.vertical!r}, end={self.end!r}, " \
+        return f"Track(name={self.name}, start={self.start!r}, vertical={self.vertical!r}, end={self.end!r}, " \
                f"other_dim_pos={self.other_dim_pos!r}, \n\t\t\tvehicles={list(self.vehicles)}, " \
                f"\n\t\t\treachable_stations=[{reachable_stations_repr}])"

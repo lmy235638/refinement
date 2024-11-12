@@ -104,6 +104,7 @@ class SimulatorEnv(RefinementEnv):
                 running = False
 
             self.render()
+            clock.tick(60)
 
             # # 保存当前帧
             # surface = pygame.display.get_surface()
@@ -114,7 +115,6 @@ class SimulatorEnv(RefinementEnv):
             # array = np.rot90(array, k=3)
             # writer.append_data(array)
 
-            clock.tick(60)
         pygame.quit()
         writer.close()
 

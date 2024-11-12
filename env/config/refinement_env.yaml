@@ -326,7 +326,7 @@ poses:
     x: 48
     y: 51
     connections:
-      -
+      - 2LF3
       - 2LF5
   1RH:
     x: 158

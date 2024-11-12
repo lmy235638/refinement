@@ -33,7 +33,7 @@ class Station:
     def remove_ladle(self):
         ladle = self.ladle
         if self.ladle is None:
-            raise RuntimeError(f'工位没有钢包 {self}')
+            raise logging.error(f'工位没有钢包 {self}')
         else:
             self.ladle = None
         return ladle

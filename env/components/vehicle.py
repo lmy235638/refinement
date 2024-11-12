@@ -48,13 +48,17 @@ class Vehicle:
             self.lower_limit <= task.end_pos <= self.upper_limit
 
     def check_whose_task(self, task):
-        if task.vehicle is None:
+        if task.vehicle == self.name:
             return True
         else:
-            if task.vehicle == self.name:
-                return True
-            else:
-                return False
+            return False
+        # if task.vehicle is None:
+        #     return True
+        # else:
+        #     if task.vehicle == self.name:
+        #         return True
+        #     else:
+        #         return False
 
     def take_task(self, task):
         self.task = task
@@ -136,6 +140,7 @@ class Vehicle:
     def take_ladle(self, ladle):
         if self.ladle is None:
             self.ladle = ladle
+            logging.info(f'{self.name} take ladle {ladle.pono}')
         else:
             raise ValueError('已有钢包')
 
@@ -143,6 +148,7 @@ class Vehicle:
         ladle = self.ladle
         if self.ladle:
             self.ladle = None
+            logging.info(f'{self.name} drop ladle {ladle.pono}')
         else:
             raise ValueError('没有钢包')
 
