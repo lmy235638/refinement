@@ -218,8 +218,8 @@ class EnvRecord(RefinementEnv):
                              'BC_TYPE': bc_type,
                              'BEGIN_POSITION': result['begin_pos'],
                              'TARGET_POSITION': result['tar_pos'],
-                             'START_TIME': result['start_time'],
-                             'END_TIME': result['end_time'],
+                             'START_TIME': result['start_time'].strftime('%Y%m%d%H%M%S'),
+                             'END_TIME': result['end_time'].strftime('%Y%m%d%H%M%S'),
                              'LOAD_STATE': result['load_state'],
                              'LOAD_STATE_REMARK': load_degree_remark[result['load_state']],
                              'STATE': state,
@@ -231,9 +231,9 @@ class EnvRecord(RefinementEnv):
         pass
 
     def record_all(self):
-        clock = pygame.time.Clock()
-        pygame.init()
-        writer = imageio.get_writer('animation.mp4', fps=20)
+        # clock = pygame.time.Clock()
+        # pygame.init()
+        # writer = imageio.get_writer('animation.mp4', fps=20)
 
         self.data = {
             "INITIALINFORMATION": self.record_reset(),
@@ -249,8 +249,8 @@ class EnvRecord(RefinementEnv):
             self.record_vehicle()
             self.record_station()
 
-            self.render()
-            clock.tick(60)
+            # self.render()
+            # clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False

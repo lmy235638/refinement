@@ -57,9 +57,9 @@ vehicles:
       InitLowerLimit: 700
       InitUpperLimit: 9883
       connections:
-        - trolley1_1
-        - trolley2_2
+        - trolley1_2
         - trolley2_1
+        - trolley2_2
         - trolley_3
         - trolley_4
         - trolley_5
@@ -71,8 +71,8 @@ vehicles:
       InitLowerLimit: 700
       InitUpperLimit: 9883
       connections:
-        - trolley1_2
-        - trolley2_2
+        - trolley1_1
+        - trolley2_1
         - trolley_3
         - trolley_4
         - trolley_5
@@ -204,7 +204,7 @@ Track:
   horizontal:
     bridge1:
       other_dim_pos: 8402
-      low: 2970
+      low: 700
       high: 17794
       num_crane: 2
     bridge2:

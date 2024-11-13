@@ -86,7 +86,7 @@ class SimulatorEnv(RefinementEnv):
     def main_game_loop(self):
         clock = pygame.time.Clock()
         running = True
-        pygame.init()
+        # pygame.init()
 
         writer = imageio.get_writer('animation.mp4', fps=20)
         while running:
@@ -103,8 +103,8 @@ class SimulatorEnv(RefinementEnv):
                 logging.info(f'All tasks completed at {self.sys_time}')
                 running = False
 
-            self.render()
-            clock.tick(60)
+            # self.render()
+            # clock.tick(60)
 
             # # 保存当前帧
             # surface = pygame.display.get_surface()

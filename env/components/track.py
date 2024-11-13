@@ -331,7 +331,8 @@ class Track:
         remove_tasks = []
         for task in self.buffer.buffer:
             able_vehicles = self.find_able_vehicles(task)  # 找出能接任务的车
-            # logging.info(f'able_vehicles: {able_vehicles}')
+            # if self.name == 'trolley_track_2':
+            #     logging.info(f'able_vehicles: {able_vehicles}')
             if able_vehicles:
                 if task.vehicle is not None:
                     for able_vehicle in able_vehicles:
