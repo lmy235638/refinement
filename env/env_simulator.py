@@ -86,9 +86,9 @@ class SimulatorEnv(RefinementEnv):
     def main_game_loop(self):
         clock = pygame.time.Clock()
         running = True
-        # pygame.init()
+        pygame.init()
 
-        writer = imageio.get_writer('animation.mp4', fps=20)
+        writer = imageio.get_writer('animation.mp4', fps=40)
         while running:
             logging.info('*' * 40 + f' {self.sys_time} ' + '*' * 40)
             self.step()
@@ -103,17 +103,17 @@ class SimulatorEnv(RefinementEnv):
                 logging.info(f'All tasks completed at {self.sys_time}')
                 running = False
 
-            # self.render()
-            # clock.tick(60)
+            self.render()
+            clock.tick(60)
 
-            # # 保存当前帧
-            # surface = pygame.display.get_surface()
-            # array = pygame.surfarray.array3d(surface)
-            # # 翻转帧的垂直方向
-            # array = np.flip(array, axis=0)
-            # # 向右旋转90度
-            # array = np.rot90(array, k=3)
-            # writer.append_data(array)
+            # 保存当前帧
+            surface = pygame.display.get_surface()
+            array = pygame.surfarray.array3d(surface)
+            # 翻转帧的垂直方向
+            array = np.flip(array, axis=0)
+            # 向右旋转90度
+            array = np.rot90(array, k=3)
+            writer.append_data(array)
 
         pygame.quit()
         writer.close()
@@ -122,7 +122,7 @@ class SimulatorEnv(RefinementEnv):
 if __name__ == '__main__':
     # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
     #                     format='%(levelname)s: - %(message)s', encoding='utf-8')
-    logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
+    # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
                              task_file='data/processed_data/processed_data.json')

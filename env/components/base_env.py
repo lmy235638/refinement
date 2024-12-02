@@ -41,23 +41,23 @@ class RefinementEnv:
         logging.info([(name, vehicle.pos) for name, vehicle in self.vehicles.items()])
         logging.info([station.name for station in self.stations.values()])
 
-        self.vehicles['crane1_1'].pos = 6628
-        self.vehicles['crane1_2'].pos = 11302
-        self.vehicles['crane2'].pos = 7586
-        self.vehicles['crane3'].pos = 4769
-        self.vehicles['crane5'].pos = 3514
-        self.vehicles['trolley1_1'].pos = 1983
-        self.vehicles['trolley1_2'].pos = 4347
-        self.vehicles['trolley2_1'].pos = 1717
-        self.vehicles['trolley2_2'].pos = 6790
-        self.vehicles['trolley_3'].pos = 8427
-        self.vehicles['trolley_4'].pos = 1434
-        self.vehicles['trolley_5'].pos = 9335
-        self.vehicles['trolley_6'].pos = 3388
-        self.vehicles['trolley_7'].pos = 9350
-        self.vehicles['trolley_8'].pos = 9015
-        self.vehicles['trolley_9'].pos = 8869
-        self.vehicles['trolley_10'].pos = 8584
+        # self.vehicles['crane1_1'].pos = 6628
+        # self.vehicles['crane1_2'].pos = 11302
+        # self.vehicles['crane2'].pos = 7586
+        # self.vehicles['crane3'].pos = 4769
+        # self.vehicles['crane5'].pos = 3514
+        # self.vehicles['trolley1_1'].pos = 1983
+        # self.vehicles['trolley1_2'].pos = 4347
+        # self.vehicles['trolley2_1'].pos = 1717
+        # self.vehicles['trolley2_2'].pos = 6790
+        # self.vehicles['trolley_3'].pos = 8427
+        # self.vehicles['trolley_4'].pos = 1434
+        # self.vehicles['trolley_5'].pos = 9335
+        # self.vehicles['trolley_6'].pos = 3388
+        # self.vehicles['trolley_7'].pos = 9350
+        # self.vehicles['trolley_8'].pos = 9015
+        # self.vehicles['trolley_9'].pos = 8869
+        # self.vehicles['trolley_10'].pos = 8584
 
     def step(self):
         self.update_tasks()

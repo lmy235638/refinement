@@ -104,25 +104,21 @@ class EnvRecord(RefinementEnv):
         result = {}
 
         for vehicle in self.vehicles.values():
+            vehicle_name = self.vehicle_name_convert(vehicle.name)
             if vehicle.type == 'crane':
                 init_pos = [vehicle.pos, vehicle.other_dim_pos]
             elif vehicle.type == 'trolley':
                 init_pos = [vehicle.other_dim_pos, vehicle.pos]
             else:
                 raise ValueError(f"{vehicle.type} vehicle type not supported")
-            result[f"{vehicle.name}_INIT_LOAD_STATE"] = 1
-            result[f"{vehicle.name}_INIT_LOAD_STATE_REMARK"] = "空载-1"
-            result[f"{vehicle.name}_INIT_POSITION"] = init_pos
+            result[f"{vehicle_name}_INIT_LOAD_STATE"] = 1
+            result[f"{vehicle_name}_INIT_LOAD_STATE_REMARK"] = "空载-1"
+            result[f"{vehicle_name}_INIT_POSITION"] = init_pos
             self.init_vehicles_pos[vehicle.name] = init_pos
 
         for station in self.stations.values():
             if station.type == 'workstation':
-                if station.name in ['2RH_left', '2RH_right']:
-                    station_name = '2RH'
-                elif station.name in ['4LF_left', '4LF_right']:
-                    station_name = '4LF'
-                else:
-                    station_name = station.name
+                station_name = station.name
                 result[f"{station_name}_STATE"] = 1
                 result[f"{station_name}_REMARK"] = "空闲-1"
                 result[f"{station_name}_POSITION_X"] = station.x
@@ -132,6 +128,8 @@ class EnvRecord(RefinementEnv):
 
         for vehicle in self.vehicles.values():
             self.temp_vehicles[vehicle.name] = None
+        for station in self.stations.values():
+            self.temp_stations[station.name] = None
 
         return result
 
@@ -171,10 +169,10 @@ class EnvRecord(RefinementEnv):
                 if (cur_action != self.temp_vehicles[vehicle.name]['action'] or
                         vehicle.is_operating != self.temp_vehicles[vehicle.name]['is_operating']):
                     self.temp_vehicles[vehicle.name]['end_time'] = cur_time
-                    self.translate_result(copy.deepcopy(self.temp_vehicles[vehicle.name]))
+                    self.translate_vehicle_result(copy.deepcopy(self.temp_vehicles[vehicle.name]))
 
                     self.temp_vehicles[vehicle.name]['begin_pos'] = self.temp_vehicles[vehicle.name]['tar_pos']
-                    self.temp_vehicles[vehicle.name]['pre_action'] = cur_action
+                    self.temp_vehicles[vehicle.name]['action'] = cur_action
                     self.temp_vehicles[vehicle.name]['start_time'] = self.temp_vehicles[vehicle.name]['end_time']
                     self.temp_vehicles[vehicle.name]['tar_pos'] = cur_pos
                     self.temp_vehicles[vehicle.name]['load_state'] = cur_load_state
@@ -187,7 +185,7 @@ class EnvRecord(RefinementEnv):
 
 
 
-    def translate_result(self, result):
+    def translate_vehicle_result(self, result):
         load_degree_remark = {0: '空载-1', 1: '满载-2', 2: '重载-3'}
         if result['load_state'] == 0:
             if result['is_operating']:
@@ -214,13 +212,13 @@ class EnvRecord(RefinementEnv):
         bc_type = '天车' if result['type'] == 'crane' else '台车'
         remark = crane_remark[state] if bc_type == '天车' else trolley_remark[state]
 
-        translated_result = {'BC_ID': result['name'],
+        translated_result = {'BC_ID': self.vehicle_name_convert(result['name']),
                              'BC_TYPE': bc_type,
                              'BEGIN_POSITION': result['begin_pos'],
                              'TARGET_POSITION': result['tar_pos'],
                              'START_TIME': result['start_time'].strftime('%Y%m%d%H%M%S'),
                              'END_TIME': result['end_time'].strftime('%Y%m%d%H%M%S'),
-                             'LOAD_STATE': result['load_state'],
+                             'LOAD_STATE': result['load_state'] + 1,
                              'LOAD_STATE_REMARK': load_degree_remark[result['load_state']],
                              'STATE': state,
                              'REMARK': remark
@@ -228,7 +226,61 @@ class EnvRecord(RefinementEnv):
 
         self.data['BRIDGECRANE_PLAN'].append(translated_result)
     def record_station(self):
-        pass
+        cur_time = self.sys_time
+
+        for station in self.stations.values():
+            if station.type == 'workstation':
+                # 工位第一次接受指令时init
+                if self.temp_stations[station.name] is None:
+                    if not station.is_processing:
+                        continue
+                    else:
+                        # 写入新动作
+                        self.temp_stations[station.name] = {
+                            'name': station.name,
+                            'start_time': cur_time,
+                            'end_time': cur_time,
+                            'is_processing': station.is_processing
+                        }
+                else:
+                    if station.is_processing != self.temp_stations[station.name]['is_processing']:
+                        self.temp_stations[station.name]['end_time'] = cur_time
+                        self.translate_station_result(copy.deepcopy(self.temp_stations[station.name]))
+
+                        self.temp_stations[station.name]['start_time'] = self.temp_stations[station.name]['end_time']
+                        self.temp_stations[station.name]['is_processing'] = station.is_processing
+    def translate_station_result(self, result):
+        state = {True: 2, False: 1}
+        remark = {True: '正在加工-2', False: '空闲-1'}
+        translated_result = {
+            "EQUIPMENT_ID": result['name'],
+            "START_TIME": result['start_time'].strftime('%Y%m%d%H%M%S'),
+            "END_TIME": result['end_time'].strftime('%Y%m%d%H%M%S'),
+            "STATE": state[result['is_processing']],
+            "REMARK": remark[result['is_processing']]
+        }
+        self.data['EQUIPMENT_STATE'].append(translated_result)
+
+    def vehicle_name_convert(self, vehicle_name):
+        name = {'crane1_1': 'crane1_1',
+                'crane1_2': 'crane1_2',
+                'crane2': 'crane2_1',
+                'crane3': 'crane3_1',
+                'crane5': 'crane5_1',
+                'trolley1_1': 'trolley1_2',
+                'trolley1_2': 'trolley1_1',
+                'trolley2_1': 'trolley2_2',
+                'trolley2_2': 'trolley2_1',
+                'trolley_3': 'trolley3_1',
+                'trolley_4': 'trolley4_1',
+                'trolley_5': 'trolley5_1',
+                'trolley_6': 'trolley6_1',
+                'trolley_7': 'trolley7_1',
+                'trolley_8': 'trolley8_1',
+                'trolley_9': 'trolley9_1',
+                'trolley_10': 'trolley10_1'
+                }
+        return name[vehicle_name]
 
     def record_all(self):
         # clock = pygame.time.Clock()
@@ -281,6 +333,7 @@ if __name__ == '__main__':
                          task_file_path='data/processed_data/processed_data.json')
     recorder.record_all()
     recorder.output_to_file('data/command/GlobalInformation.json')
+
     # init_information = recorder.record_reset()
     # recorder.data = {"INITIALINFORMATION": init_information}
     # recorder.output_to_file('data/command/GlobalInformation.json')
