@@ -140,6 +140,7 @@ class Vehicle:
     def take_ladle(self, ladle):
         if self.ladle is None:
             self.ladle = ladle
+            self.ladle.update_finished_time(self.task.end_time)
             logging.info(f'{self.name} take ladle {ladle.pono}')
         else:
             raise ValueError('已有钢包')

@@ -99,7 +99,7 @@ class SimulatorEnv(RefinementEnv):
                     running = False
                 if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
                     running = False
-            if self.sys_time > self.sys_end_time and self.all_track_free():
+            if self.sys_time > self.sys_end_time and self.check_all_track_free():
                 logging.info(f'All tasks completed at {self.sys_time}')
                 running = False
 

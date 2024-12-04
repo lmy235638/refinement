@@ -318,7 +318,8 @@ class EnvRecord(RefinementEnv):
             # array = np.rot90(array, k=3)
             # writer.append_data(array)
 
-            if self.sys_time > self.sys_end_time and self.all_track_free():
+            if self.sys_time > self.sys_end_time and self.check_all_track_free():
+                self.cal_ontime_ladle()
                 print(f'All tasks completed at {self.sys_time}')
                 running = False
 

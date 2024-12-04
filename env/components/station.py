@@ -2,7 +2,7 @@ import logging
 
 
 class Station:
-    def __init__(self, x, y, name, station_type, config):
+    def __init__(self, x, y, name, station_type, config, time):
         self.name = name
         self.x = x
         self.y = y
@@ -10,6 +10,7 @@ class Station:
         self.type = station_type  # workstation, intersection
         self.reachable_track = {}
         self.config = config
+        self.time = time
 
         self.ladle = None
         self.is_processing = False
@@ -17,6 +18,9 @@ class Station:
         self.operating_timer = -1
         self.processing_timer = -1
         self.temp = None
+
+    def update_time(self, new_time):
+        self.time = new_time
 
     def bind_track(self, track, name):
         self.reachable_track[name] = track
@@ -28,6 +32,7 @@ class Station:
             raise RuntimeError('工位已经有钢包')
 
         if self.name.endswith('CC'):
+            self.ladle.destroy(self.time)
             self.remove_ladle()
 
     def remove_ladle(self):

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from matplotlib import pyplot as plt
 from env.components.vehicle import Vehicle
 from env.components.track import Track
 from env.components.station import Station
@@ -79,6 +80,7 @@ class RefinementEnv:
 
         for station in self.stations.values():
             # print(station)
+            station.update_time(self.sys_time)
             station.step()
 
         self.sys_time += timedelta(seconds=1)
@@ -140,12 +142,14 @@ class RefinementEnv:
             x = info['x']
             y = info['y']
             station_type = 'workstation'
-            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name, config=self.config)
+            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name, config=self.config,
+                                          time=self.sys_time)
         for name, info in intersections_info.items():
             x = info['x']
             y = info['y']
             station_type = 'intersection'
-            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name, config=self.config)
+            self.stations[name] = Station(x=x, y=y, station_type=station_type, name=name, config=self.config,
+                                          time=self.sys_time)
 
     def bind_vehicle_station_on_track(self):
         for track_name, track in self.tracks.items():
@@ -169,11 +173,43 @@ class RefinementEnv:
                             station.bind_track(track=track, name=track_name)
                             track.add_station(name=station_name, station=station)
 
-    def all_track_free(self):
+    def check_all_track_free(self):
         for track in self.tracks.values():
             if len(track.buffer.buffer) != 0 and not track.all_vehicle_free():
                 return False
         return True
+
+    def cal_ontime_ladle(self):
+        on_time_count = 0
+        delay_times = []
+        colors = []
+        ladles = []
+        for ladle in self.ladles:
+            ladles.append(ladle.pono)
+            delay_time = (ladle.finished_time - ladle.should_finish_time).total_seconds()
+            if delay_time <= 0:
+                on_time_count += 1
+                ladle.is_delay = True
+                colors.append('g')
+            else:
+                colors.append('r')
+            delay_times.append(delay_time)
+        on_time_rate = on_time_count / len(self.ladles)
+
+        bar_list = plt.bar(range(len(self.ladles)), delay_times, color=colors)
+        plt.xlabel('Ladle Pono')
+        plt.xticks(range(len(self.ladles)), ladles)
+        plt.ylabel('Delay Time (seconds)')
+        plt.title(f'On-time Rate: {on_time_rate * 100:.2f}%')
+
+        for i, bar in enumerate(bar_list):
+            height = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width() / 2, height,
+                     f"{delay_times[i]:.0f}s",
+                     ha='center', va='bottom')
+
+        plt.show()
+        print(f"准点率: {on_time_rate * 100:.2f}%")
 
 
 if __name__ == '__main__':
