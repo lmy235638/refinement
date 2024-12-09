@@ -5,8 +5,8 @@ class Finder:
     def __init__(self, config, env_vehicles):
         self.config = config
         self.task_list = []
-        self.nodes = {}
-        self.station_adjacent_nodes = {}
+        self.nodes = {} # 车构成的节点
+        self.station_adjacent_nodes = {}    # 工位构成的节点,里面装有相连接的车
         self.env_vehicles = env_vehicles
 
     def reset(self):

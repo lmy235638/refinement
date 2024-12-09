@@ -8,7 +8,7 @@ from pygame.color import THECOLORS
 
 left_padding = 200
 under_padding = 100
-scale_factor = 5
+scale_factor = 4
 track_width = 2
 circle_radius = 5
 rect_width = 10
@@ -106,14 +106,14 @@ class SimulatorEnv(RefinementEnv):
             self.render()
             clock.tick(60)
 
-            # 保存当前帧
-            surface = pygame.display.get_surface()
-            array = pygame.surfarray.array3d(surface)
-            # 翻转帧的垂直方向
-            array = np.flip(array, axis=0)
-            # 向右旋转90度
-            array = np.rot90(array, k=3)
-            writer.append_data(array)
+            # # 保存当前帧
+            # surface = pygame.display.get_surface()
+            # array = pygame.surfarray.array3d(surface)
+            # # 翻转帧的垂直方向
+            # array = np.flip(array, axis=0)
+            # # 向右旋转90度
+            # array = np.rot90(array, k=3)
+            # writer.append_data(array)
 
         pygame.quit()
         writer.close()
@@ -124,6 +124,6 @@ if __name__ == '__main__':
     #                     format='%(levelname)s: - %(message)s', encoding='utf-8')
     # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
-    simulator = SimulatorEnv(config_file='config/refinement_env.yaml',
+    simulator = SimulatorEnv(config_file='config/feed_and_refine_env.yaml',
                              task_file='data/processed_data/processed_data.json')
     simulator.main_game_loop()

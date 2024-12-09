@@ -1,0 +1,1108 @@
+safety_distance: 20
+unload_speed: 1.5
+fractional_load_speed: 1
+heavy_load_speed: 0.8
+able_process_distance: 0.79
+real_action_time: 30
+
+vehicles:
+  Cranes:
+    # 加料跨
+    crane0_1:
+      other_dim_pos: 182
+      LowerMovingPos: 0
+      UpperMovingPos: 129
+      InitLowerLimit: 55
+      InitUpperLimit: 129
+      connections:
+        - trolley_scrap
+
+    crane0_2:
+      other_dim_pos: 182
+      LowerMovingPos: 73
+      UpperMovingPos: 236
+      InitLowerLimit: 152
+      InitUpperLimit: 185
+      connections:
+        - trolley_kr5
+        - trolley_kr6
+        - trolley_kr7
+        - trolley_kr8
+        - trolley_t1
+        - trolley_t2
+
+    crane0_3:
+      other_dim_pos: 182
+      LowerMovingPos: 73
+      UpperMovingPos: 236
+      InitLowerLimit: 190
+      InitUpperLimit: 236
+      connections:
+        - trolley_kr5
+        - trolley_kr6
+        - trolley_kr7
+        - trolley_kr8
+        - trolley_t1
+        - trolley_t2
+
+    # 精炼跨
+    crane1_1:
+      other_dim_pos: 134
+      LowerMovingPos: 48
+      UpperMovingPos: 267
+      InitLowerLimit: 48
+      InitUpperLimit: 129
+      connections:
+        - trolley2_2
+        - trolley_3
+        - trolley_4
+        - trolley_5
+        - trolley_6
+        - trolley_7
+        - trolley_8
+        - trolley_9
+        - trolley_10
+    crane1_2:
+      other_dim_pos: 134
+      LowerMovingPos: 48
+      UpperMovingPos: 267
+      InitLowerLimit: 150
+      InitUpperLimit: 267
+      connections:
+        - trolley2_2
+        - trolley_3
+        - trolley_4
+        - trolley_5
+        - trolley_6
+        - trolley_7
+        - trolley_8
+        - trolley_9
+        - trolley_10
+    crane2:
+      other_dim_pos: 106
+      LowerMovingPos: 73
+      UpperMovingPos: 158
+      InitLowerLimit: 73
+      InitUpperLimit: 158
+      connections:
+        - trolley_3
+        - trolley_4
+        - trolley_5
+        - trolley_6
+    crane3:
+      other_dim_pos: 79
+      LowerMovingPos: 11
+      UpperMovingPos: 158
+      InitLowerLimit: 11
+      InitUpperLimit: 158
+      connections:
+        - trolley1_2
+        - trolley2_1
+        - trolley2_2
+        - trolley_3
+        - trolley_4
+        - trolley_5
+        - trolley_6
+    crane5:
+      other_dim_pos: 13
+      LowerMovingPos: 11
+      UpperMovingPos: 158
+      InitLowerLimit: 11
+      InitUpperLimit: 158
+      connections:
+        - trolley1_1
+        - trolley2_1
+        - trolley_3
+        - trolley_4
+        - trolley_5
+        - trolley_6
+
+  Trolleys:
+    # 加料跨
+    trolley_scrap:
+      other_dim_pos: 55
+      LowerMovingPos: 182
+      UpperMovingPos: 199
+      InitLowerLimit: 182
+      InitUpperLimit: 199
+      connections:
+        - crane0_1
+    trolley_kr5:
+      other_dim_pos: 152
+      LowerMovingPos: 182
+      UpperMovingPos: 199
+      InitLowerLimit: 182
+      InitUpperLimit: 199
+      connections:
+        - crane0_2
+        - crane0_3
+    trolley_kr6:
+      other_dim_pos: 160
+      LowerMovingPos: 182
+      UpperMovingPos: 199
+      InitLowerLimit: 182
+      InitUpperLimit: 199
+      connections:
+        - crane0_2
+        - crane0_3
+    trolley_kr7:
+      other_dim_pos: 178
+      LowerMovingPos: 182
+      UpperMovingPos: 199
+      InitLowerLimit: 182
+      InitUpperLimit: 199
+      connections:
+        - crane0_2
+        - crane0_3
+    trolley_kr8:
+      other_dim_pos: 185
+      LowerMovingPos: 182
+      UpperMovingPos: 199
+      InitLowerLimit: 182
+      InitUpperLimit: 199
+      connections:
+        - crane0_2
+        - crane0_3
+    trolley_t1:
+      other_dim_pos: 209
+      LowerMovingPos: 182
+      UpperMovingPos: 204
+      InitLowerLimit: 182
+      InitUpperLimit: 204
+      connections:
+        - crane0_2
+        - crane0_3
+    trolley_t2:
+      other_dim_pos: 236
+      LowerMovingPos: 182
+      UpperMovingPos: 204
+      InitLowerLimit: 182
+      InitUpperLimit: 204
+      connections:
+        - crane0_2
+        - crane0_3
+
+    # 精炼跨
+    trolley1_1:
+      other_dim_pos: 11
+      LowerMovingPos: 13
+      UpperMovingPos: 51
+      InitLowerLimit: 13
+      InitUpperLimit: 41
+      connections:
+        - crane5
+    trolley1_2:
+      other_dim_pos: 11
+      LowerMovingPos: 51
+      UpperMovingPos: 79
+      InitLowerLimit: 61
+      InitUpperLimit: 79
+      connections:
+        - crane3
+    trolley2_1:
+      other_dim_pos: 48
+      LowerMovingPos: 13
+      UpperMovingPos: 79
+      InitLowerLimit: 13
+      InitUpperLimit: 66
+      connections:
+        - crane3
+        - crane5
+    trolley2_2:
+      other_dim_pos: 48
+      LowerMovingPos: 51
+      UpperMovingPos: 141
+      InitLowerLimit: 93
+      InitUpperLimit: 141
+      connections:
+        - crane1_1
+        - crane1_2
+        - crane3
+    trolley_3:
+      other_dim_pos: 73
+      LowerMovingPos: 13
+      UpperMovingPos: 165
+      InitLowerLimit: 13
+      InitUpperLimit: 165
+      connections:
+        - crane1_1
+        - crane1_2
+        - crane3
+        - crane2
+        - crane5
+    trolley_4:
+      other_dim_pos: 102
+      LowerMovingPos: 13
+      UpperMovingPos: 165
+      InitLowerLimit: 13
+      InitUpperLimit: 165
+      connections:
+        - crane1_1
+        - crane1_2
+        - crane3
+        - crane2
+        - crane5
+    # Trolly5_1涉及到逆物流问题,此轨道能和加料跨交互,能到达182.这里不考虑,因此限制到173
+    trolley_5:
+      other_dim_pos: 129
+      LowerMovingPos: 13
+      UpperMovingPos: 1650
+      InitLowerLimit: 13
+      InitUpperLimit: 165
+      connections:
+        - crane1_1
+        - crane1_2
+        - crane3
+        - crane2
+        - crane5
+    trolley_6:
+      other_dim_pos: 158
+      LowerMovingPos: 13
+      UpperMovingPos: 134
+      InitLowerLimit: 13
+      InitUpperLimit: 134
+      connections:
+        - crane1_1
+        - crane1_2
+        - crane3
+        - crane2
+        - crane5
+    trolley_7:
+      other_dim_pos: 150
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
+      connections:
+        - crane1_1
+        - crane1_2
+    trolley_8:
+      other_dim_pos: 167
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
+      connections:
+        - crane1_1
+        - crane1_2
+    trolley_9:
+      other_dim_pos: 220
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
+      connections:
+        - crane1_1
+        - crane1_2
+    trolley_10:
+      other_dim_pos: 240
+      LowerMovingPos: 134
+      UpperMovingPos: 155
+      InitLowerLimit: 134
+      InitUpperLimit: 155
+      connections:
+        - crane1_1
+        - crane1_2
+
+Track:
+  horizontal:
+    # 加料跨
+    bridge0:
+      other_dim_pos: 182
+      low: 0
+      high: 256
+      num_crane: 3
+
+    # 精炼跨
+    bridge1:
+      other_dim_pos: 134
+      low: 0
+      high: 287
+      num_crane: 2
+    bridge2:
+      other_dim_pos: 106
+      low: 73
+      high: 158
+      num_crane: 1
+    bridge3:
+      other_dim_pos: 79
+      low: 11
+      high: 158
+      num_crane: 1
+    bridge5:
+      other_dim_pos: 13
+      low: 11
+      high: 158
+      num_crane: 1
+  vertical:
+    # 加料跨
+    trolley_track_scrap:
+      other_dim_pos: 55
+      low: 182
+      high: 204
+    trolley_track_kr5:
+      other_dim_pos: 152
+      low: 182
+      high: 199
+    trolley_track_kr6:
+      other_dim_pos: 160
+      low: 182
+      high: 199
+    trolley_track_kr7:
+      other_dim_pos: 178
+      low: 182
+      high: 199
+    trolley_track_kr8:
+      other_dim_pos: 185
+      low: 182
+      high: 199
+    trolley_track_t1:
+      other_dim_pos: 209
+      low: 182
+      high: 204
+    trolley_track_t2:
+      other_dim_pos: 236
+      low: 182
+      high: 204
+
+    # 精炼跨
+    trolley_track_1:
+      other_dim_pos: 11
+      low: 13
+      high: 93
+    trolley_track_2:
+      other_dim_pos: 48
+      low: 13
+      high: 141
+    trolley_track_3:
+      other_dim_pos: 73
+      low: 13
+      high: 165
+    trolley_track_4:
+      other_dim_pos: 102
+      low: 13
+      high: 165
+    trolley_track_5:
+      other_dim_pos: 129
+      low: 13
+      high: 165
+    trolley_track_6:
+      other_dim_pos: 158
+      low: 13
+      high: 134
+    trolley_track_7:
+      other_dim_pos: 150
+      low: 134
+      high: 155
+    trolley_track_8:
+      other_dim_pos: 167
+      low: 134
+      high: 155
+    trolley_track_9:
+      other_dim_pos: 220
+      low: 134
+      high: 155
+    trolley_track_10:
+      other_dim_pos: 240
+      low: 134
+      high: 155
+
+poses:
+  # 加料跨
+  scrap_m:
+    x: 55
+    y: 204
+  5KR:
+    x: 152
+    y: 199
+  6KR:
+    x: 160
+    y: 199
+  7KR:
+    x: 178
+    y: 199
+  8KR:
+    x: 185
+    y: 199
+  T1_m:
+    x: 209
+    y: 204
+  T2_m:
+    x: 236
+    y: 204
+
+  scrap:
+    x: 55
+    y: 182
+  5KRT:
+    x: 152
+    y: 182
+  6KRT:
+    x: 160
+    y: 182
+  7KRT:
+    x: 178
+    y: 182
+  8KRT:
+    x: 185
+    y: 182
+  T1:
+    x: 209
+    y: 182
+  T2:
+    x: 236
+    y: 182
+  # 精炼跨
+  1LD:
+    x: 73
+    y: 165
+    connections:
+      - 1LD1
+  2LD:
+    x: 102
+    y: 165
+    connections:
+      - 2LD1
+  3LD:
+    x: 129
+    y: 165
+    connections:
+      - 3LD1
+  4LF_left:
+    x: 150
+    y: 155
+    connections:
+      - 4LF1
+  4LF_right:
+    x: 167
+    y: 155
+    connections:
+      - 4LF2
+  2RH_left:
+    x: 220
+    y: 155
+    connections:
+      - 2RH1
+  2RH_right:
+    x: 240
+    y: 155
+    connections:
+      - 2RH2
+  1LF:
+    x: 48
+    y: 141
+    connections:
+      - 1LF1
+  1CC:
+    x: 223
+    y: 134
+    connections:
+      - 2RH2
+      - 2RH1
+  2CC:
+    x: 267
+    y: 134
+    connections:
+      - 2RH2
+  4RH:
+    x: 11
+    y: 51
+    connections:
+      - 4RH3
+      - 4RH5
+  2LF:
+    x: 48
+    y: 51
+    connections:
+      - 2LF3
+      - 2LF5
+  1RH:
+    x: 158
+    y: 51
+    connections:
+      - 1RH3
+      - 1RH5
+  3CC:
+    x: 34
+    y: 13
+    connections:
+      - 4RH5
+      - 2LF5
+  1LF1:
+    x: 48
+    y: 134
+    connections:
+      - 1LF
+      - 1LD1
+      - 2LF3
+  1LD1:
+    x: 73
+    y: 134
+    connections:
+      - 1LD
+      - 1LF1
+      - 1LD2
+      - 2LD1
+  2LD1:
+    x: 102
+    y: 134
+    connections:
+      - 2LD
+      - 1LD1
+      - 2LD2
+      - 3LD1
+  3LD1:
+    x: 129
+    y: 134
+    connections:
+      - 3LD
+      - 2LD1
+      - 3LD2
+      - 4LF1
+  4LF1:
+    x: 150
+    y: 134
+    connections:
+      - 4LF_left
+      - 3LD1
+      - 1RH1
+  4LF2:
+    x: 167
+    y: 134
+    connections:
+      - 4LF_right
+      - 2RH1
+      - 1RH1
+  1RH1:
+    x: 158
+    y: 134
+    connections:
+      - 4LF1
+      - 4LF2
+      - 1RH2
+  2RH1:
+    x: 220
+    y: 134
+    connections:
+      - 1CC
+      - 4LF2
+      - 2RH_left
+  2RH2:
+    x: 240
+    y: 134
+    connections:
+      - 1CC
+      - 2CC
+      - 2RH_right
+  1LD2:
+    x: 73
+    y: 106
+    connections:
+      - 2LD2
+      - 1LD1
+      - 1LD3
+  2LD2:
+    x: 102
+    y: 106
+    connections:
+      - 2LD1
+      - 1LD2
+      - 3LD2
+      - 2LD3
+  3LD2:
+    x: 129
+    y: 106
+    connections:
+      - 3LD1
+      - 2LD2
+      - 1RH2
+      - 3LD3
+  1RH2:
+    x: 158
+    y: 106
+    connections:
+      - 3LD2
+      - 1RH1
+      - 1RH3
+  4RH3:
+    x: 11
+    y: 79
+    connections:
+      - 2LF3
+      - 4RH
+  2LF3:
+    x: 48
+    y: 79
+    connections:
+      - 1LF1
+      - 4RH3
+      - 2LF
+      - 1LD3
+  1LD3:
+    x: 73
+    y: 79
+    connections:
+      - 2LF3
+      - 1LD2
+      - 2LD3
+      - 1LD5
+  2LD3:
+    x: 102
+    y: 79
+    connections:
+      - 1LD3
+      - 3LD3
+      - 2LD2
+      - 2LD5
+  3LD3:
+    x: 129
+    y: 79
+    connections:
+      - 2LD3
+      - 3LD2
+      - 3LD5
+      - 1RH3
+  1RH3:
+    x: 158
+    y: 79
+    connections:
+      - 3LD3
+      - 1RH2
+      - 1RH
+  4RH5:
+    x: 11
+    y: 13
+    connections:
+      - 4RH
+      - 3CC
+  2LF5:
+    x: 48
+    y: 13
+    connections:
+      - 2LF
+      - 3CC
+      - 1LD5
+  1LD5:
+    x: 73
+    y: 13
+    connections:
+      - 1LD3
+      - 2LF5
+      - 2LD5
+  2LD5:
+    x: 102
+    y: 13
+    connections:
+      - 1LD5
+      - 3LD5
+      - 2LD3
+  3LD5:
+    x: 129
+    y: 13
+    connections:
+      - 2LD5
+      - 3LD3
+      - 1RH5
+  1RH5:
+    x: 158
+    y: 13
+    connections:
+      - 3LD5
+      - 1RH
+
+
+# connections为一步能到达的周围节点
+Station_Layout:
+  workstations:
+    # 加料跨
+    scrap_m:
+      x: 55
+      y: 204
+      connections:
+        - scrap
+      vehicle:
+        - trolley_scrap
+    5KR:
+      x: 152
+      y: 199
+      connections:
+        - 5KRT
+      vehicle:
+        - trolley_kr5
+    6KR:
+      x: 160
+      y: 199
+      connections:
+        - 6KRT
+      vehicle:
+        - trolley_kr6
+    7KR:
+      x: 178
+      y: 199
+      connections:
+        - 7KRT
+      vehicle:
+        - trolley_kr7
+    8KR:
+      x: 185
+      y: 199
+      connections:
+        - 8KRT
+      vehicle:
+        - trolley_kr8
+    T1_m:
+      x: 209
+      y: 204
+      connections:
+        - T1
+      vehicle:
+        - trolley_t1
+    T2_m:
+      x: 236
+      y: 204
+      connections:
+        - T2
+      vehicle:
+        - trolley_t2
+
+    # 精炼跨
+    1LD:
+      x: 73
+      y: 165
+      connections:
+        - 1LD1
+      vehicle:
+        - trolley_3
+    2LD:
+      x: 102
+      y: 165
+      connections:
+        - 2LD1
+      vehicle:
+        - trolley_4
+    3LD:
+      x: 129
+      y: 165
+      connections:
+        - 3LD1
+      vehicle:
+        - trolley_5
+    4LF_left:
+      x: 150
+      y: 155
+      connections:
+        - 4LF1
+      vehicle:
+        - trolley_7
+    4LF_right:
+      x: 167
+      y: 155
+      connections:
+        - 4LF2
+      vehicle:
+        - trolley_8
+    2RH_left:
+      x: 220
+      y: 155
+      connections:
+        - 2RH1
+      vehicle:
+        - trolley_9
+    2RH_right:
+      x: 240
+      y: 155
+      connections:
+        - 2RH2
+      vehicle:
+        - trolley_10
+    1LF:
+      x: 48
+      y: 141
+      connections:
+        - 1LF1
+      vehicle:
+        - trolley2_2
+    1CC:
+      x: 223
+      y: 134
+      connections:
+        - 2RH2
+        - 2RH1
+      vehicle:
+        - crane1_1
+        - crane1_2
+    2CC:
+      x: 267
+      y: 134
+      connections:
+        - 2RH2
+      vehicle:
+        - crane1_1
+        - crane1_2
+    4RH:
+      x: 11
+      y: 51
+      connections:
+        - 4RH3
+        - 4RH5
+      vehicle:
+        - trolley1_1
+        - trolley1_2
+    2LF:
+      x: 48
+      y: 51
+      connections:
+        - 2LF3
+        - 2LF5
+      vehicle:
+        - trolley2_1
+        - trolley2_2
+    1RH:
+      x: 158
+      y: 51
+      connections:
+        - 1RH3
+        - 1RH5
+      vehicle:
+        - trolley_6
+    3CC:
+      x: 34
+      y: 13
+      connections:
+        - 4RH5
+        - 2LF5
+      vehicle:
+        - crane5
+  # 交互位置
+  intersections:
+    # 加料跨
+    scrap:
+      x: 55
+      y: 182
+      connections:
+        - scrap_m
+        - 1LD
+    5KRT:
+      x: 152
+      y: 182
+      connections:
+        - 5KR
+        - 6KRT
+        - 3LD
+    6KRT:
+      x: 160
+      y: 182
+      connections:
+        - 6KR
+        - 5KRT
+        - 7KRT
+    7KRT:
+      x: 178
+      y: 182
+      connections:
+        - 7KR
+        - 6KRT
+        - 8KRT
+    8KRT:
+      x: 185
+      y: 182
+      connections:
+        - 8KR
+        - 7KRT
+        - T1
+    T1:
+      x: 209
+      y: 182
+      connections:
+        - T1_m
+        - 8KRT
+        - T2
+    T2:
+      x: 236
+      y: 182
+      connections:
+        - T2_m
+        - T1
+
+    # 精炼跨
+    1LF1:
+      x: 48
+      y: 134
+      connections:
+        - 1LF
+        - 1LD1
+        - 2LF3
+    1LD1:
+      x: 73
+      y: 134
+      connections:
+        - 1LD
+        - 1LF1
+        - 1LD2
+        - 2LD1
+    2LD1:
+      x: 102
+      y: 134
+      connections:
+        - 2LD
+        - 1LD1
+        - 2LD2
+        - 3LD1
+    3LD1:
+      x: 129
+      y: 134
+      connections:
+        - 3LD
+        - 2LD1
+        - 3LD2
+        - 4LF1
+    4LF1:
+      x: 150
+      y: 134
+      connections:
+        - 4LF_left
+        - 3LD1
+        - 1RH1
+    4LF2:
+      x: 167
+      y: 134
+      connections:
+        - 4LF_right
+        - 2RH1
+        - 1RH1
+    1RH1:
+      x: 158
+      y: 134
+      connections:
+        - 4LF1
+        - 4LF2
+        - 1RH2
+    2RH1:
+      x: 220
+      y: 134
+      connections:
+        - 1CC
+        - 4LF2
+        - 2RH_left
+    2RH2:
+      x: 240
+      y: 134
+      connections:
+        - 1CC
+        - 2CC
+        - 2RH_right
+    1LD2:
+      x: 73
+      y: 106
+      connections:
+        - 2LD2
+        - 1LD1
+        - 1LD3
+    2LD2:
+      x: 102
+      y: 106
+      connections:
+        - 2LD1
+        - 1LD2
+        - 3LD2
+        - 2LD3
+    3LD2:
+      x: 129
+      y: 106
+      connections:
+        - 3LD1
+        - 2LD2
+        - 1RH2
+        - 3LD3
+    1RH2:
+      x: 158
+      y: 106
+      connections:
+        - 3LD2
+        - 1RH1
+        - 1RH3
+    4RH3:
+      x: 11
+      y: 79
+      connections:
+        - 2LF3
+        - 4RH
+    2LF3:
+      x: 48
+      y: 79
+      connections:
+        - 1LF1
+        - 4RH3
+        - 2LF
+        - 1LD3
+    1LD3:
+      x: 73
+      y: 79
+      connections:
+        - 2LF3
+        - 1LD2
+        - 2LD3
+        - 1LD5
+    2LD3:
+      x: 102
+      y: 79
+      connections:
+        - 1LD3
+        - 3LD3
+        - 2LD2
+        - 2LD5
+    3LD3:
+      x: 129
+      y: 79
+      connections:
+        - 2LD3
+        - 3LD2
+        - 3LD5
+        - 1RH3
+    1RH3:
+      x: 158
+      y: 79
+      connections:
+        - 3LD3
+        - 1RH2
+        - 1RH
+    4RH5:
+      x: 11
+      y: 13
+      connections:
+        - 4RH
+        - 3CC
+    2LF5:
+      x: 48
+      y: 13
+      connections:
+        - 2LF
+        - 3CC
+        - 1LD5
+    1LD5:
+      x: 73
+      y: 13
+      connections:
+        - 1LD3
+        - 2LF5
+        - 2LD5
+    2LD5:
+      x: 102
+      y: 13
+      connections:
+        - 1LD5
+        - 3LD5
+        - 2LD3
+    3LD5:
+      x: 129
+      y: 13
+      connections:
+        - 2LD5
+        - 3LD3
+        - 1RH5
+    1RH5:
+      x: 158
+      y: 13
+      connections:
+        - 3LD5
+        - 1RH

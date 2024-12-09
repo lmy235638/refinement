@@ -7,7 +7,7 @@ from env.components.ladle import Ladle
 from env.components.task_pipeline.reader import Reader
 from env.components.task_pipeline.buffer import Buffer
 from env.components.task_pipeline.finder import Finder
-from utils.file_utils import load_config, pos_convert
+from utils.file_utils import load_config
 import logging
 
 
@@ -213,7 +213,7 @@ class RefinementEnv:
 
 
 if __name__ == '__main__':
-    env = RefinementEnv(config_path='../config/refinement_env.yaml',
+    env = RefinementEnv(config_path='../config/feed_and_refine_env.yaml.yaml',
                         task_file_path='../data/processed_data/processed_data.json')
     env.reset()
     print(env.stations)
