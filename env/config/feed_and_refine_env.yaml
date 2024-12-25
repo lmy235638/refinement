@@ -16,6 +16,9 @@ vehicles:
       InitUpperLimit: 129
       connections:
         - trolley_scrap
+#        - trolley_3
+#        - trolley_4
+#        - trolley_5
 
     crane0_2:
       other_dim_pos: 182
@@ -30,6 +33,9 @@ vehicles:
         - trolley_kr8
         - trolley_t1
         - trolley_t2
+#        - trolley_3
+#        - trolley_4
+#        - trolley_5
 
     crane0_3:
       other_dim_pos: 182
@@ -773,6 +779,8 @@ Station_Layout:
         - 1LD1
       vehicle:
         - trolley_3
+        - crane0_1
+        - crane0_2
     2LD:
       x: 102
       y: 165
@@ -780,6 +788,8 @@ Station_Layout:
         - 2LD1
       vehicle:
         - trolley_4
+        - crane0_1
+        - crane0_2
     3LD:
       x: 129
       y: 165
@@ -787,6 +797,8 @@ Station_Layout:
         - 3LD1
       vehicle:
         - trolley_5
+        - crane0_1
+        - crane0_2
     4LF_left:
       x: 150
       y: 155

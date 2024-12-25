@@ -125,5 +125,6 @@ if __name__ == '__main__':
     # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/feed_and_refine_env.yaml',
-                             task_file='data/processed_data/processed_data.json')
+                             task_file='data/processed_data/test.json')
+                             # task_file='data/processed_data/processed_data.json')
     simulator.main_game_loop()

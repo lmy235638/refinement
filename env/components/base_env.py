@@ -91,6 +91,7 @@ class RefinementEnv:
         self.finder.update_node_occupied()  # 更新node节点状态
         for task in task_list:
             solutions = self.finder.decomposition(task)
+            print(f'solutions: {solutions}')
             if solutions:
                 self.buffer.add_from_reader(solutions)
                 self.reader.remove_task(task)
@@ -172,6 +173,10 @@ class RefinementEnv:
                         if track.start <= station.x <= track.end:
                             station.bind_track(track=track, name=track_name)
                             track.add_station(name=station_name, station=station)
+
+                if track_name == 'bridge0' and station_name in ['1LD', '2LD', '3LD']:
+                    track.add_station(name=station_name, station=station)
+
 
     def check_all_track_free(self):
         for track in self.tracks.values():

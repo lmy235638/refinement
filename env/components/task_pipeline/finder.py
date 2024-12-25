@@ -11,6 +11,8 @@ class Finder:
 
     def reset(self):
         self.generate_node()
+        # print(f'station_adjacent_nodes: {self.station_adjacent_nodes}')
+        # print(self.nodes)
 
     def generate_node(self):
         for name, vehicle in self.env_vehicles.items():
@@ -49,7 +51,7 @@ class Finder:
         assign_time = task['ASSIGN_TIME']
         end_time = task['END_TIME']
         process_time = task['PROCESS_TIME']
-        start_nodes = self.station_adjacent_nodes[task['BEG_STATION']]
+        start_nodes = self.station_adjacent_nodes[task['BEG_STATION']]  # 以任务开始工位的连接车作为起始点
         end_nodes = self.station_adjacent_nodes[task['TAR_STATION']]
 
         for start_node in start_nodes:
@@ -118,6 +120,10 @@ class Finder:
         station_path.append(task_end_station)
 
         for i in range(len(station_path) - 1):
+            # if station_path[i] == station_path[i + 1]:
+            #     return []
+            # if station_path[i] == station_path[i + 1]:
+            #     continue
             solution.append({
                 'start': station_path[i],
                 'end': station_path[i + 1],
