@@ -1,6 +1,5 @@
 import copy
 import logging
-
 from env.components.task_pipeline.buffer import Buffer
 from env.components.vehicle import Vehicle
 from utils.file_utils import bool_xor
@@ -80,8 +79,8 @@ class Track:
             temp_right_pos = self.vehicles[i + 1].simulate_move()
             if abs(temp_left_pos - temp_right_pos) < self.config['safety_distance']:
                 # 两车发生碰撞
-                left_vehicle: Vehicle = min(self.vehicles, key=lambda vehicle: vehicle.pos)
-                right_vehicle: Vehicle = max(self.vehicles, key=lambda vehicle: vehicle.pos)
+                left_vehicle: Vehicle = min([self.vehicles[i], self.vehicles[i + 1]], key=lambda vehicle: vehicle.pos)
+                right_vehicle: Vehicle = max([self.vehicles[i], self.vehicles[i + 1]], key=lambda vehicle: vehicle.pos)
                 # 1. 有一车正在加工,优先级最高
                 if left_vehicle.is_operating or right_vehicle.is_operating:
                     if left_vehicle.is_operating:
@@ -298,6 +297,8 @@ class Track:
                 else:
                     raise ValueError(f'未考虑情况出现')
 
+
+    def verify_vehicle_safety_after_move(self):
         for i in range(self.vehicle_num - 1):
             temp_left_pos = self.vehicles[i].simulate_move()
             temp_right_pos = self.vehicles[i + 1].simulate_move()
@@ -348,7 +349,10 @@ class Track:
             self.buffer.remove_task(remove_task)
 
         # 检测是否有碰撞
-        self.vehicles_crash_check()
+        for i in range(self.vehicle_num - 1):
+            self.vehicles_crash_check()
+
+        self.verify_vehicle_safety_after_move()
 
     def add_tasks_to_buffer(self, tasks: list):
         # 有新任务添加进来

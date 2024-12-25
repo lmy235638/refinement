@@ -1,4 +1,5 @@
 import json
+import random
 import re
 from datetime import datetime, timedelta
 
@@ -59,7 +60,7 @@ def parse_record(records) -> list:
             raise ValueError("The processed path must start with '00K'.")
         processed_path = record['路径'].lstrip('0')
         processed_path = re.findall(r'[A-Z][0-9]', processed_path)
-        stations = []
+        stations = [random.choice(['T1_m', 'T2_m'])]    # 随机添加第一个起始工位
         for ori_station in processed_path:
             if len(ori_station) > 2:
                 raise ValueError('读取工位数据有错误')
@@ -108,34 +109,36 @@ def parse_to_single_task(records, original_format='%Y%m%d%H%M%S'):
             "TAR_STATION": "1CC",
             "END_TIME": "2024-03-01T00:43:02"
     },
-
+    任务下发时间应该是上一个任务结束的时间,
     :param records:
     :param original_format:
     :return:
     """
     task_records = []
     for record in records:
-        stations = record['路径'][1::]
-        for i, station in enumerate(stations[0:-1]):
+        stations = record['路径']
+        for i, station in enumerate(stations[0:-1]):    # 抛去最后一个(左闭右开)
             task_record = {}
             task_record.update({'PONO': record['PONO']})
             task_record.update({'BEG_STATION': station})
             tar_station = stations[i + 1]
             task_record.update({'TAR_STATION': tar_station})
-            assigned_time = record[f'工序{i + 3}结束时间']
+            assigned_time = record[f'工序{i}结束时间'] if i > 0 else record[f'工序{i + 1}开始时间']
             assigned_time = datetime.strptime(assigned_time, original_format)
             task_record.update({'ASSIGN_TIME': assigned_time.isoformat()})
-            # end_time = record[f'工序{len(stations) + 2}开始时间']
-            end_time = record[f'工序{i + 4}开始时间']
+            if tar_station.endswith('CC'):
+                end_time = record[f'工序{i + 2}开始时间']
+            else:
+                end_time = record[f'工序{i + 1}开始时间']
             end_time = datetime.strptime(end_time, original_format)
             task_record.update({'END_TIME': end_time.isoformat()})
             if tar_station.endswith('CC'):
                 process_time = timedelta(0)
             else:
-                process_time = datetime.strptime(record[f'工序{i + 4}结束时间'], original_format) - end_time
+                process_time = datetime.strptime(record[f'工序{i + 2}结束时间'], original_format) - datetime.strptime(record[f'工序{i + 2}开始时间'], original_format)
             task_record.update({'PROCESS_TIME': process_time.total_seconds()})
-
-            task_records.append(task_record)
+            if task_record['PONO'] == 'p1':
+                task_records.append(task_record)
 
     return task_records
 

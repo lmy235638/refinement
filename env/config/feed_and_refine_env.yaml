@@ -39,7 +39,7 @@ vehicles:
 
     crane0_3:
       other_dim_pos: 182
-      LowerMovingPos: 73
+      LowerMovingPos: 152
       UpperMovingPos: 236
       InitLowerLimit: 190
       InitUpperLimit: 236

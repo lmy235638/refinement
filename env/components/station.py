@@ -92,7 +92,7 @@ class Station:
                             self.set_processing(True, vehicle.task.process_time)
                         else:
                             # 空车装货物,工位卸载货物
-                            if not self.is_processing:
+                            if not self.is_processing and self.ladle is not None:
                                 # 不在加工时才可以拿走
                                 vehicle.set_operating(True)
                                 vehicle.take_ladle(self.remove_ladle())
@@ -168,6 +168,8 @@ class Station:
                 logging.info(f'processing_timer {self.name} {self.processing_timer}')
                 if self.processing_timer == 0:
                     self.set_processing(False)
+            else:
+                raise RuntimeError(f'工位正在执行,但时间小于等于0 {self}')
 
     def check_captive_vehicle_pono(self, vehicle_list):
         pono = vehicle_list[0].task.pono

@@ -42,23 +42,33 @@ class RefinementEnv:
         logging.info([(name, vehicle.pos) for name, vehicle in self.vehicles.items()])
         logging.info([station.name for station in self.stations.values()])
 
-        # self.vehicles['crane1_1'].pos = 6628
-        # self.vehicles['crane1_2'].pos = 11302
-        # self.vehicles['crane2'].pos = 7586
-        # self.vehicles['crane3'].pos = 4769
-        # self.vehicles['crane5'].pos = 3514
-        # self.vehicles['trolley1_1'].pos = 1983
-        # self.vehicles['trolley1_2'].pos = 4347
-        # self.vehicles['trolley2_1'].pos = 1717
-        # self.vehicles['trolley2_2'].pos = 6790
-        # self.vehicles['trolley_3'].pos = 8427
-        # self.vehicles['trolley_4'].pos = 1434
-        # self.vehicles['trolley_5'].pos = 9335
-        # self.vehicles['trolley_6'].pos = 3388
-        # self.vehicles['trolley_7'].pos = 9350
-        # self.vehicles['trolley_8'].pos = 9015
-        # self.vehicles['trolley_9'].pos = 8869
-        # self.vehicles['trolley_10'].pos = 8584
+        self.vehicles['crane0_1'].pos = 124
+        self.vehicles['crane0_2'].pos = 160
+        self.vehicles['crane0_3'].pos = 197
+        self.vehicles['crane1_1'].pos = 98
+        self.vehicles['crane1_2'].pos = 197
+        self.vehicles['crane2'].pos = 86
+        self.vehicles['crane3'].pos = 69
+        self.vehicles['crane5'].pos = 133
+        self.vehicles['trolley_scrap'].pos = 190
+        self.vehicles['trolley_kr5'].pos = 199
+        self.vehicles['trolley_kr6'].pos = 198
+        self.vehicles['trolley_kr7'].pos = 182
+        self.vehicles['trolley_kr8'].pos = 197
+        self.vehicles['trolley_t1'].pos = 200
+        self.vehicles['trolley_t2'].pos = 204
+        self.vehicles['trolley1_1'].pos = 19
+        self.vehicles['trolley1_2'].pos = 76
+        self.vehicles['trolley2_1'].pos = 66
+        self.vehicles['trolley2_2'].pos = 113
+        self.vehicles['trolley_3'].pos = 83
+        self.vehicles['trolley_4'].pos = 77
+        self.vehicles['trolley_5'].pos = 110
+        self.vehicles['trolley_6'].pos = 114
+        self.vehicles['trolley_7'].pos = 146
+        self.vehicles['trolley_8'].pos = 148
+        self.vehicles['trolley_9'].pos = 150
+        self.vehicles['trolley_10'].pos = 144
 
     def step(self):
         self.update_tasks()
@@ -91,7 +101,7 @@ class RefinementEnv:
         self.finder.update_node_occupied()  # 更新node节点状态
         for task in task_list:
             solutions = self.finder.decomposition(task)
-            print(f'solutions: {solutions}')
+            # print(f'solutions: {solutions}')
             if solutions:
                 self.buffer.add_from_reader(solutions)
                 self.reader.remove_task(task)
@@ -99,7 +109,7 @@ class RefinementEnv:
 
     def spawn_ladle(self, solutions: dict):
         for solution in solutions:
-            if solution['start'].endswith('LD'):
+            if solution['start'] in ['T1_m', 'T2_m']:
                 ladle = Ladle(pono=solution['pono'], process_time=solution['process_time'])
                 self.ladles.append(ladle)
                 self.stations[solution['start']].add_ladle(ladle)
