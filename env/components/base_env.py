@@ -185,12 +185,14 @@ class RefinementEnv:
                             track.add_station(name=station_name, station=station)
 
                 if track_name == 'bridge0' and station_name in ['1LD', '2LD', '3LD']:
+                    station.bind_track(track=track, name=track_name)
                     track.add_station(name=station_name, station=station)
 
-
     def check_all_track_free(self):
+        if self.buffer.size > 0:
+            return False
         for track in self.tracks.values():
-            if len(track.buffer.buffer) != 0 and not track.all_vehicle_free():
+            if track.buffer.size > 0 or not track.all_vehicle_free():
                 return False
         return True
 

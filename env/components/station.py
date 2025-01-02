@@ -78,25 +78,26 @@ class Station:
             if distance > self.config['able_process_distance']:
                 self.release_vehicle(vehicle)
 
-        # 说明当前工位空闲
-        if not self.is_operating:
+        # 说明当前工位空闲 如果是workstation工位装货卸货,如果是intersection工位交换两车货物.最后尝试捕获新车
+        if not self.is_operating and not self.is_processing:
             if self.type == 'workstation':
                 for vehicle in self.vehicles:
-                    if vehicle.operating_timer == -1:
-                        if vehicle.ladle:
-                            # 车卸载货物,工位装载货物
-                            logging.info(f'{vehicle.ladle.pono} arrive {self.name}')
-                            self.add_ladle(vehicle.drop_ladle())
+                    if self.is_operating:
+                        break
+                    if vehicle.ladle:
+                        # 车卸载货物,工位装载货物
+                        logging.info(f'{vehicle.ladle.pono} arrive {self.name}')
+                        self.add_ladle(vehicle.drop_ladle())
+                        vehicle.set_operating(True)
+                        self.set_operating(True)
+                        self.set_processing(True, vehicle.task.process_time)
+                    else:
+                        # 空车装货物,工位卸载货物
+                        if not self.is_processing and self.ladle is not None:
+                            # 不在加工时才可以拿走
                             vehicle.set_operating(True)
+                            vehicle.take_ladle(self.remove_ladle())
                             self.set_operating(True)
-                            self.set_processing(True, vehicle.task.process_time)
-                        else:
-                            # 空车装货物,工位卸载货物
-                            if not self.is_processing and self.ladle is not None:
-                                # 不在加工时才可以拿走
-                                vehicle.set_operating(True)
-                                vehicle.take_ladle(self.remove_ladle())
-                                self.set_operating(True)
 
             elif self.type == 'intersection':
                 if len(self.vehicles) == 2:
@@ -138,30 +139,40 @@ class Station:
                         if distance < self.config['able_process_distance'] and \
                                 vehicle.calculate_target() == station_pos and vehicle not in self.vehicles:
                             self.capture_vehicle(vehicle)
-        else:
-            # 工位正在执行装载或卸载
+        # 工位正在执行装载或卸载
+        elif self.is_operating:
             if self.operating_timer > 0:
                 self.operating_timer -= 1
-                # print(f'operating_timer {self.name} {self.operating_timer}')
                 logging.info(f'operating_timer {self.name} {self.operating_timer}')
                 if self.operating_timer == 0:
-                    # print(f'{self.name} has {[vehicle.name for vehicle in self.vehicles]} at operating_timer==0')
-                    for vehicle in self.vehicles[:]:
-                        self.release_vehicle(vehicle)
+                    # 装货卸货倒计时结束时释放车,但workstation需要判断释放哪一个车
+                    if self.type == 'intersection':
+                        for vehicle in self.vehicles[:]:
+                            self.release_vehicle(vehicle)
+                    elif self.type == 'workstation':
+                        if len(self.vehicles) == 2:
+                            for vehicle in self.vehicles[:]:
+                                if abs(vehicle.pos - vehicle.task.end_pos) < self.config['able_process_distance']:
+                                    self.release_vehicle(vehicle)
+                        elif len(self.vehicles) < 2:
+                            for vehicle in self.vehicles[:]:
+                                self.release_vehicle(vehicle)
+                        else:
+                            raise ValueError('车辆数量大于2')
+                    else:
+                        raise RuntimeError('未定义工位类型')
                     self.set_operating(False)
             else:
                 raise ValueError(f'工位操作时间小于0 {self.name} {self.operating_timer}')
-
-        if self.vehicles:
-            # print(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
-            logging.info(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
-
-        if self.is_processing:
+        # 工位正在加工
+        elif self.is_processing:
+            # 检查钢包情况
             if self.ladle is None:
                 if self.name.endswith('CC'):
                     pass
                 else:
                     raise RuntimeError(f'工位正在执行,但无钢包 {self}')
+            # 加工倒计时
             if self.processing_timer > 0:
                 self.processing_timer -= 1
                 # print(f'processing_timer {self.name} {self.processing_timer}')
@@ -170,6 +181,14 @@ class Station:
                     self.set_processing(False)
             else:
                 raise RuntimeError(f'工位正在执行,但时间小于等于0 {self}')
+        elif self.is_operating and self.is_processing:
+            raise RuntimeError(f'工位同时执行了装载和加工 {self}')
+        else:
+            pass
+
+        if self.vehicles:
+            # print(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
+            logging.info(f'{self.name} has vehicle {[vehicle.name for vehicle in self.vehicles]}')
 
     def check_captive_vehicle_pono(self, vehicle_list):
         pono = vehicle_list[0].task.pono

@@ -91,9 +91,8 @@ class SimulatorEnv(RefinementEnv):
         writer = imageio.get_writer('animation.mp4', fps=40)
         while running:
             logging.info('*' * 40 + f' {self.sys_time} ' + '*' * 40)
+            # print(('*' * 40 + f' {self.sys_time} ' + '*' * 40))
             self.step()
-            # print(f"crane1_1.task:{self.vehicles['crane1_1'].task}")
-            # print(f"crane1_2.task:{self.vehicles['crane1_2'].task}")
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -125,6 +124,6 @@ if __name__ == '__main__':
     # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/feed_and_refine_env.yaml',
-                             task_file='data/processed_data/test.json')
+                             task_file='data/processed_data/processed_data.json')
                              # task_file='data/processed_data/processed_data.json')
     simulator.main_game_loop()

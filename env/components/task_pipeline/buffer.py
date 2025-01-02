@@ -36,6 +36,7 @@ class Buffer:
         if task.type == 'temp':
             raise logging.error(f'车把临时任务返回给buffer')
         self.buffer.append(task)
+        self.update_size(1)
         logging.info(f'add {crash_type} task from allocator: {task}')
 
     def remove_task(self, task):

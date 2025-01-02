@@ -6,7 +6,7 @@
             "TAR_STATION": "6KR",
             "ASSIGN_TIME": "2024-08-26T17:07:20",
             "END_TIME": "2024-08-26T17:07:20",
-            "PROCESS_TIME": 1800.0
+            "PROCESS_TIME": 180.0
         },
         {
             "PONO": "p1",
@@ -14,25 +14,25 @@
             "TAR_STATION": "3LD",
             "ASSIGN_TIME": "2024-08-26T17:07:20",
             "END_TIME": "2024-08-26T17:07:20",
-            "PROCESS_TIME": 2700.0
+            "PROCESS_TIME": 270.0
         },
         {
             "PONO": "p1",
             "BEG_STATION": "3LD",
             "TAR_STATION": "4LF_right",
-            "ASSIGN_TIME": "2024-08-26T17:37:20",
-            "END_TIME": "2024-08-26T17:47:20",
-            "PROCESS_TIME": 1800.0
+            "ASSIGN_TIME": "2024-08-26T17:07:20",
+            "END_TIME": "2024-08-26T17:07:20",
+            "PROCESS_TIME": 180.0
         },
         {
             "PONO": "p1",
             "BEG_STATION": "4LF_right",
             "TAR_STATION": "3CC",
-            "ASSIGN_TIME": "2024-08-26T18:32:20",
-            "END_TIME": "2024-08-26T19:40:20",
+            "ASSIGN_TIME": "2024-08-26T17:07:20",
+            "END_TIME": "2024-08-26T17:07:20",
             "PROCESS_TIME": 0.0
         }
     ],
     "START_TIME": "2024-08-26T17:07:20",
-    "END_TIME": "2024-08-26T19:40:20"
+    "END_TIME": "2024-08-26T17:07:20"
 }
