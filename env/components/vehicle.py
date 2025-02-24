@@ -65,7 +65,7 @@ class Vehicle:
 
     def remove_task(self):
         # print(f'{self.name} remove {self.task}')
-        logging.info(f'{self.name}at {self.pos} remove {self.task}')
+        logging.info(f'{self.name} at {self.pos} remove {self.task}')
         self.task = None
 
     def calculate_target(self):

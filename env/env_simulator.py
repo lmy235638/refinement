@@ -8,7 +8,7 @@ from pygame.color import THECOLORS
 
 left_padding = 200
 under_padding = 100
-scale_factor = 4
+scale_factor = 3
 track_width = 2
 circle_radius = 5
 rect_width = 10
@@ -88,7 +88,7 @@ class SimulatorEnv(RefinementEnv):
         running = True
         pygame.init()
 
-        writer = imageio.get_writer('animation.mp4', fps=40)
+        writer = imageio.get_writer('animation.mp4', fps=20)
         while running:
             logging.info('*' * 40 + f' {self.sys_time} ' + '*' * 40)
             # print(('*' * 40 + f' {self.sys_time} ' + '*' * 40))
@@ -103,7 +103,7 @@ class SimulatorEnv(RefinementEnv):
                 running = False
 
             self.render()
-            clock.tick(60)
+            # clock.tick(60)
 
             # # 保存当前帧
             # surface = pygame.display.get_surface()
@@ -125,5 +125,4 @@ if __name__ == '__main__':
 
     simulator = SimulatorEnv(config_file='config/feed_and_refine_env.yaml',
                              task_file='data/processed_data/processed_data.json')
-                             # task_file='data/processed_data/processed_data.json')
     simulator.main_game_loop()

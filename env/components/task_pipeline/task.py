@@ -15,6 +15,6 @@ class Task:
         self.temp_hold_time = temp_hold_time
 
     def __repr__(self):
-        return f"\n\tTask(start_pos={self.start_pos}, end_pos={self.end_pos}, vehicle={self.vehicle} " \
+        return f"\n\tTask(start_pos={self.start_pos}, end_pos={self.end_pos}, vehicle={self.vehicle}, " \
                f"assign_time={self.assign_time}, pono={self.pono},\n\t\t track_name='{self.track}', " \
                f"type={self.type}, process_time={self.process_time}, temp_hold_time={self.temp_hold_time})"

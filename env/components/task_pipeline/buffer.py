@@ -35,6 +35,7 @@ class Buffer:
     def add_from_allocator(self, task, crash_type):
         if task.type == 'temp':
             raise logging.error(f'车把临时任务返回给buffer')
+            # return
         self.buffer.append(task)
         self.update_size(1)
         logging.info(f'add {crash_type} task from allocator: {task}')
@@ -43,3 +44,7 @@ class Buffer:
         if task in self.buffer:
             self.buffer.remove(task)
             self.update_size(-1)
+
+    def sorted_tasks(self):
+        # 对任务列表进行排序，将 vehicle 不等于 None 的任务排在前面
+        self.buffer = sorted(self.buffer, key=lambda task: task.vehicle is None)

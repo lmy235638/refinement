@@ -137,8 +137,9 @@ def parse_to_single_task(records, original_format='%Y%m%d%H%M%S'):
             else:
                 process_time = datetime.strptime(record[f'工序{i + 2}结束时间'], original_format) - datetime.strptime(record[f'工序{i + 2}开始时间'], original_format)
             task_record.update({'PROCESS_TIME': process_time.total_seconds()})
-            if task_record['PONO'] == 'p1':
-                task_records.append(task_record)
+
+            # if task_record['PONO'] == 'p1':
+            task_records.append(task_record)
 
     return task_records
 
