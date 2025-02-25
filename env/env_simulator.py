@@ -76,6 +76,8 @@ class SimulatorEnv(RefinementEnv):
             # if loaded:
             if vehicle.ladle:
                 pygame.draw.rect(self.screen, THECOLORS['blue'], (x, y, width, height))
+                text = font.render(vehicle.task.pono, True, THECOLORS['green'])
+                self.screen.blit(text, (x + 10, y + 20))
             else:
                 pygame.draw.rect(self.screen, THECOLORS['blue'], (x, y, width, height), 2)
             rendered_text = font.render(vehicle.name, True, THECOLORS['red'])
@@ -119,8 +121,8 @@ class SimulatorEnv(RefinementEnv):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
-                        format='%(levelname)s: - %(message)s', encoding='utf-8')
+    # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
+    #                     format='%(levelname)s: - %(message)s', encoding='utf-8')
     # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/feed_and_refine_env.yaml',
