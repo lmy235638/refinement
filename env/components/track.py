@@ -397,7 +397,6 @@ class Track:
                 else:
                     raise ValueError(f'未考虑情况出现')
 
-
     def verify_vehicle_safety_after_move(self):
         for i in range(self.vehicle_num - 1):
             temp_left_pos = self.vehicles[i].simulate_move()

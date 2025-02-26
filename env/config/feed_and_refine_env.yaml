@@ -4,6 +4,7 @@ fractional_load_speed: 1
 heavy_load_speed: 0.8
 able_process_distance: 0.79
 real_action_time: 30
+scrap_task_advance_time: 200
 
 vehicles:
   Cranes:

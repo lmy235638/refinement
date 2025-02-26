@@ -1,5 +1,6 @@
 from datetime import timedelta
 from matplotlib import pyplot as plt
+from env.components.task_pipeline.task import Task
 from env.components.vehicle import Vehicle
 from env.components.track import Track
 from env.components.station import Station
@@ -71,6 +72,7 @@ class RefinementEnv:
         self.vehicles['trolley_10'].pos = 144
 
     def step(self):
+        # 从任务池中获取到达时间的任务, 并对他们进行分解, 并添加进buffer中
         self.update_tasks()
         # print(f'buffer: {self.buffer.buffer}')
         if self.buffer.buffer:
@@ -82,6 +84,14 @@ class RefinementEnv:
                 if task.track == track.name:
                     tasks.append(task)
                     self.buffer.remove_task(task)
+
+                    # if track.name == 'bridge0' and task.end_pos.endswith('LD'):
+                    #     task_transport_scrap_to_LD = (
+                    #         Task(start_pos='scrap_m', end_pos=task.end_pos, end_time= task.end_time,
+                    #               assign_time=task.assign_time + timedelta(seconds= task.process_time - self.config['scrap_task_advance_time']),
+                    #               process_time=0, track=task.track, pono='scrap'))
+                    #     track.add_tasks_to_buffer([task_transport_scrap_to_LD])
+                    #     print(f'{self.sys_time} {task}')
             # print('*' * 20 + f'track:{track.name}' + '*' * 20)
             logging.info('*' * 20 + f'track:{track.name}' + '*' * 20)
             track.add_tasks_to_buffer(tasks)
@@ -105,7 +115,7 @@ class RefinementEnv:
             if solutions:
                 self.buffer.add_from_reader(solutions)
                 self.reader.remove_task(task)
-                self.spawn_ladle(solutions)  # 生成货物在LD上
+                self.spawn_ladle(solutions)  # 生成货物在工位上
 
     def spawn_ladle(self, solutions: dict):
         for solution in solutions:
@@ -113,6 +123,13 @@ class RefinementEnv:
                 ladle = Ladle(pono=solution['pono'], process_time=solution['process_time'])
                 self.ladles.append(ladle)
                 self.stations[solution['start']].add_ladle(ladle)
+
+            # # 生成废钢钢包
+            # if solution['start'] in ['scrap_m']:
+            #     ladle = Ladle(pono='scrap', process_time=solution['process_time'])
+            #     self.ladles.append(ladle)
+            #     self.stations[solution['start']].add_ladle(ladle)
+
 
     def spawn_vehicles(self):
         crane_trolly_info = self.config['vehicles']

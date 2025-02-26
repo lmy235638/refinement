@@ -76,8 +76,9 @@ class SimulatorEnv(RefinementEnv):
             # if loaded:
             if vehicle.ladle:
                 pygame.draw.rect(self.screen, THECOLORS['blue'], (x, y, width, height))
-                text = font.render(vehicle.task.pono, True, THECOLORS['green'])
-                self.screen.blit(text, (x + 10, y + 20))
+                if vehicle.task:
+                    text = font.render(vehicle.task.pono, True, THECOLORS['green'])
+                    self.screen.blit(text, (x + 10, y + 20))
             else:
                 pygame.draw.rect(self.screen, THECOLORS['blue'], (x, y, width, height), 2)
             rendered_text = font.render(vehicle.name, True, THECOLORS['red'])

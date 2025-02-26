@@ -169,22 +169,6 @@
             "PROCESS_TIME": 2700.0
         },
         {
-            "PONO": "p15",
-            "BEG_STATION": "T1_m",
-            "TAR_STATION": "6KR",
-            "ASSIGN_TIME": "2024-08-26T19:07:20",
-            "END_TIME": "2024-08-26T19:07:20",
-            "PROCESS_TIME": 1800.0
-        },
-        {
-            "PONO": "p15",
-            "BEG_STATION": "6KR",
-            "TAR_STATION": "3LD",
-            "ASSIGN_TIME": "2024-08-26T19:07:20",
-            "END_TIME": "2024-08-26T19:07:20",
-            "PROCESS_TIME": 2700.0
-        },
-        {
             "PONO": "p2",
             "BEG_STATION": "2LF",
             "TAR_STATION": "3CC",
@@ -228,14 +212,6 @@
             "PONO": "p9",
             "BEG_STATION": "1LD",
             "TAR_STATION": "1RH",
-            "ASSIGN_TIME": "2024-08-26T19:37:20",
-            "END_TIME": "2024-08-26T19:47:20",
-            "PROCESS_TIME": 1800.0
-        },
-        {
-            "PONO": "p15",
-            "BEG_STATION": "3LD",
-            "TAR_STATION": "4LF_right",
             "ASSIGN_TIME": "2024-08-26T19:37:20",
             "END_TIME": "2024-08-26T19:47:20",
             "PROCESS_TIME": 1800.0
@@ -313,14 +289,6 @@
             "PROCESS_TIME": 0.0
         },
         {
-            "PONO": "p15",
-            "BEG_STATION": "4LF_right",
-            "TAR_STATION": "1RH",
-            "ASSIGN_TIME": "2024-08-26T20:32:20",
-            "END_TIME": "2024-08-26T20:52:20",
-            "PROCESS_TIME": 1800.0
-        },
-        {
             "PONO": "p4",
             "BEG_STATION": "2LD",
             "TAR_STATION": "1LF",
@@ -391,14 +359,6 @@
             "ASSIGN_TIME": "2024-08-26T21:07:20",
             "END_TIME": "2024-08-26T21:07:20",
             "PROCESS_TIME": 2700.0
-        },
-        {
-            "PONO": "p15",
-            "BEG_STATION": "1RH",
-            "TAR_STATION": "1CC",
-            "ASSIGN_TIME": "2024-08-26T21:22:20",
-            "END_TIME": "2024-08-26T22:10:20",
-            "PROCESS_TIME": 0.0
         },
         {
             "PONO": "p4",
