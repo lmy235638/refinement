@@ -169,16 +169,17 @@ class Station:
             # 检查钢包情况
             if self.ladle is None:
                 if self.name.endswith('CC'):
-                    pass
+                    logging.info(f"加工了一个空钢包,但是:{self.name}工位")
                 else:
                     raise RuntimeError(f'工位正在执行,但无钢包 {self}')
             # 加工倒计时
-            if self.processing_timer > 0:
+            if self.processing_timer >= 0:
                 self.processing_timer -= 1
                 # print(f'processing_timer {self.name} {self.processing_timer}')
                 logging.info(f'processing_timer {self.name} {self.processing_timer}')
-                if self.processing_timer == 0:
+                if self.processing_timer <= 0:
                     self.set_processing(False)
+                    logging.info(f'{self.name} 加工完成, 加工状态为: {self.is_processing}')
             else:
                 raise RuntimeError(f'工位正在执行,但时间小于等于0 {self}')
         elif self.is_operating and self.is_processing:

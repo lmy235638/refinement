@@ -1,3 +1,6 @@
+import logging
+
+
 class Ladle:
     def __init__(self, pono, pass_station=None, process_time=0):
         self.pono = pono
@@ -18,6 +21,7 @@ class Ladle:
         self.should_finish_time = finish_time
 
     def destroy(self, finished_time):
+        logging.info(f'Ladle {self.pono} is destroyed.')
         self.finished_time = finished_time
 
     def __repr__(self):

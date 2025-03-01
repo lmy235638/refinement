@@ -66,7 +66,7 @@
         },
         {
             "PONO": "p8",
-            "BEG_STATION": "T1_m",
+            "BEG_STATION": "T2_m",
             "TAR_STATION": "7KR",
             "ASSIGN_TIME": "2024-08-26T18:07:20",
             "END_TIME": "2024-08-26T18:07:20",
@@ -76,22 +76,6 @@
             "PONO": "p8",
             "BEG_STATION": "7KR",
             "TAR_STATION": "1LD",
-            "ASSIGN_TIME": "2024-08-26T18:07:20",
-            "END_TIME": "2024-08-26T18:07:20",
-            "PROCESS_TIME": 2700.0
-        },
-        {
-            "PONO": "p14",
-            "BEG_STATION": "T1_m",
-            "TAR_STATION": "5KR",
-            "ASSIGN_TIME": "2024-08-26T18:07:20",
-            "END_TIME": "2024-08-26T18:07:20",
-            "PROCESS_TIME": 1800.0
-        },
-        {
-            "PONO": "p14",
-            "BEG_STATION": "5KR",
-            "TAR_STATION": "2LD",
             "ASSIGN_TIME": "2024-08-26T18:07:20",
             "END_TIME": "2024-08-26T18:07:20",
             "PROCESS_TIME": 2700.0
@@ -124,14 +108,6 @@
             "PONO": "p8",
             "BEG_STATION": "1LD",
             "TAR_STATION": "2RH_right",
-            "ASSIGN_TIME": "2024-08-26T18:37:20",
-            "END_TIME": "2024-08-26T18:47:20",
-            "PROCESS_TIME": 1800.0
-        },
-        {
-            "PONO": "p14",
-            "BEG_STATION": "2LD",
-            "TAR_STATION": "1LF",
             "ASSIGN_TIME": "2024-08-26T18:37:20",
             "END_TIME": "2024-08-26T18:47:20",
             "PROCESS_TIME": 1800.0
@@ -191,14 +167,6 @@
             "ASSIGN_TIME": "2024-08-26T19:32:20",
             "END_TIME": "2024-08-26T20:20:20",
             "PROCESS_TIME": 0.0
-        },
-        {
-            "PONO": "p14",
-            "BEG_STATION": "1LF",
-            "TAR_STATION": "2RH_left",
-            "ASSIGN_TIME": "2024-08-26T19:32:20",
-            "END_TIME": "2024-08-26T19:57:20",
-            "PROCESS_TIME": 1800.0
         },
         {
             "PONO": "p3",
@@ -263,14 +231,6 @@
             "ASSIGN_TIME": "2024-08-26T20:07:20",
             "END_TIME": "2024-08-26T20:07:20",
             "PROCESS_TIME": 2700.0
-        },
-        {
-            "PONO": "p14",
-            "BEG_STATION": "2RH_left",
-            "TAR_STATION": "1CC",
-            "ASSIGN_TIME": "2024-08-26T20:27:20",
-            "END_TIME": "2024-08-26T21:15:20",
-            "PROCESS_TIME": 0.0
         },
         {
             "PONO": "p3",
