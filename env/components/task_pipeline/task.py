@@ -1,5 +1,5 @@
 class Task:
-    def __init__(self, start_pos, end_pos, assign_time, end_time, pono, track, process_time,
+    def __init__(self, start_pos, end_pos, assign_time, end_time, pono, track, process_time, priority,
                  type=None, has_good=None, vehicle=None, temp_hold_time=0):
         self.start_pos = start_pos
         self.end_pos = end_pos
@@ -13,11 +13,12 @@ class Task:
         self.has_good = has_good
         self.vehicle = vehicle
         self.temp_hold_time = temp_hold_time
+        self.priority = priority
 
     def __repr__(self):
         return f"\n\tTask(start_pos={self.start_pos}, end_pos={self.end_pos}, vehicle={self.vehicle}, " \
                f"assign_time={self.assign_time}, pono={self.pono},\n\t\t track_name='{self.track}', " \
-               f"type={self.type}, process_time={self.process_time}, temp_hold_time={self.temp_hold_time})"
+               f"type={self.type}, process_time={self.process_time}, temp_hold_time={self.temp_hold_time}), priority={self.priority}"
 
     def __eq__(self, other):
         """重写 __eq__ 方法，用于比较两个 Task 对象的属性是否相等"""

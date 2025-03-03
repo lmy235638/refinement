@@ -19,10 +19,14 @@ class Buffer:
         self.size += delta
 
     def add_from_reader(self, tasks):
+        priority = 0
         for task in tasks:
+            # 将 datetime 对象转换为指定格式的字符串
+            formatted_time = int(task['assign_time'].strftime('%Y%m%d%H%M%S')) + priority
+            priority += 1
             new_task = Task(start_pos=task['start'], end_pos=task['end'], assign_time=task['assign_time'],
                             end_time=task['end_time'], process_time=task['process_time'],
-                            track=task['track'], pono=task['pono'])
+                            track=task['track'], pono=task['pono'], priority=formatted_time)
             self.buffer.append(new_task)
             self.update_size(1)
 

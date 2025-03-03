@@ -425,12 +425,16 @@ class Track:
         else:
             raise ValueError(f'同时出现3个以上任务的情况')
 
-    def task_allocator(self):
+    def task_allocator(self, priority):
         logging.info(f'{self.name} : {self.buffer.buffer}')
 
         remove_tasks = []
         self.buffer.sorted_tasks()
         for task in self.buffer.buffer:
+            # if self.name == 'bridge1':
+            #     logging.info(f'priority: {priority}')
+            if task.pono in priority and task.priority > priority[task.pono]:
+                continue
             able_vehicles = self.find_able_vehicles(task)  # 找出能接任务的车
             # if self.name == 'trolley_track_2':
             #     logging.info(f'able_vehicles: {able_vehicles}')

@@ -29,7 +29,7 @@ class Station:
         if self.ladle is None:
             self.ladle = ladle
         else:
-            raise RuntimeError('工位已经有钢包')
+            raise logging.error(f'工位已经有钢包 {self}')
 
         if self.name.endswith('CC'):
             self.ladle.destroy(self.time)

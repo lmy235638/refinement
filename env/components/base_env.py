@@ -26,6 +26,8 @@ class RefinementEnv:
         self.finder = Finder(self.config, self.vehicles)
         self.buffer = Buffer()
 
+        self.priority = {}
+
     def reset(self):
         """
         重置环境将:生成车,轨道,工位.并将他们绑定在轨道上
@@ -77,6 +79,9 @@ class RefinementEnv:
         # print(f'buffer: {self.buffer.buffer}')
         if self.buffer.buffer:
             logging.info(f'buffer: {self.buffer.buffer}')
+
+        logging.info(f'priority: {self.priority}')
+
         # 把buffer中的任务分配给各个轨道
         for track in self.tracks.values():
             tasks = []
@@ -93,10 +98,23 @@ class RefinementEnv:
                     #     track.add_tasks_to_buffer([task_transport_scrap_to_LD])
                     #     print(f'{self.sys_time} {task}')
             # print('*' * 20 + f'track:{track.name}' + '*' * 20)
-            logging.info('*' * 20 + f'track:{track.name}' + '*' * 20)
+            logging.info('*' * 20 + f' track:{track.name} ' + '*' * 20)
             track.add_tasks_to_buffer(tasks)
-            track.task_allocator()
+            track.task_allocator(self.priority)
             track.step()
+
+        # 更新所有任务优先级表
+        self.priority = {}
+        for track in self.tracks.values():
+            for task in track.buffer.buffer[:]:
+                pono = task.pono
+                task_priority = task.priority
+                # 如果该 pono 还没有在优先级字典中，直接添加
+                if pono not in self.priority:
+                    self.priority[pono] = task_priority
+                else:
+                    # 比较当前任务的优先级和已记录的优先级，取较低的那个
+                    self.priority[pono] = min(self.priority[pono], task_priority)
 
         for station in self.stations.values():
             # print(station)
