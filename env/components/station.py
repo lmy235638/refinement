@@ -18,6 +18,7 @@ class Station:
         self.operating_timer = -1
         self.processing_timer = -1
         self.temp = None
+        self.last_processed_pono = None
 
     def update_time(self, new_time):
         self.time = new_time
@@ -82,6 +83,9 @@ class Station:
         if not self.is_operating and not self.is_processing:
             if self.type == 'workstation':
                 for vehicle in self.vehicles:
+                    # 如果当前工位有货物,且车有货物,则跳过.因为有任务排队的情况,工位有旧钢包,新车仍然放入新钢包
+                    if vehicle.ladle and self.ladle:
+                        continue
                     if self.is_operating:
                         break
                     if vehicle.ladle:
@@ -151,9 +155,23 @@ class Station:
                             self.release_vehicle(vehicle)
                     elif self.type == 'workstation':
                         if len(self.vehicles) == 2:
-                            for vehicle in self.vehicles[:]:
-                                if abs(vehicle.pos - vehicle.task.end_pos) < self.config['able_process_distance']:
-                                    self.release_vehicle(vehicle)
+                            # 如果两个车都有货物, 那么应该释放刚加工完的那一个
+                            if self.vehicles[0].ladle and self.vehicles[1].ladle:
+                                for vehicle in self.vehicles[:]:
+                                    if vehicle.ladle.pono == self.last_processed_pono:
+                                        self.release_vehicle(vehicle)
+                            else:
+                                for vehicle in self.vehicles[:]:
+                                    if abs(vehicle.pos - vehicle.task.end_pos) <= self.config['able_process_distance']:
+                                        self.release_vehicle(vehicle)
+                            # for vehicle in self.vehicles[:]:
+                            #     # 通过任务结束位置与当前位置差判断,应当释放送货的车.
+                            #     if self.vehicles[0].ladle and self.vehicles[1].ladle:
+                            #         if vehicle.ladle.pono == self.last_processed_pono:
+                            #             self.release_vehicle(vehicle)
+                            #     else:
+                            #         if abs(vehicle.pos - vehicle.task.end_pos) <= self.config['able_process_distance']:
+                                        self.release_vehicle(vehicle)
                         elif len(self.vehicles) < 2:
                             for vehicle in self.vehicles[:]:
                                 self.release_vehicle(vehicle)
@@ -179,7 +197,13 @@ class Station:
                 logging.info(f'processing_timer {self.name} {self.processing_timer}')
                 if self.processing_timer <= 0:
                     self.set_processing(False)
-                    logging.info(f'{self.name} 加工完成, 加工状态为: {self.is_processing}')
+                    # 存放加工完的pono号, 判断释放哪一个车
+                    if self.ladle is not None:
+                        self.last_processed_pono = self.ladle.pono
+                    if self.name.endswith('CC'):
+                        logging.info(f'{self.name} 加工完成, 加工状态为: {self.is_processing}')
+                    else:
+                        logging.info(f'{self.name} 加工完成, 加工状态为: {self.is_processing}, 加工钢包号为: {self.ladle.pono}')
             else:
                 raise RuntimeError(f'工位正在执行,但时间小于等于0 {self}')
         elif self.is_operating and self.is_processing:

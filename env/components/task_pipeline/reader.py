@@ -35,9 +35,20 @@ class Reader:
         :param time:
         :return:
         """
+        # 先筛选出时间 ≤ time 的任务，并按 ASSIGN_TIME 排序
         task_list = [task for task in self.records if task['ASSIGN_TIME'] <= time]
         task_list = sorted(task_list, key=lambda x: x['ASSIGN_TIME'])
-        return task_list
+
+        seen_pono = set()  # 用于记录已处理的 pono
+        result = []
+
+        for task in task_list:
+            pono = task['PONO']
+            if pono not in seen_pono:   # 如果有多个同一pono的任务,每次只返回最早的那个
+                seen_pono.add(pono)
+                result.append(task)
+
+        return result
 
     def remove_task(self, task):
         self.records.remove(task)

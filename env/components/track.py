@@ -132,7 +132,28 @@ class Track:
                 elif left_vehicle.task.assign_time == right_vehicle.task.assign_time:
                     left_action = left_vehicle.determine_action()
                     right_action = right_vehicle.determine_action()
-                    if left_vehicle.load_degree != 0 and right_vehicle.load_degree == 0:
+                    # if self.name == 'bridge0':
+                    #     logging.info(f'left_action:{left_action} right_action:{right_action}')
+                    #     logging.info(f'left_task:{left_vehicle.task} right_task:{right_vehicle.task}')
+
+                    if left_action == Action.STAY or right_action == Action.STAY:
+                        if left_action == Action.STAY and right_action == Action.STAY:
+                            # 检查动作合规
+                            raise logging.error(f'两车的动作都是STAY')
+                        elif left_action == Action.STAY:
+                            # 左车STAY, 那么右车一定是向左移动且撞上左车, 右车需要等待
+                            right_vehicle.task.vehicle = right_vehicle.name
+                            self.buffer.add_from_allocator(right_vehicle.task, '3-左STAY 右等待')
+                            right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_vehicle.pos, 0,
+                                                                   is_loaded=True if right_vehicle.ladle else False))
+                        else:
+                            # 右车STAY, 左车等待
+                            left_vehicle.task.vehicle = left_vehicle.name
+                            self.buffer.add_from_allocator(left_vehicle.task, '3-右STAY 左等待')
+                            left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, 0,
+                                                                  is_loaded=True if left_vehicle.ladle else False))
+
+                    elif left_vehicle.load_degree != 0 and right_vehicle.load_degree == 0:
                         # 左车装载,右车空载
                         if left_action == right_action:
                             # 同一方向,说明空车追装载车
@@ -143,7 +164,8 @@ class Track:
                             time = self.cal_move_time(left_vehicle, left_vehicle.task.end_pos) - advance_time
                             right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp',
                                                                    right_vehicle.pos, time))
-                        else:
+                        # elif left_action != right_action and (left_action != Action.STAY and right_action != Action.STAY):
+                        elif left_action != right_action:
                             # 两车一左一右,在中间碰撞
                             self.buffer.add_from_allocator(right_vehicle.task, '3-左装右空-中间撞')
                             left_pos = self.cal_stop_pos(left_vehicle, left_vehicle.task.end_pos)
@@ -151,6 +173,26 @@ class Track:
                             time = max(self.cal_move_time(right_vehicle, right_pos),
                                        self.cal_move_time(left_vehicle, left_pos))
                             right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_pos, time))
+
+                        # else:
+                        #     # 这里是一个车为STAY状态的情况.
+                        #     if left_action == Action.STAY and right_action == Action.STAY:
+                        #         # 检查动作合规
+                        #         raise logging.error(f'两车的动作都是STAY')
+                        #
+                        #     if left_action == Action.STAY:
+                        #         # 左车装载静止STAY, 那么右车空车一定是向左移动且撞上左车, 右车需要等待
+                        #         right_vehicle.task.vehicle = right_vehicle.name
+                        #         self.buffer.add_from_allocator(right_vehicle.task, '3-左装STAY 右空 右等待')
+                        #         right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_vehicle.pos, 0,
+                        #                                                is_loaded=True if right_vehicle.ladle else False))
+                        #     else:
+                        #         # 右车空载STAY, 左车装载等待
+                        #         left_vehicle.task.vehicle = left_vehicle.name
+                        #         self.buffer.add_from_allocator(left_vehicle.task, '3-左装 右空STAY 左等待')
+                        #         left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, 0,
+                        #                                               is_loaded=True if left_vehicle.ladle else False))
+
                     elif left_vehicle.load_degree == 0 and right_vehicle.load_degree != 0:
                         # 左车空载,右车装载
                         if left_action == right_action:
@@ -159,13 +201,32 @@ class Track:
                             self.buffer.add_from_allocator(left_vehicle.task, '3-左空右装-空追装')
                             time = self.cal_move_time(right_vehicle, right_vehicle.task.end_pos)
                             left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, time))
-                        else:
+                        # elif left_action != right_action and (left_action != Action.STAY and right_action != Action.STAY):
+                        elif left_action != right_action:
                             # 两车一左一右,在中间碰撞
                             self.buffer.add_from_allocator(left_vehicle.task, '3-左空右装-中间撞')
                             right_pos = self.cal_stop_pos(right_vehicle, right_vehicle.task.end_pos)
                             left_pos = self.cal_avoid_pos(left_vehicle, right_pos, is_right=False)
                             time = self.cal_max_time(left_vehicle, left_pos, right_vehicle, right_pos)
                             left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_pos, time))
+                        # else:
+                        #     # 这里是一个车为STAY状态的情况.
+                        #     if left_action == Action.STAY and right_action == Action.STAY:
+                        #         # 检查动作合规
+                        #         raise logging.error(f'两车的动作都是STAY')
+                        #
+                        #     if left_action == Action.STAY:
+                        #         # 左车空静止STAY, 那么右车装载一定是向左移动且撞上左车, 右车需要等待
+                        #         right_vehicle.task.vehicle = right_vehicle.name
+                        #         self.buffer.add_from_allocator(right_vehicle.task, '3-左空STAY 右装载 右等待')
+                        #         right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_vehicle.pos, 0,
+                        #                                                is_loaded=True if right_vehicle.ladle else False))
+                        #     else:
+                        #         # 右装载STAY, 左车空等待
+                        #         left_vehicle.task.vehicle = left_vehicle.name
+                        #         self.buffer.add_from_allocator(left_vehicle.task, '3-左空 右装载STAY 左等待')
+                        #         left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, 0,
+                        #                                               is_loaded=True if left_vehicle.ladle else False))
                     elif left_vehicle.load_degree == 0 and right_vehicle.load_degree == 0:
                         # 两车都空载 谁近谁优先
                         if left_action != right_action:
@@ -454,6 +515,7 @@ class Track:
 
         # 检测是否有碰撞
         for i in range(self.vehicle_num - 1):
+            # logging.info(f'开始第{i}次冲突检测')
             self.vehicles_crash_check()
 
         self.verify_vehicle_safety_after_move()
@@ -494,9 +556,8 @@ class Track:
         # 3.执行移动
         for vehicle in self.vehicles:
             vehicle.move()
-            # logging.info(f'{vehicle}')
-            if self.name == 'bridge0':
-                logging.info(f'{vehicle.name}: {vehicle.pos} {vehicle.task}')
+            # if self.name == 'bridge0':
+            #     logging.info(f'{vehicle.name}: {vehicle.pos} {vehicle.task}')
 
         # 安全距离检查
         for i in range(self.vehicle_num - 1):
