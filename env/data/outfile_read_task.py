@@ -14,7 +14,7 @@ def read_from_file(filename) -> list:
     :return: List(dict,dict...)
     """
     records = []
-    with open(filename, 'r') as lines:
+    with open(filename, 'r', encoding='gbk') as lines:
         # 第一行一般为一个数字
         next(lines)
         for line in lines:
@@ -90,6 +90,8 @@ def parse_record(records) -> list:
                     raise ValueError(f'未定义类型 station:{station}')
             elif first_char == 'C':
                 station = num_char + 'CC'
+            elif first_char == 'A':
+                station = 'CAS'
             # A为CAS工位,图中没画不考虑
             else:
                 raise ValueError(f'出现未定义工位字段{ori_station}')
@@ -117,32 +119,36 @@ def parse_to_single_task(records, original_format='%Y%m%d%H%M%S'):
     task_records = []
     for record in records:
         stations = record['路径']
-        for i, station in enumerate(stations[0:-1]):    # 抛去最后一个(左闭右开)
+        for i, station in enumerate(stations[0:-1], start=1):    # 抛去最后一个(左闭右开)
+            # print(f'{i} {station}')
             task_record = {}
             task_record.update({'PONO': record['PONO']})
             task_record.update({'BEG_STATION': station})
-            tar_station = stations[i + 1]
+            tar_station = stations[i]
             task_record.update({'TAR_STATION': tar_station})
-            assigned_time = record[f'工序{i}结束时间'] if i > 0 else record[f'工序{i + 1}开始时间']
-            assigned_time = datetime.strptime(assigned_time, original_format)
+            assigned_time = record[f'工序{i}结束时间'] if i > 1 else record[f'工序{i}开始时间']
+            assigned_time = parse_with_default(assigned_time, original_format)
             task_record.update({'ASSIGN_TIME': assigned_time.isoformat()})
-            if tar_station.endswith('CC'):
-                end_time = record[f'工序{i + 2}开始时间']
-            else:
-                end_time = record[f'工序{i + 1}开始时间']
-            end_time = datetime.strptime(end_time, original_format)
+            end_time = record[f'工序{i + 1}开始时间']
+            end_time = parse_with_default(end_time, original_format)
             task_record.update({'END_TIME': end_time.isoformat()})
             if tar_station.endswith('CC'):
                 process_time = timedelta(0)
             else:
-                process_time = datetime.strptime(record[f'工序{i + 2}结束时间'], original_format) - datetime.strptime(record[f'工序{i + 2}开始时间'], original_format)
+                process_time = datetime.strptime(record[f'工序{i + 1}结束时间'], original_format) - datetime.strptime(record[f'工序{i + 1}开始时间'], original_format)
             task_record.update({'PROCESS_TIME': process_time.total_seconds()})
 
             # if task_record['PONO'] == 'p1':
             task_records.append(task_record)
+            # print(f'ASSIGN_TIME: {assigned_time}, END_TIME: {end_time}')
 
     return task_records
 
+def parse_with_default(time_str, original_format, default=datetime(1970, 1, 1)):
+    try:
+        return datetime.strptime(time_str, original_format)
+    except ValueError:
+        return default  # 返回固定默认值
 
 def parse_to_full_task(records, original_format='%Y%m%d%H%M%S'):
     task_records = []
@@ -221,7 +227,7 @@ def find_earliest_and_last_time(records):
 
 
 if __name__ == '__main__':
-    original_records = read_from_file('ori_data/20240826170720.out')
+    original_records = read_from_file('ori_data/20250307104116.out')
     parse_records = parse_record(original_records)
     with open('processed_data/parse_records.json', 'w', encoding='utf-8') as f:
         json.dump(parse_records, f, indent=4, ensure_ascii=False)
@@ -229,8 +235,13 @@ if __name__ == '__main__':
     tasks.sort(key=lambda x: x['ASSIGN_TIME'])
     # tasks = parse_to_full_task(parse_records)
 
-    processed_data = {'RECORDS': tasks}
-    task_start_time, task_end_time = find_earliest_and_last_time(tasks)
+    tasks_start_at_LD = []
+    for task in tasks:
+        if not task['TAR_STATION'].endswith(('KR', 'LD')):
+            tasks_start_at_LD.append(task)
+
+    processed_data = {'RECORDS': tasks_start_at_LD}
+    task_start_time, task_end_time = find_earliest_and_last_time(tasks_start_at_LD)
     processed_data.update({'START_TIME': task_start_time.isoformat()})
     processed_data.update({'END_TIME': task_end_time.isoformat()})
 

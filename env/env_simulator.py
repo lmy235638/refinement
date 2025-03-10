@@ -6,8 +6,8 @@ import pygame
 from components.base_env import RefinementEnv
 from pygame.color import THECOLORS
 
-left_padding = 200
-under_padding = 100
+left_padding = 350
+under_padding = 80
 scale_factor = 3
 track_width = 2
 circle_radius = 5
@@ -31,7 +31,7 @@ class SimulatorEnv(RefinementEnv):
         # self.gauge_tasks()
 
         sys_time = time_font.render(self.sys_time.strftime('%Y-%m-%d %H:%M:%S'), True, THECOLORS['black'])
-        self.screen.blit(sys_time, (self.screen_width/2 - 150, 40))
+        self.screen.blit(sys_time, (self.screen_width/2 - 150, 60))
 
         for track in self.tracks.values():
             start = track.start
@@ -91,7 +91,7 @@ class SimulatorEnv(RefinementEnv):
         running = True
         pygame.init()
 
-        writer = imageio.get_writer('animation.mp4', fps=20)
+        writer = imageio.get_writer('animation.mp4', fps=40)
         while running:
             logging.info('*' * 40 + f' {self.sys_time} ' + '*' * 40)
             # print(('*' * 40 + f' {self.sys_time} ' + '*' * 40))
@@ -122,8 +122,8 @@ class SimulatorEnv(RefinementEnv):
 
 
 if __name__ == '__main__':
-    # logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
-    #                     format='%(levelname)s: - %(message)s', encoding='utf-8')
+    logging.basicConfig(filename='log.log', level=logging.INFO, filemode='w',
+                        format='%(levelname)s: - %(message)s', encoding='utf-8')
     # logging.basicConfig(level=logging.INFO, format='%(message)s', stream=sys.stdout)
 
     simulator = SimulatorEnv(config_file='config/feed_and_refine_env.yaml',

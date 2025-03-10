@@ -500,6 +500,12 @@ poses:
     y: 141
     connections:
       - 1LF1
+  CAS:
+    x: 180
+    y: 134
+    connections:
+      - 4LF2
+      - 2RH1
   1CC:
     x: 223
     y: 134
@@ -578,8 +584,8 @@ poses:
     y: 134
     connections:
       - 4LF_right
-      - 2RH1
       - 1RH1
+      - CAS
   1RH1:
     x: 158
     y: 134
@@ -592,8 +598,8 @@ poses:
     y: 134
     connections:
       - 1CC
-      - 4LF2
       - 2RH_left
+      - CAS
   2RH2:
     x: 240
     y: 134
@@ -835,6 +841,15 @@ Station_Layout:
         - 1LF1
       vehicle:
         - trolley2_2
+    CAS:
+      x: 180
+      y: 134
+      connections:
+        - 4LF2
+        - 2RH1
+      vehicle:
+        - crane1_1
+        - crane1_2
     1CC:
       x: 223
       y: 134
@@ -981,8 +996,8 @@ Station_Layout:
       y: 134
       connections:
         - 4LF_right
-        - 2RH1
         - 1RH1
+        - CAS
     1RH1:
       x: 158
       y: 134
@@ -995,8 +1010,8 @@ Station_Layout:
       y: 134
       connections:
         - 1CC
-        - 4LF2
         - 2RH_left
+        - CAS
     2RH2:
       x: 240
       y: 134

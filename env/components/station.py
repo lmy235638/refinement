@@ -117,7 +117,7 @@ class Station:
                         else:
                             no_ladle_vehicle = vehicle
                     if has_ladle_vehicle is None or no_ladle_vehicle is None:
-                        raise ValueError('两个车,其中有个为None')
+                        raise logging.error(f'交互工位,但两个车都为空或者都有钢包: {self.vehicles[0]} {self.vehicles[1]}')
                     no_ladle_vehicle.take_ladle(has_ladle_vehicle.drop_ladle())
                     has_ladle_vehicle.set_operating(True)
                     no_ladle_vehicle.set_operating(True)

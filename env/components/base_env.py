@@ -122,26 +122,43 @@ class RefinementEnv:
             station.step()
 
         self.sys_time += timedelta(seconds=1)
+        # print(self.sys_time)
 
     def update_tasks(self):
         # 从reader中获取任务并尝试分解成子任务,成功分解的子任务添加进buffer中
         task_list = self.reader.get_task(self.sys_time)
+        # print(f'task_list: {task_list}')
         self.finder.update_node_occupied()  # 更新node节点状态
         for task in task_list:
+            if self.stations[task['TAR_STATION']].is_processing or self.stations[task['TAR_STATION']].ladle:
+                process_state = self.stations[task['TAR_STATION']].is_processing
+                ladle_state = self.stations[task['TAR_STATION']].ladle
+                logging.info(f'跳过了该任务, 因为该工位有钢包 {task}')
+                logging.info(f'{process_state} {ladle_state}')
+                continue
+            # print(self.stations[task['TAR_STATION']])
+
             solutions = self.finder.decomposition(task)
             # print(f'solutions: {solutions}')
             if solutions:
                 self.buffer.add_from_reader(solutions)
                 self.reader.remove_task(task)
-                self.spawn_ladle(solutions)  # 生成货物在工位上
+                # self.spawn_ladle_at_T(solutions)  # 生成货物在工位上
+                self.spawn_ladle_at_LD(solutions)  # 生成货物在LD上
 
-    def spawn_ladle(self, solutions: dict):
+    def spawn_ladle_at_T(self, solutions: dict):
         for solution in solutions:
             if solution['start'] in ['T1_m', 'T2_m']:
                 ladle = Ladle(pono=solution['pono'], process_time=solution['process_time'])
                 self.ladles.append(ladle)
                 self.stations[solution['start']].add_ladle(ladle)
 
+    def spawn_ladle_at_LD(self, solutions: dict):
+        for solution in solutions:
+            if solution['start'].endswith('LD'):
+                ladle = Ladle(pono=solution['pono'], process_time=solution['process_time'])
+                self.ladles.append(ladle)
+                self.stations[solution['start']].add_ladle(ladle)
             # # 生成废钢钢包
             # if solution['start'] in ['scrap_m']:
             #     ladle = Ladle(pono='scrap', process_time=solution['process_time'])
@@ -238,6 +255,7 @@ class RefinementEnv:
         ladles = []
         for ladle in self.ladles:
             ladles.append(ladle.pono)
+            print(f'ladle:{ladle.pono} : 实际结束时间: {ladle.finished_time} 预期结束时间: {ladle.should_finish_time}')
             delay_time = (ladle.finished_time - ladle.should_finish_time).total_seconds()
             if delay_time <= 0:
                 on_time_count += 1
@@ -248,9 +266,10 @@ class RefinementEnv:
             delay_times.append(delay_time)
         on_time_rate = on_time_count / len(self.ladles)
 
+        plt.figure(figsize=(12, 6))
         bar_list = plt.bar(range(len(self.ladles)), delay_times, color=colors)
         plt.xlabel('Ladle Pono')
-        plt.xticks(range(len(self.ladles)), ladles)
+        plt.xticks(range(len(self.ladles)), ladles, rotation=45, ha='right')  # 旋转45度，右对齐
         plt.ylabel('Delay Time (seconds)')
         plt.title(f'On-time Rate: {on_time_rate * 100:.2f}%')
 
@@ -260,6 +279,7 @@ class RefinementEnv:
                      f"{delay_times[i]:.0f}s",
                      ha='center', va='bottom')
 
+        plt.tight_layout()
         plt.show()
         print(f"准点率: {on_time_rate * 100:.2f}%")
 
