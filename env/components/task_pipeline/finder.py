@@ -80,12 +80,26 @@ class Finder:
         if start_node.is_occupied or end_node.is_occupied:
             return []
 
+        # 对于两个工位在同一个轨道上,如CAS和CC,不能通过下面的求解逻辑
+        if self.env_vehicles[start_node.name].track.name == self.env_vehicles[end_node.name].track.name:
+            solution.append({
+                'start': task_start_station,
+                'end': task_end_station,
+                'assign_time': assign_time,
+                'end_time': end_time,
+                'process_time': process_time,
+                'track': self.env_vehicles[start_node.name].track.name,
+                'pono': pono
+            })
+            return solution
+
         # bfs搜索
         for node_name in current_node.connected_nodes:
             connected_node = self.nodes[node_name]
             if connected_node not in queue and not connected_node.has_visited and not connected_node.is_occupied:
                 connected_node.prev_node = current_node
                 queue.append(connected_node)
+
         while end_node not in queue and len(queue) > 0:
             current_node = queue.pop(0)
             if current_node.name == end_node.name:
@@ -100,6 +114,7 @@ class Finder:
                 if connected_node not in queue and not connected_node.has_visited and not connected_node.is_occupied:
                     connected_node.prev_node = current_node
                     queue.append(connected_node)
+
         if end_node.prev_node is None:
             return []
 
@@ -108,6 +123,7 @@ class Finder:
             vehicle_path.insert(0, current_node)
             current_node = current_node.prev_node
         vehicle_path.insert(0, start_node)
+
         for i in range(len(vehicle_path) - 1):
             start = vehicle_path[i]
             end = vehicle_path[i + 1]

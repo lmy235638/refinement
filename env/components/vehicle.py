@@ -46,17 +46,19 @@ class Vehicle:
             self.lower_limit <= task.end_pos <= self.upper_limit
 
     def check_whose_task(self, task):
+        # 该车有钢包,那么不能接其他钢包的任务
+        if self.ladle and task.pono != self.ladle.pono:
+            return False
+
         if task.vehicle == self.name:
             return True
         else:
             return False
-        # if task.vehicle is None:
-        #     return True
+
+        # if self.ladle and task.pono != self.ladle.pono:
+        #     return False
         # else:
-        #     if task.vehicle == self.name:
-        #         return True
-        #     else:
-        #         return False
+        #     return True
 
     def take_task(self, task):
         self.task = task
@@ -136,6 +138,9 @@ class Vehicle:
             self.load_degree = 0
 
     def take_ladle(self, ladle):
+        # print(f'{self.name} take ladle {ladle} task ladle {self.task.pono}')
+        if self.task.pono != ladle.pono:
+            raise logging.error(f'钢包号不匹配 拿起的钢包是:{ladle} 任务是:{self.task}')
         if self.ladle is None:
             self.ladle = ladle
             self.ladle.update_finished_time(self.task.end_time)

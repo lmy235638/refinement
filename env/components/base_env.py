@@ -80,7 +80,7 @@ class RefinementEnv:
         if self.buffer.buffer:
             logging.info(f'buffer: {self.buffer.buffer}')
 
-        logging.info(f'priority: {self.priority}')
+        # logging.info(f'priority: {self.priority}')
 
         # 把buffer中的任务分配给各个轨道
         for track in self.tracks.values():
@@ -98,9 +98,9 @@ class RefinementEnv:
                     #     track.add_tasks_to_buffer([task_transport_scrap_to_LD])
                     #     print(f'{self.sys_time} {task}')
             # print('*' * 20 + f'track:{track.name}' + '*' * 20)
-            logging.info('*' * 20 + f' track:{track.name} ' + '*' * 20)
+            # logging.info('*' * 20 + f' track:{track.name} ' + '*' * 20)
             track.add_tasks_to_buffer(tasks)
-            track.task_allocator(self.priority)
+            track.task_allocator()
             track.step()
 
         # 更新所有任务优先级表
@@ -137,6 +137,8 @@ class RefinementEnv:
                 logging.info(f'{process_state} {ladle_state}')
                 continue
             # print(self.stations[task['TAR_STATION']])
+            if task['PONO'] in self.priority:
+                continue
 
             solutions = self.finder.decomposition(task)
             # print(f'solutions: {solutions}')
@@ -244,7 +246,7 @@ class RefinementEnv:
         if self.buffer.size > 0:
             return False
         for track in self.tracks.values():
-            if track.buffer.size > 0 or not track.all_vehicle_free():
+            if track.buffer.size > 0 or not track.all_vehicle_free() or not track.all_station_free():
                 return False
         return True
 

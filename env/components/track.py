@@ -113,20 +113,66 @@ class Track:
 
                 # 2. 一车空闲,一车有任务
                 elif bool_xor(left_vehicle.task, right_vehicle.task):
+                    # 左车有任务撞右车
                     if left_vehicle.task:
-                        # 左车有任务撞右车
-                        logging.info('2-左有任务撞右车')
-                        left_tar = self.cal_stop_pos(left_vehicle, left_vehicle.task.end_pos if left_vehicle.ladle else left_vehicle.task.start_pos)
-                        right_tar = self.cal_avoid_pos(right_vehicle, left_tar, is_right=True)
-                        time = max(self.cal_move_time(left_vehicle, left_tar), self.cal_move_time(right_vehicle, right_tar))
-                        right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', right_tar, time))
+                        if left_vehicle.ladle:
+                            # 左车有钢包, 右车无论有没有都可以不冲突避让
+                            logging.info('2-左有任务撞右车, 右车避让')
+                            left_tar = self.cal_stop_pos(left_vehicle, left_vehicle.task.end_pos if left_vehicle.ladle else left_vehicle.task.start_pos)
+                            right_tar = self.cal_avoid_pos(right_vehicle, left_tar, is_right=True)
+                            time = max(self.cal_move_time(left_vehicle, left_tar), self.cal_move_time(right_vehicle, right_tar))
+                            right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', right_tar, time))
+                        else:
+                            if right_vehicle.ladle:
+                                # 左车无钢包,右车有钢包,两车都需要调度
+                                left_vehicle.task.vehicle = left_vehicle.name
+                                self.buffer.add_from_allocator(left_vehicle.task, '2-左有任务空右装空闲')
+                                left_pos = self.cal_stop_pos(left_vehicle, left_vehicle.task.start_pos)
+                                right_pos = self.cal_avoid_pos(right_vehicle, left_pos, is_right=True)
+                                # TODO 可优化时间
+                                left_time = self.cal_move_time(right_vehicle, right_pos)
+                                right_time = left_time + self.cal_move_time(left_vehicle, left_pos)
+                                left_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', left_vehicle.pos, left_time))
+                                right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', right_pos, right_time, is_loaded=True))
+                            else:
+                                # 左车没有钢包,右车也没有钢包
+                                logging.info('2-左有任务无钢包, 右车无钢包')
+                                left_tar = self.cal_stop_pos(left_vehicle,left_vehicle.task.end_pos if left_vehicle.ladle else left_vehicle.task.start_pos)
+                                right_tar = self.cal_avoid_pos(right_vehicle, left_tar, is_right=True)
+                                time = max(self.cal_move_time(left_vehicle, left_tar), self.cal_move_time(right_vehicle, right_tar))
+                                right_vehicle.take_task(self.temp_task(left_vehicle.task, 'temp', right_tar, time))
+
+                    # 右车有任务撞左车
                     else:
-                        # 右车有任务撞左车
-                        logging.info('2-右车有任务撞左车')
-                        right_tar = self.cal_stop_pos(right_vehicle, right_vehicle.task.end_pos if right_vehicle.ladle else right_vehicle.task.start_pos )
-                        left_tar = self.cal_avoid_pos(left_vehicle, right_tar, is_right=False)
-                        time = max(self.cal_move_time(right_vehicle, right_tar), self.cal_move_time(left_vehicle, left_tar))
-                        left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', left_tar, time))
+                        if left_vehicle.ladle:
+                            if right_vehicle.ladle:
+                                logging.info('2-右车有任务有钢包撞左车,左车有钢包')
+                                right_tar = self.cal_stop_pos(right_vehicle,right_vehicle.task.end_pos if right_vehicle.ladle else right_vehicle.task.start_pos)
+                                left_tar = self.cal_avoid_pos(left_vehicle, right_tar, is_right=False)
+                                time = max(self.cal_move_time(right_vehicle, right_tar),self.cal_move_time(left_vehicle, left_tar))
+                                left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', left_tar, time))
+                            else:
+                                # 左车空闲但有钢包,右车有任务但无钢包,两车都需要调度
+                                right_vehicle.task.vehicle = right_vehicle.name
+                                self.buffer.add_from_allocator(right_vehicle.task, '2-左空闲有钢包右有任务无钢包')
+                                right_pos = self.cal_stop_pos(right_vehicle, right_vehicle.task.start_pos)
+                                left_pos = self.cal_avoid_pos(left_vehicle, right_pos, is_right=False)
+                                # TODO 可优化时间
+                                # 这里先让右车站着不动,让左车先走,左车到达目的地后,右车再出发,左车再多等直到右车到达,避免碰撞
+                                right_time = self.cal_move_time(left_vehicle, left_pos)
+                                left_time = right_time + self.cal_move_time(right_vehicle, right_pos)
+                                left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', left_pos, left_time, is_loaded=True))
+                                right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_vehicle.pos, right_time))
+
+
+
+                        else:
+                            # 左车没有钢包,那么右车什么情况都撞不上
+                            logging.info('2-右车有任务撞左车,左车无钢包')
+                            right_tar = self.cal_stop_pos(right_vehicle, right_vehicle.task.end_pos if right_vehicle.ladle else right_vehicle.task.start_pos )
+                            left_tar = self.cal_avoid_pos(left_vehicle, right_tar, is_right=False)
+                            time = max(self.cal_move_time(right_vehicle, right_tar), self.cal_move_time(left_vehicle, left_tar))
+                            left_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', left_tar, time))
 
                 # 下面的两个车都会有任务
                 # 3. 两车任务下发时间相同
@@ -330,7 +376,6 @@ class Track:
                                     right_vehicle.take_task(self.temp_task(right_vehicle.task, 'temp', right_pos, time))
                                 else:
                                     # 左车早且空,右车迟且装 两车都需要temp调度
-                                    logging.info('定位错误位置')
                                     left_vehicle.task.vehicle = left_vehicle.name
                                     right_vehicle.task.vehicle = right_vehicle.name
                                     self.buffer.add_from_allocator(left_vehicle.task, '4-左早空右迟装-中间撞-左车')
@@ -516,12 +561,21 @@ class Track:
         else:
             raise ValueError(f'同时出现3个以上任务的情况')
 
-    def task_allocator(self, priority):
-        logging.info(f'{self.name} : {self.buffer.buffer}')
-
+    def task_allocator(self):
+        if self.buffer.buffer:
+            logging.info('*' * 20 + f' track:{self.name} ' + '*' * 20)
+            logging.info(f'{self.name} : {self.buffer.buffer}')
+        # print(self.stations)
         remove_tasks = []
         self.buffer.sorted_tasks()
         for task in self.buffer.buffer:
+            end_station = self.find_station_by_pos(task.end_pos)
+            if not end_station.name.endswith('CC') and (end_station.is_processing or end_station.ladle):
+                process_state = end_station.is_processing
+                ladle_state = end_station.ladle
+                logging.info(f"在轨道: 跳过了该任务, 因为该工位有钢包 'PONO':{task.pono} 'BEG':{task.start_pos} 'TAR':{task.end_pos}")
+                logging.info(f'{process_state} {ladle_state}')
+                continue
             # if self.name == 'bridge1':
             #     logging.info(f'priority: {priority}')
             # if task.pono in priority and task.priority > priority[task.pono]:
@@ -538,9 +592,15 @@ class Track:
                             able_vehicle.take_task(task)
                             remove_tasks.append(task)
                 else:
-                    able_vehicle = self.find_closest_vehicle(task, able_vehicles)
-                    able_vehicle.take_task(task)
-                    remove_tasks.append(task)
+                    # 有钢包的车不能接其他钢包的任务
+                    checked_able_vehicles = []
+                    for able_vehicle in able_vehicles:
+                        if able_vehicle.ladle is None:
+                            checked_able_vehicles.append(able_vehicle)
+                    if checked_able_vehicles:
+                        able_vehicle = self.find_closest_vehicle(task, checked_able_vehicles)
+                        able_vehicle.take_task(task)
+                        remove_tasks.append(task)
         for remove_task in remove_tasks:
             self.buffer.remove_task(remove_task)
 
@@ -576,6 +636,13 @@ class Track:
 
         return closest_vehicle
 
+    def find_station_by_pos(self, pos):
+        for station in self.stations.values():
+            station_pos = station.y if self.vertical else station.x
+            if station_pos == pos:
+                return station
+        raise logging.error(f'未找到位置为{pos}的工位')
+
     def step(self):
         # 算法分配任务的时候一定
         # 如果轨道的车有空闲的,分配任务
@@ -587,8 +654,8 @@ class Track:
         # 3.执行移动
         for vehicle in self.vehicles:
             vehicle.move()
-            # if self.name == 'bridge0':
-            #     logging.info(f'{vehicle.name}: {vehicle.pos} {vehicle.task}')
+            if self.name == 'bridge1':
+                logging.info(f'{vehicle.name}: {vehicle.pos} {vehicle.task} {vehicle.ladle}')
 
         # 安全距离检查
         for i in range(self.vehicle_num - 1):
@@ -607,6 +674,12 @@ class Track:
     def all_vehicle_free(self):
         for vehicle in self.vehicles:
             if vehicle.task:
+                return False
+        return True
+
+    def all_station_free(self):
+        for station in self.stations.values():
+            if not station.is_free():
                 return False
         return True
 

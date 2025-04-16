@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 from datetime import datetime, timedelta
 import json
 from matplotlib import pyplot as plt
@@ -51,10 +52,10 @@ class EnvRecord(RefinementEnv):
                 log_file = os.path.join(fig_out_file, 'error.log')
                 logging.root.handlers = []  # 移除所有现有处理器
                 logging.basicConfig(filename=log_file, level=logging.ERROR, filemode='w',
-                                    format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
+                                    format='%(asctime)s - %(levelname)s - %(message)s')
 
-                logging.error(f"程序运行超时：当前时间 {self.sys_time} 超过 sys_end_time 6 小时。")
-                print("程序运行超时，已生成错误日志。")
+                logging.error(f"The program execution has timed out: The current time {self.sys_time} exceeds the sys_end_time by 6 hours.")
+                print("The program execution has timed out, and an error log has been generated.")
                 running = False
 
 if __name__ == '__main__':
@@ -62,10 +63,18 @@ if __name__ == '__main__':
     fig_name = sys.argv[1]
     orig_file = sys.argv[2]
 
+    # 获取当前脚本所在目录的绝对路径
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    print(f"Current Script Directory: {script_dir}")
+
     # 提取文件名（不含扩展名）
     file_name = os.path.splitext(os.path.basename(orig_file))[0]
     # 构建目标文件夹路径
-    fig_out_file = os.path.join(os.path.dirname(orig_file), file_name)
+    fig_out_file = os.path.join(script_dir, os.path.dirname(orig_file), file_name)
+
+    # 如果文件夹存在，先彻底删除
+    if os.path.exists(fig_out_file):
+        shutil.rmtree(fig_out_file)  # 删除文件夹及其所有内容
     # 创建目标文件夹（如果不存在）
     if not os.path.exists(fig_out_file):
         os.makedirs(fig_out_file, exist_ok=True)
@@ -85,17 +94,17 @@ if __name__ == '__main__':
     processed_data.update({'START_TIME': task_start_time.isoformat()})
     processed_data.update({'END_TIME': task_end_time.isoformat()})
 
-    with open('test_data/processed_data.json', 'w', encoding='utf-8') as f:
+    with open(os.path.join(script_dir, 'test_data/processed_data.json'), 'w', encoding='utf-8') as f:
         json.dump(processed_data, f, indent=4, ensure_ascii=False)
 
-    reader.check_time_conflict('test_data/processed_data.json')
+    reader.check_time_conflict(os.path.join(script_dir, 'test_data/processed_data.json'))
 
-    recorder = EnvRecord(config_path='env/config/feed_and_refine_env.yaml',
-                         task_file_path='test_data/processed_data.json')
+    recorder = EnvRecord(config_path=os.path.join(script_dir, 'env/config/feed_and_refine_env.yaml'),
+                         task_file_path=os.path.join(script_dir, 'test_data/processed_data.json'))
     recorder.record_trajectory()
-    recorder.output_to_file('test_data/trajectory.json')
+    recorder.output_to_file(os.path.join(script_dir, 'test_data/trajectory.json'))
 
-    with open('test_data/trajectory.json', 'r') as file:
+    with open(os.path.join(script_dir, 'test_data/trajectory.json'), 'r') as file:
         data = json.load(file)
 
     plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
@@ -117,26 +126,6 @@ if __name__ == '__main__':
         plt.title('天车行车轨迹图')
         plt.legend()
 
-
         track_fig_name = fig_name + f'_{track}'
         plt.savefig(os.path.join(fig_out_file, track_fig_name))
         plt.close()
-
-    # # 绘制轨迹图
-    # plt.figure(figsize=(20, 10))
-    # for crane, positions in pos_info.items():
-    #     plt.plot(time_series, positions, label=crane)
-    #
-    # plt.xlabel('时间（秒）')
-    # plt.ylabel('位置')
-    # plt.title('天车行车轨迹图')
-    # plt.legend()
-    #
-    # fig_out_file = os.path.dirname(orig_file)
-    # if not os.path.exists(fig_out_file):
-    #     os.makedirs(fig_out_file)
-    # plt.savefig(os.path.join(fig_out_file, fig_name))
-
-
-
-

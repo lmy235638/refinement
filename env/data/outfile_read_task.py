@@ -123,6 +123,7 @@ def parse_to_single_task(records, original_format='%Y%m%d%H%M%S'):
             # print(f'{i} {station}')
             task_record = {}
             task_record.update({'PONO': record['PONO']})
+            # task_record.update({'PONO': record['序号']})
             task_record.update({'BEG_STATION': station})
             tar_station = stations[i]
             task_record.update({'TAR_STATION': tar_station})
@@ -227,9 +228,12 @@ def find_earliest_and_last_time(records):
 
 
 if __name__ == '__main__':
-    original_records = read_from_file('ori_data/20250307104116.out')
+    original_records = read_from_file('ori_data/20250310151706.out')
     parse_records = parse_record(original_records)
-    with open('processed_data/parse_records.json', 'w', encoding='utf-8') as f:
+    # file_name = 'processed_data/parse_records.json'
+    file_name = 'test/parse_records.json'
+
+    with open(file_name, 'w', encoding='utf-8') as f:
         json.dump(parse_records, f, indent=4, ensure_ascii=False)
     tasks = parse_to_single_task(parse_records)
     tasks.sort(key=lambda x: x['ASSIGN_TIME'])
@@ -245,7 +249,7 @@ if __name__ == '__main__':
     processed_data.update({'START_TIME': task_start_time.isoformat()})
     processed_data.update({'END_TIME': task_end_time.isoformat()})
 
-    with open('processed_data/processed_data.json', 'w', encoding='utf-8') as f:
+    with open(file_name, 'w', encoding='utf-8') as f:
         json.dump(processed_data, f, indent=4, ensure_ascii=False)
 
-    check_time_conflict('processed_data/processed_data.json')
+    check_time_conflict(file_name)

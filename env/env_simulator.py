@@ -94,7 +94,7 @@ class SimulatorEnv(RefinementEnv):
         writer = imageio.get_writer('animation.mp4', fps=40)
         while running:
             logging.info('*' * 40 + f' {self.sys_time} ' + '*' * 40)
-            # print(('*' * 40 + f' {self.sys_time} ' + '*' * 40))
+            print(('*' * 40 + f' {self.sys_time} ' + '*' * 40))
             self.step()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

@@ -83,7 +83,11 @@ class Station:
         if not self.is_operating and not self.is_processing:
             if self.type == 'workstation':
                 for vehicle in self.vehicles:
-                    # 如果当前工位有货物,且车有货物,则跳过.因为有任务排队的情况,工位有旧钢包,新车仍然放入新钢包
+                    # 车辆吸入的时候没有做钢包检测,防止工位的钢包是p6,但这时有一个任务也是从该工位拿走p7钢包,拿错钢包的情况
+                    if self.ladle is not None and vehicle.task.pono != self.ladle.pono:
+                        self.release_vehicle(vehicle)
+                        continue
+                    # 如果当前工位有货物,且车有货物,则跳过.因为有任务排队的情况,工位有旧钢包,新车不能放入新钢包
                     if vehicle.ladle and self.ladle:
                         continue
                     if self.is_operating:
@@ -221,6 +225,13 @@ class Station:
             if vehicle.task.pono != pono:
                 return False
         return True
+
+    def is_free(self):
+        # logging.info(f'{self.name} {self.ladle} {self.is_operating} {self.is_processing}')
+        if self.ladle or self.is_operating or self.is_processing:
+            return False
+        else:
+            return True
 
     def __repr__(self):
         return f"Station(name={self.name}, type={self.type}, x={self.x}, y={self.y}, " \
